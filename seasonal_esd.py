@@ -4,6 +4,9 @@ from statsmodels.tsa.seasonal import seasonal_decompose
 import math
 from scipy import stats
 import matplotlib.pyplot as plt
+from sklearn.neighbors import KernelDensity
+import statsmodels.api as sm
+import pylab as py
 
 
 class SeasonalESD:
@@ -27,9 +30,7 @@ class SeasonalESD:
     def run(self):
         if not self.init:
             self.init=True
-            median = self.data.median()
-            seasonal = self._get_seasonal()
-            resid = pd.Series(data=self.data - seasonal - median, name='resid')
+            resid = self._get_updated_resid()
             self.indices = self._esd(resid)
 
             if self.indices.shape[0]:
@@ -40,10 +41,15 @@ class SeasonalESD:
         else:
             print("Already executed Seasonal-ESD algorithm")
 
-    def _get_seasonal(self, model='additive', period=7):
+    def _get_seasonal_decomposition(self, model='additive', period=7):
         result = seasonal_decompose(self.data, model=model, period=period)
-        seasonal = result.seasonal
-        return seasonal
+        return result
+
+    def _get_updated_resid(self):
+        median = self.data.median()
+        result = self._get_seasonal_decomposition()
+        resid = pd.Series(data=self.data - result.seasonal - median, name='resid')
+        return resid
 
     def _esd(self, resid):
         critical_values = self._calc_critical_values()
@@ -136,5 +142,27 @@ class SeasonalESD:
         else:
             print('Need to call run() first')
 
+    @staticmethod
+    def plot_data_distribution(data, kernel='gaussian'):
+        if isinstance(data, pd.DataFrame):
+            data = data.iloc[:, 0]
+        x = data.values.reshape(-1, 1)
+        kde = KernelDensity(kernel=kernel, bandwidth=0.3).fit(x)
+        x_plot = np.linspace(0, 100, 100)[:, np.newaxis]
+        logprob = kde.score_samples(x_plot)
+        plt.fill_between(x_plot.reshape(1, -1)[0], np.exp(logprob), alpha=0.5)
+        plt.plot(x, np.full_like(x, -0.01), '|k', markeredgewidth=1)
+        plt.xlim(np.min(x), np.max(x))
+        plt.show()
 
+    def plot_residual_distribution(self):
+        resid = self._get_updated_resid()
+        self.plot_data_distribution(resid)
+        self.qqplot(resid)
 
+    @staticmethod
+    def qqplot(data):
+        if isinstance(data, pd.DataFrame):
+            data = data.iloc[:, 0]
+        sm.qqplot(data, line='45')
+        py.show()
