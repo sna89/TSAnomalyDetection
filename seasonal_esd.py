@@ -4,7 +4,6 @@ from statsmodels.tsa.seasonal import seasonal_decompose
 import math
 from scipy import stats
 import matplotlib.pyplot as plt
-from sklearn.neighbors import KernelDensity
 import statsmodels.api as sm
 import pylab as py
 
@@ -129,7 +128,7 @@ class SeasonalESD:
         indices = self.summary_df[:max_idx_anomaly+1]['index']
         return indices
 
-    def plot(self):
+    def plot_anomalies(self):
         if self.init:
             if self.anomaly_df.shape[0]:
                 plt.plot(self.data, 'b')
@@ -142,22 +141,9 @@ class SeasonalESD:
         else:
             print('Need to call run() first')
 
-    @staticmethod
-    def plot_data_distribution(data, kernel='gaussian'):
-        if isinstance(data, pd.DataFrame):
-            data = data.iloc[:, 0]
-        x = data.values.reshape(-1, 1)
-        kde = KernelDensity(kernel=kernel, bandwidth=0.3).fit(x)
-        x_plot = np.linspace(0, 100, 100)[:, np.newaxis]
-        logprob = kde.score_samples(x_plot)
-        plt.fill_between(x_plot.reshape(1, -1)[0], np.exp(logprob), alpha=0.5)
-        plt.plot(x, np.full_like(x, -0.01), '|k', markeredgewidth=1)
-        plt.xlim(np.min(x), np.max(x))
-        plt.show()
-
     def plot_residual_distribution(self):
         resid = self._get_updated_resid()
-        self.plot_data_distribution(resid)
+        # self.plot_data_distribution(resid)
         self.qqplot(resid)
 
     @staticmethod
