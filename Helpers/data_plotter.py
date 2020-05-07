@@ -2,6 +2,9 @@ from sklearn.neighbors import KernelDensity
 import matplotlib.pyplot as plt
 import numpy as np
 from pylab import rcParams
+import pandas as pd
+import statsmodels.api as sm
+import pylab as py
 
 
 class DataPlotter:
@@ -36,3 +39,10 @@ class DataPlotter:
     @staticmethod
     def _update_figure_size(width, height):
         rcParams['figure.figsize'] = width, height
+
+    @staticmethod
+    def qqplot(data):
+        if isinstance(data, pd.DataFrame):
+            data = data.iloc[:, 0]
+        sm.qqplot(data, line='45')
+        py.show()

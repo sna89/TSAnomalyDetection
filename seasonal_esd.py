@@ -4,14 +4,14 @@ from statsmodels.tsa.seasonal import seasonal_decompose
 import math
 from scipy import stats
 import matplotlib.pyplot as plt
-import statsmodels.api as sm
-import pylab as py
+from Helpers.data_plotter import DataPlotter
 
 
 class SeasonalESD:
     def __init__(self, data, anomaly_ratio, hybrid=False):
         assert anomaly_ratio <= 0.49, "anomaly ratio is too high"
 
+        self.data_plotter = DataPlotter()
         self.data = data
         if isinstance(self.data, pd.DataFrame):
             self.data = self.data.iloc[:, 0]
@@ -143,12 +143,5 @@ class SeasonalESD:
 
     def plot_residual_distribution(self):
         resid = self._get_updated_resid()
-        # self.plot_data_distribution(resid)
-        self.qqplot(resid)
-
-    @staticmethod
-    def qqplot(data):
-        if isinstance(data, pd.DataFrame):
-            data = data.iloc[:, 0]
-        sm.qqplot(data, line='45')
-        py.show()
+        self.data_plotter.plot_data_distribution(resid)
+        self.data_plotter.qqplot(resid)
