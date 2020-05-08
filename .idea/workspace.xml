@@ -2,13 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="27da9a7e-1324-4c59-8a3a-c97de520e9de" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Logger/logger.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helpers/data_helper.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_plotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helpers/data_plotter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/google_trend.py" beforeDir="false" afterPath="$PROJECT_DIR$/Obsolete/google_trend.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Helpers/data_helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helpers/data_helper.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/seasonal_esd.py" beforeDir="false" afterPath="$PROJECT_DIR$/seasonal_esd.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_esd_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_esd_data.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -52,44 +51,49 @@
     <session id="1919133095">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="3" />
-          <entry key="project.open.time.0" value="1" />
+          <entry key="project.closed" value="6" />
+          <entry key="project.open.time.0" value="2" />
+          <entry key="project.open.time.10" value="1" />
+          <entry key="project.open.time.7" value="1" />
           <entry key="project.open.time.8" value="3" />
-          <entry key="project.opened" value="4" />
+          <entry key="project.opened" value="7" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="py" value="9" />
+          <entry key="log" value="3" />
+          <entry key="py" value="17" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Python" value="8" />
+          <entry key="PLAIN_TEXT" value="3" />
+          <entry key="Python" value="16" />
           <entry key="Scratch" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="3937" />
+          <entry key="dummy" value="1" />
+          <entry key="py" value="6469" />
           <entry key="txt" value="32" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PLAIN_TEXT" value="32" />
-          <entry key="Python" value="3937" />
+          <entry key="PLAIN_TEXT" value="33" />
+          <entry key="Python" value="6469" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="220">
-              <caret line="11" column="24" lean-forward="true" selection-start-line="11" selection-start-column="24" selection-end-line="11" selection-end-column="24" />
+            <state relative-caret-position="160">
+              <caret line="8" selection-start-line="8" selection-end-line="8" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -97,19 +101,28 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Helpers/data_helper.py">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Logger/logger.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="820">
-              <caret line="41" lean-forward="true" selection-start-line="41" selection-end-line="41" />
+            <state relative-caret-position="560">
+              <caret line="28" column="28" selection-start-line="28" selection-start-column="28" selection-end-line="28" selection-end-column="28" />
               <folding>
-                <element signature="e#0#19#0" expanded="true" />
-                <marker date="1588859252264" expanded="true" signature="70:71" ph="..." />
-                <marker date="1588859252264" expanded="true" signature="143:162" ph="..." />
-                <marker date="1588859252264" expanded="true" signature="143:180" ph="..." />
-                <marker date="1588859252264" expanded="true" signature="205:214" ph="..." />
-                <marker date="1588859252264" expanded="true" signature="205:303" ph="..." />
-                <marker date="1588859252264" expanded="true" signature="1218:1227" ph="..." />
+                <element signature="e#0#14#0" expanded="true" />
+                <marker date="1588958513693" expanded="true" signature="156:538" ph="..." />
+                <marker date="1588958513693" expanded="true" signature="560:565" ph="..." />
+                <marker date="1588958513693" expanded="true" signature="765:766" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test_esd_data.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="280">
+              <caret line="14" selection-start-line="14" selection-end-line="14" />
+              <folding>
+                <element signature="e#0#36#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -118,12 +131,29 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/seasonal_esd.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1641">
-              <caret line="34" column="37" selection-start-line="34" selection-start-column="37" selection-end-line="34" selection-end-column="37" />
+            <state relative-caret-position="-12">
+              <caret line="32" selection-start-line="32" selection-end-line="32" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
-                <marker date="1588857918945" expanded="true" signature="228:2102" ph="..." />
-                <marker date="1588857918945" expanded="true" signature="1367:1565" ph="..." />
+                <marker date="1588956979860" expanded="true" signature="270:2165" ph="..." />
+                <marker date="1588956979860" expanded="true" signature="1430:1628" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Helpers/data_helper.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="260">
+              <caret line="13" column="12" lean-forward="true" selection-start-line="13" selection-start-column="12" selection-end-line="13" selection-end-column="12" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
+                <marker date="1588923114642" expanded="true" signature="94:113" ph="..." />
+                <marker date="1588923114642" expanded="true" signature="94:131" ph="..." />
+                <marker date="1588923114642" expanded="true" signature="156:165" ph="..." />
+                <marker date="1588923114642" expanded="true" signature="156:254" ph="..." />
+                <marker date="1588923114642" expanded="true" signature="1185:1196" ph="..." />
               </folding>
             </state>
           </provider>
@@ -132,8 +162,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Helpers/data_plotter.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="820">
-              <caret line="41" selection-start-line="41" selection-end-line="41" />
+            <state relative-caret-position="494">
+              <caret line="34" column="17" selection-start-line="34" selection-start-column="8" selection-end-line="34" selection-end-column="17" />
               <folding>
                 <element signature="e#0#43#0" expanded="true" />
                 <marker date="1588857918898" expanded="true" signature="210:211" ph="..." />
@@ -159,13 +189,15 @@
       <list>
         <option value="$PROJECT_DIR$/google_trend.py" />
         <option value="$PROJECT_DIR$/test.py" />
-        <option value="$PROJECT_DIR$/test_esd_data.py" />
         <option value="$PROJECT_DIR$/data_plotter.py" />
         <option value="$PROJECT_DIR$/data_helper.py" />
         <option value="$PROJECT_DIR$/Helpers/data_plotter.py" />
-        <option value="$PROJECT_DIR$/seasonal_esd.py" />
-        <option value="$PROJECT_DIR$/main.py" />
         <option value="$PROJECT_DIR$/Helpers/data_helper.py" />
+        <option value="$PROJECT_DIR$/Logger/looger.py" />
+        <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/test_esd_data.py" />
+        <option value="$PROJECT_DIR$/seasonal_esd.py" />
+        <option value="$PROJECT_DIR$/Logger/logger.py" />
       </list>
     </option>
   </component>
@@ -180,7 +212,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -188,10 +219,21 @@
               <item name="TSAnomalyDetection" type="b2602c69:ProjectViewProjectNode" />
               <item name="TSAnomalyDetection" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="TSAnomalyDetection" type="b2602c69:ProjectViewProjectNode" />
+              <item name="TSAnomalyDetection" type="462c0819:PsiDirectoryNode" />
+              <item name="Helpers" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="TSAnomalyDetection" type="b2602c69:ProjectViewProjectNode" />
+              <item name="TSAnomalyDetection" type="462c0819:PsiDirectoryNode" />
+              <item name="Logger" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -302,14 +344,15 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1912" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4992785" visible="true" weight="0.1085353" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4992785" visible="true" weight="0.1085353" />
       <window_info id="Structure" order="1" sideWeight="0.5007215" side_tool="true" weight="0.05584826" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49947312" visible="true" weight="0.29826465" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49947312" weight="0.29826465" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.3991323" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.329718" />
@@ -330,6 +373,78 @@
     <MESSAGE value="Add plotting options" />
     <option name="LAST_COMMIT_MESSAGE" value="Add plotting options" />
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/seasonal_esd.py</url>
+          <line>32</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>8</line>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+      </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="debuggerHistoryManager">
+    <expressions id="evaluateExpression">
+      <expression>
+        <expression-string>self.logger</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>f_handler</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>logger</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>instance</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>self</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>self.func</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>args</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>kwargs</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>func</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+    </expressions>
+  </component>
   <component name="editorHistoryManager">
     <entry file="file://$USER_HOME$/Documents/venv/TSAnomalyDetection/Lib/site-packages/pandas/core/generic.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -343,27 +458,25 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/graphics_gofplots_qqplot.py" />
     <entry file="file://$PROJECT_DIR$/test.py" />
-    <entry file="file://$PROJECT_DIR$/test_esd_data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
-          <caret line="5" column="4" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Obsolete/google_trend.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="220">
           <caret line="11" selection-start-line="11" selection-end-line="11" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/log_08052020180909.log" />
+    <entry file="file://$USER_HOME$/.PyCharmCE2018.2/system/python_stubs/-429134397/builtins.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1869">
+          <caret line="719" column="6" selection-start-line="719" selection-start-column="6" selection-end-line="719" selection-end-column="6" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Helpers/data_plotter.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="820">
-          <caret line="41" selection-start-line="41" selection-end-line="41" />
+        <state relative-caret-position="494">
+          <caret line="34" column="17" selection-start-line="34" selection-start-column="8" selection-end-line="34" selection-end-column="17" />
           <folding>
             <element signature="e#0#43#0" expanded="true" />
             <marker date="1588857918898" expanded="true" signature="210:211" ph="..." />
@@ -371,40 +484,68 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/seasonal_esd.py">
+    <entry file="file://$PROJECT_DIR$/log_08052020200224.log">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/log_08052020200851.log">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1641">
-          <caret line="34" column="37" selection-start-line="34" selection-start-column="37" selection-end-line="34" selection-end-column="37" />
+        <state relative-caret-position="160">
+          <caret line="8" selection-start-line="8" selection-end-line="8" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-            <marker date="1588857918945" expanded="true" signature="228:2102" ph="..." />
-            <marker date="1588857918945" expanded="true" signature="1367:1565" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_esd_data.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="280">
+          <caret line="14" selection-start-line="14" selection-end-line="14" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/seasonal_esd.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-12">
+          <caret line="32" selection-start-line="32" selection-end-line="32" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <marker date="1588956979860" expanded="true" signature="270:2165" ph="..." />
+            <marker date="1588956979860" expanded="true" signature="1430:1628" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Helpers/data_helper.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="820">
-          <caret line="41" lean-forward="true" selection-start-line="41" selection-end-line="41" />
+        <state relative-caret-position="260">
+          <caret line="13" column="12" lean-forward="true" selection-start-line="13" selection-start-column="12" selection-end-line="13" selection-end-column="12" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-            <marker date="1588859252264" expanded="true" signature="70:71" ph="..." />
-            <marker date="1588859252264" expanded="true" signature="143:162" ph="..." />
-            <marker date="1588859252264" expanded="true" signature="143:180" ph="..." />
-            <marker date="1588859252264" expanded="true" signature="205:214" ph="..." />
-            <marker date="1588859252264" expanded="true" signature="205:303" ph="..." />
-            <marker date="1588859252264" expanded="true" signature="1218:1227" ph="..." />
+            <marker date="1588923114642" expanded="true" signature="94:113" ph="..." />
+            <marker date="1588923114642" expanded="true" signature="94:131" ph="..." />
+            <marker date="1588923114642" expanded="true" signature="156:165" ph="..." />
+            <marker date="1588923114642" expanded="true" signature="156:254" ph="..." />
+            <marker date="1588923114642" expanded="true" signature="1185:1196" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
+    <entry file="file://$PROJECT_DIR$/Logger/logger.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="11" column="24" lean-forward="true" selection-start-line="11" selection-start-column="24" selection-end-line="11" selection-end-column="24" />
+        <state relative-caret-position="560">
+          <caret line="28" column="28" selection-start-line="28" selection-start-column="28" selection-end-line="28" selection-end-column="28" />
           <folding>
-            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#0#14#0" expanded="true" />
+            <marker date="1588958513693" expanded="true" signature="156:538" ph="..." />
+            <marker date="1588958513693" expanded="true" signature="560:565" ph="..." />
+            <marker date="1588958513693" expanded="true" signature="765:766" ph="..." />
           </folding>
         </state>
       </provider>

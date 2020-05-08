@@ -5,6 +5,7 @@ import math
 from scipy import stats
 import matplotlib.pyplot as plt
 from Helpers.data_plotter import DataPlotter
+from Logger.logger import LoggerDecorator
 
 
 class SeasonalESD:
@@ -26,6 +27,7 @@ class SeasonalESD:
 
         self.init = False
 
+    @LoggerDecorator
     def run(self):
         if not self.init:
             self.init=True

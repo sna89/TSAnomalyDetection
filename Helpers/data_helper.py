@@ -4,8 +4,6 @@ import numpy as np
 
 
 class DataHelper:
-    ATTRIBUTES = ['internaltemp', 'internalrh']
-
     def __init__(self):
         pass
 
@@ -32,10 +30,22 @@ class DataHelper:
         df_ = df_[~df_['duplicated']]
         return df_.drop(labels=['duplicated'], axis=1)
 
-    @classmethod
-    def describe(cls, df):
-        for attribute in cls.ATTRIBUTES:
-            df_ = copy.deepcopy(df['Value'])
-            df_[attribute] = df_[attribute].astype(float)
-            print(df_.describe(include=[np.number]))
-            del df_
+    # @classmethod
+    # def describe(cls, df, attributes):
+    #     for attribute in attributes:
+    #         df_ = copy.deepcopy(df['Value'])
+    #         df_[attribute] = df_[attribute].astype(float)
+    #         print(df_.describe(include=[np.number]))
+    #         del df_
+
+    @staticmethod
+    def split_data(df, freq='W'):
+        assert isinstance(df.index, pd.DatetimeIndex), "Data frame index must be date time"
+        start_period = df.index.min()
+        end_period = df.index.max()
+        start_periods = pd.DatetimeIndex([start_period])\
+            .append(pd.date_range(start_period, end_period, freq=freq, normalize=True))\
+            .append(pd.DatetimeIndex([end_period]))
+        periods = [(start_periods[t],start_periods[t+1]) for t in range(len(start_periods)) if t < len(start_periods)-1]
+        return list(map(lambda x: df[x[0]:x[1]], periods))
+
