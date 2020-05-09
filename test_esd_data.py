@@ -1,6 +1,7 @@
 from seasonal_esd import SeasonalESD
 import pandas as pd
 from Helpers.data_plotter import DataPlotter
+from Tasks.task import Task
 
 
 def test_esd_data():
@@ -12,7 +13,9 @@ def test_esd_data():
     test_data = pd.DataFrame(data=test_data)
     seasonal_esd_test = SeasonalESD(test_data, 0.3)
     # data_plotter.plot_data(test_data)
-    seasonal_esd_test.run()
+    task = Task(seasonal_esd_test)
+    task.run()
+    # seasonal_esd_test.run()
     # data_plotter.plot_data_distribution(test_data)
     # seasonal_esd_test.plot_residual_distribution()
     # seasonal_esd_test.plot_anomalies()

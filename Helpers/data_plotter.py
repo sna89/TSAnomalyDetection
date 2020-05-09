@@ -46,3 +46,13 @@ class DataPlotter:
             data = data.iloc[:, 0]
         sm.qqplot(data, line='45')
         py.show()
+
+    @staticmethod
+    def plot_anomalies(df, df_anomalies):
+        if df_anomalies.shape[0]:
+            plt.plot(df, 'b')
+            x = df_anomalies.index.values
+            y = df_anomalies.values.reshape(1, -1)[0]
+            plt.scatter(x=x, y=y, c='r')
+            plt.show()
+

@@ -43,9 +43,9 @@ class DataHelper:
         assert isinstance(df.index, pd.DatetimeIndex), "Data frame index must be date time"
         start_period = df.index.min()
         end_period = df.index.max()
-        start_periods = pd.DatetimeIndex([start_period])\
+        periods = pd.DatetimeIndex([start_period])\
             .append(pd.date_range(start_period, end_period, freq=freq, normalize=True))\
             .append(pd.DatetimeIndex([end_period]))
-        periods = [(start_periods[t],start_periods[t+1]) for t in range(len(start_periods)) if t < len(start_periods)-1]
+        periods = [(periods[t],periods[t+1]) for t in range(len(periods)) if t < len(periods)-1]
         return list(map(lambda x: df[x[0]:x[1]], periods))
 

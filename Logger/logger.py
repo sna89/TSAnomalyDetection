@@ -20,7 +20,11 @@ def create_logger():
     logger.addHandler(f_handler)
 
 
-class LoggerDecorator:
+def get_logger():
+    return logging.getLogger(LOGGER_NAME)
+
+
+class MethodLogger:
     def __init__(self, func):
         functools.update_wrapper(self, func)
         self.func = func
@@ -29,9 +33,11 @@ class LoggerDecorator:
     def __call__(self, instance, *args, **kwargs):
         try:
             class_name = instance.__class__.__name__
-            self.logger.info("Running function {0} in - {1} - {2} - {3}"
+            self.logger.info("Running function {0} in - {1} with arguments - {2} - {3}"
                              .format(self.func.__name__, class_name, args, kwargs))
-            return self.func(instance, *args, **kwargs)
+            result = self.func(instance, *args, **kwargs)
+            self.logger.info(result)
+            return result
         except Exception as e:
             self.logger.exception("Exception occurred: {}".format(e))
 

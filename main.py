@@ -1,18 +1,14 @@
+from Tasks.task import ESDTask
+from seasonal_esd import SeasonalESD
 import pandas as pd
-from Helpers.data_helper import DataHelper
-from Helpers.data_plotter import DataPlotter
-from Logger.logger import create_logger
-from test_esd_data import test_esd_data
 
+pd.set_option('display.max_rows', None)
 
-create_logger()
-test_esd_data()
+filename = 'Sensor U106748.csv'
 
-# data_helper = DataHelper()
-# data_plotter = DataPlotter()
-#
-# ATTRIBUTES = ['internaltemp', 'internalrh']
-# filename = 'Sensor U106748.csv'
-# df_ref = pd.read_csv(filename)
-# df = data_helper.pre_process(df_ref, index='Time', pivot_column='Type', value_columns=['Value'])
-# df.info()
+anomaly_ratio = 0.05
+hybrid = True
+alpha = 0.01
+
+esd_task = ESDTask(SeasonalESD)
+esd_task.run_experiment(filename, anomaly_ratio, alpha, hybrid)

@@ -5,40 +5,41 @@ import math
 from scipy import stats
 import matplotlib.pyplot as plt
 from Helpers.data_plotter import DataPlotter
-from Logger.logger import LoggerDecorator
+from Logger.logger import MethodLogger
 
 
 class SeasonalESD:
-    def __init__(self, data, anomaly_ratio, hybrid=False):
+    def __init__(self, data, anomaly_ratio, alpha, hybrid=False):
         assert anomaly_ratio <= 0.49, "anomaly ratio is too high"
 
         self.data_plotter = DataPlotter()
-        self.data = data
-        if isinstance(self.data, pd.DataFrame):
-            self.data = self.data.iloc[:, 0]
+
+        assert isinstance(data, pd.DataFrame), "Data must be a pandas dataframe"
+        self.data = data.iloc[:, 0]
 
         self.nobs = self.data.shape[0]
         self.k = math.ceil(float(self.nobs) * anomaly_ratio)
 
         self.hybrid = hybrid
+        self.alpha = alpha
 
         self.indices = None
         self.anomaly_df = None
 
         self.init = False
 
-    @LoggerDecorator
+    @MethodLogger
     def run(self):
         if not self.init:
-            self.init=True
+            self.init = True
             resid = self._get_updated_resid()
             self.indices = self._esd(resid)
 
-            if self.indices.shape[0]:
+            if not self.indices.empty:
                 self.anomaly_df = self.data.loc[self.indices.values]
-                return self.anomaly_df
+                return self.anomaly_df.sort_index()
             else:
-                return None
+                return pd.Series()
         else:
             print("Already executed Seasonal-ESD algorithm")
 
@@ -64,12 +65,10 @@ class SeasonalESD:
         return indices
 
     def _calc_critical_values(self):
-        alpha = 0.05
-
         critical_values = []
         for i in range(1, self.k+1):
             df = self.nobs-i-1
-            p = 1-alpha/(2*(self.nobs-i+1))
+            p = 1-self.alpha/(2*(self.nobs-i+1))
             t_stat = stats.t.ppf(p, df=df)
 
             numerator = (self.nobs-i)*t_stat
@@ -108,7 +107,7 @@ class SeasonalESD:
     @staticmethod
     def calc_mad(df, median=None):
         if not median:
-            median = df.median
+            median = df.median()
         mad = np.abs(df-median).median()
         return mad
 
@@ -124,24 +123,11 @@ class SeasonalESD:
     def _get_predicted_anomalies_indices(self):
         self.summary_df = self.summary_df.reset_index()
         if self.summary_df['anomaly'].sum() == 0:
-            return None
+            return pd.Series()
         self.summary_df = self.summary_df.reset_index()
         max_idx_anomaly = self.summary_df[self.summary_df['anomaly'] == 1]['level_0'].idxmax(axis=0)
         indices = self.summary_df[:max_idx_anomaly+1]['index']
         return indices
-
-    def plot_anomalies(self):
-        if self.init:
-            if self.anomaly_df.shape[0]:
-                plt.plot(self.data, 'b')
-                x = self.anomaly_df.index.values
-                y = self.anomaly_df.values.reshape(1, -1)[0]
-                plt.scatter(x=x, y=y, c='r')
-                plt.show()
-            else:
-                print("No anomalies according to S-ESD")
-        else:
-            print('Need to call run() first')
 
     def plot_residual_distribution(self):
         resid = self._get_updated_resid()
