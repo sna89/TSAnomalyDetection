@@ -3,7 +3,6 @@ import numpy as np
 from statsmodels.tsa.seasonal import seasonal_decompose
 import math
 from scipy import stats
-import matplotlib.pyplot as plt
 from Helpers.data_plotter import DataPlotter
 from Logger.logger import MethodLogger
 from dataclasses import dataclass

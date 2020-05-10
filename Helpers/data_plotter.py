@@ -41,11 +41,12 @@ class DataPlotter:
         rcParams['figure.figsize'] = width, height
 
     @staticmethod
-    def qqplot(data):
+    def qqplot(data, show=True):
         if isinstance(data, pd.DataFrame):
             data = data.iloc[:, 0]
         sm.qqplot(data, line='45')
-        py.show()
+        if show:
+            py.show()
 
     @staticmethod
     def plot_anomalies(df, df_anomalies):

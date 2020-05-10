@@ -2,10 +2,8 @@ from abc import ABC, abstractmethod
 import pandas as pd
 from Helpers.data_helper import DataHelper
 from Helpers.data_plotter import DataPlotter
-
-from Logger.logger import create_logger
+from Logger.logger import get_logger
 from dataclasses import dataclass
-
 
 
 @dataclass
@@ -22,7 +20,7 @@ class Task(ABC):
 
         self.data_helper = DataHelper()
         self.data_plotter = DataPlotter()
-        create_logger()
+        self.logger = get_logger()
 
         self.data = None
 

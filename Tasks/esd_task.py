@@ -4,6 +4,9 @@ from seasonal_esd import SeasonalESDHyperParameters
 import copy
 from Tasks.task import Task, ExperimentHyperParameters
 import pandas as pd
+from statsmodels.tsa.seasonal import seasonal_decompose
+import matplotlib.pyplot as plt
+from time import time
 
 ATTRIBUTES = ['internaltemp', 'internalrh']
 
@@ -19,6 +22,8 @@ class ESDTask(Task):
 
     @MethodLogger
     def run_experiment(self, filename, model_hyperparameters, test=True):
+        start = time()
+
         self.model_hyperparameters = SeasonalESDHyperParameters(**model_hyperparameters)
 
         self.read_data(filename)
@@ -41,13 +46,18 @@ class ESDTask(Task):
 
             if not filtered_anomalies.empty:
                 self.df_anomalies = pd.concat([self.df_anomalies, filtered_anomalies], axis=0)
-
+                self.logger.info("Filtered anomalies using ESD between {0} - {1}: {2}"
+                                 .format(start_time, end_time, filtered_anomalies))
             start_time, end_time = self.update_train_period(start_time, end_time, last_obs_time)
             df = df.drop(labels=detected_anomalies.index, axis=0)
 
             del df_
 
         self.data_plotter.plot_anomalies(df_raw, self.df_anomalies)
+
+        end = time()
+        self.logger.info("Total runtime of esd task for attribute {0}: {1} minutes"
+                         .format(self.attribute, (end - start)/float(60)))
 
     def pre_process_data(self):
         data = self.data_helper.pre_process(self.data, index='Time', pivot_column='Type', value_columns=['Value'])
@@ -101,3 +111,22 @@ class ESDTask(Task):
         first_obs_time = df_.index.min()
         last_obs_time = df_.index.max()
         return first_obs_time, last_obs_time
+
+    def plot_seasonality_per_period(self, filename, freq='M'):
+        self.read_data(filename)
+        df_raw = self.pre_process_data()
+        periods = self.data_helper.split_data(df_raw, freq)
+        for idx, period in enumerate(periods):
+            result = seasonal_decompose(period, model='additive', period=30)
+            result.plot()
+            median = period.median()
+            self.logger.info("period {} median: {}".format(idx+1, median))
+            resid = pd.Series(data=period - result.seasonal - median, name='resid')
+            resid.plot()
+            plt.savefig('{}_seasonal_decompose.jpg'.format(idx+1))
+
+            plt.clf()
+            self.data_plotter.qqplot(resid, show=False)
+            plt.savefig('{}_qqplot.jpg'.format(idx+1))
+
+
