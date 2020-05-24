@@ -1,27 +1,33 @@
-from Tasks.esd_task import ESDTask
-from seasonal_esd import SeasonalESD
 import pandas as pd
 import sys
 import numpy as np
-from Logger.logger import create_logger
+from Tasks.sign_task import SignTask
+from Pilfer.sign import Sign
+from Tasks.pre_process_task import PreProcessDataTask
+import matplotlib.pyplot as plt
 
-create_logger()
+
 pd.set_option('display.max_rows', None)
 np.set_printoptions(threshold=sys.maxsize)
 
-filename = 'Sensor U106748.csv'
+#Sensor U100256 dehydrator
+filenames = ['Sensor U95696.csv', 'Sensor U100256.csv', 'Sensor U100310.csv', 'Sensor U106748.csv']
 
 experiment_hyperparameters = dict()
-experiment_hyperparameters['train_period_weeks'] = 4
-experiment_hyperparameters['forecast_period_hours'] = 3
+experiment_hyperparameters['train_period_weeks'] = 1
+experiment_hyperparameters['forecast_period_hours'] = 0
 experiment_hyperparameters['retrain_schedule_hours'] = 3
-attribute = 'internalrh'
-esd_task = ESDTask(SeasonalESD, attribute, experiment_hyperparameters)
 
 model_hyperparameters = dict()
-model_hyperparameters['anomaly_ratio'] = 0.05
-model_hyperparameters['hybrid'] = False
-model_hyperparameters['alpha'] = 0.1
+model_hyperparameters['alpha'] = 0.5
 
-esd_task.run_experiment(filename, model_hyperparameters, test=False)
-# esd_task.plot_seasonality_per_period(filename)
+pre_process_task = PreProcessDataTask(*filenames)
+data = pre_process_task.pre_process()
+
+
+
+data.plot()
+plt.show()
+
+sign_task = SignTask(Sign, experiment_hyperparameters)
+sign_task.run_experiment(data, model_hyperparameters, test=False, scale=True)

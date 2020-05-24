@@ -51,9 +51,13 @@ class DataPlotter:
     @staticmethod
     def plot_anomalies(df, df_anomalies):
         if df_anomalies.shape[0]:
-            plt.plot(df, 'b')
-            x = df_anomalies.index.values
-            y = df_anomalies.values.reshape(1, -1)[0]
-            plt.scatter(x=x, y=y, c='r')
-            plt.show()
+            num_of_series = df_anomalies.shape[1]
+            for series in range(num_of_series):
+                col = df_anomalies.columns[series]
+                plt.plot(df[col], 'b')
+                x = df_anomalies.index.values
+                y = df.loc[df_anomalies.index][col].values.reshape(1, -1)
+                plt.scatter(x=x, y=y, c='r')
+                plt.title(col)
+                plt.show()
 
