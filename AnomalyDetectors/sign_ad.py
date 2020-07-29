@@ -1,4 +1,4 @@
-from Tasks.task import Task
+from AnomalyDetectors.ad import AnomalyDetector
 from dataclasses import dataclass
 
 @dataclass
@@ -6,9 +6,9 @@ class SignHyperParameters:
     alpha: float
 
 
-class SignTask(Task):
+class SignAnomalyDetector(AnomalyDetector):
     def __init__(self, model, experiment_hyperparameters, attribute='internaltemp'):
-        super(SignTask, self).__init__(model, experiment_hyperparameters, attribute)
+        super(SignAnomalyDetector, self).__init__(model, experiment_hyperparameters, attribute)
 
     def get_model_hyperparameters(self, model_hyperparameters):
         self.model_hyperparameters = SignHyperParameters(**model_hyperparameters)

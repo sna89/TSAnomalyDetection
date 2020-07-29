@@ -1,14 +1,14 @@
 from dateutil.relativedelta import relativedelta
 from SeasonalESD.seasonal_esd import SeasonalESDHyperParameters
-from Tasks.task import Task, ExperimentHyperParameters
+from AnomalyDetectors.ad import AnomalyDetector, ExperimentHyperParameters
 import pandas as pd
 from statsmodels.tsa.seasonal import seasonal_decompose
 import matplotlib.pyplot as plt
 
 
-class ESDTask(Task):
-    def __init__(self, model, experiment_hyperparameters, attribute='internaltemp'):
-        super(ESDTask, self).__init__(model, experiment_hyperparameters, attribute)
+class ESDAnomalyDetector(AnomalyDetector):
+    def __init__(self, model, experiment_hyperparameters):
+        super(ESDAnomalyDetector, self).__init__(model, experiment_hyperparameters)
 
     def get_model_hyperparameters(self, model_hyperparameters):
         self.model_hyperparameters = SeasonalESDHyperParameters(**model_hyperparameters)
@@ -24,7 +24,7 @@ class ESDTask(Task):
                            self.model_hyperparameters.alpha,
                            self.model_hyperparameters.hybrid)
 
-        return self.run(model)
+        return self.run_model(model)
 
     def filter_anomalies_in_forecast(self, end_time, detected_anomalies):
         forecast_period = end_time + relativedelta(hours=-self.experiment_hyperparameters.forecast_period_hours)
@@ -36,7 +36,7 @@ class ESDTask(Task):
         return filtered[filtered.columns[0]]
 
     def plot_seasonality_per_period(self, data, freq='M'):
-        periods = self.data_helper.split_data(data, freq)
+        periods = self.data_helper.split(data, freq)
         for idx, period in enumerate(periods):
             period = period.iloc[:, 0]
             result = seasonal_decompose(period, model='additive', period=30)

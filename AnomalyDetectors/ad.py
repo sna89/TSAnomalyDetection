@@ -18,8 +18,8 @@ class ExperimentHyperParameters:
     retrain_schedule_hours: int
 
 
-class Task(ABC):
-    def __init__(self, model, experiment_hyperparameters, attribute='internaltemp'):
+class AnomalyDetector(ABC):
+    def __init__(self, model, experiment_hyperparameters):
         assert model is not None, 'Need to pass a class model'
         self.data_helper = DataHelper()
         self.data_plotter = DataPlotter()
@@ -27,13 +27,13 @@ class Task(ABC):
 
         self.df_anomalies = pd.DataFrame()
         self.model = model
-        self.attribute = attribute
+        # self.attribute = attribute
 
         self.experiment_hyperparameters = ExperimentHyperParameters(**experiment_hyperparameters)
         self.model_hyperparameters = None
 
     @staticmethod
-    def run(model):
+    def run_model(model):
         assert hasattr(model, 'run'), 'Model must implement "run" function'
         return model.run()
 
@@ -55,16 +55,16 @@ class Task(ABC):
         return df_raw, last_obs_time, end_time
 
     @MethodLogger
-    def run_experiment(self, data, model_hyperparameters, test=True, scale=False):
+    def run_anomaly_detection(self, data, model_hyperparameters, test=True, scale=False):
         start = time()
 
         self.get_model_hyperparameters(model_hyperparameters)
 
-        first_obs_time, last_obs_time = Task.get_first_and_last_observations(data)
+        first_obs_time, last_obs_time = AnomalyDetector.get_first_and_last_observations(data)
         start_time, end_time = self.init_train_period(first_obs_time)
 
         if test:
-            data, last_obs_time, end_time = Task.test(data, start_time)
+            data, last_obs_time, end_time = AnomalyDetector.test(data, start_time)
 
         raw_data = copy.deepcopy(data)
 
@@ -95,8 +95,8 @@ class Task(ABC):
         self.data_plotter.plot_anomalies(raw_data, self.df_anomalies)
 
         end = time()
-        self.logger.info("Total runtime of esd task for attribute {0}: {1} minutes"
-                         .format(self.attribute, (end - start) / float(60)))
+        self.logger.info("Total runtime of esd task: {0} minutes"
+                         .format((end - start) / float(60)))
 
         return self.df_anomalies
 

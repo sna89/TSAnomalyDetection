@@ -5,6 +5,7 @@ import sys
 
 
 class Sign:
+    # TODO support many metrics per machine. (at the moment only 1 metric per machine).
     def __init__(self, data, alpha):
         self.data = data
         self.alpha = alpha

@@ -1,33 +1,35 @@
+from AnomalyDetectors.ad_factory import AnomalyDetectionFactory
 import pandas as pd
 import sys
 import numpy as np
-from Tasks.sign_task import SignTask
-from Pilfer.sign import Sign
-from Tasks.pre_process_task import PreProcessDataTask
-import matplotlib.pyplot as plt
+from Logger.logger import create_logger
+from Helpers.params_helper import ParamsHelper
+from Helpers.params_validator import ParamsValidator
+from Builders.data_builder import DataBuilder
 
 
-pd.set_option('display.max_rows', None)
-np.set_printoptions(threshold=sys.maxsize)
+if __name__ == "__main__":
+    create_logger()
+    pd.set_option('display.max_rows', None)
+    np.set_printoptions(threshold=sys.maxsize)
 
-#Sensor U100256 dehydrator
-filenames = ['Sensor U95696.csv', 'Sensor U100256.csv', 'Sensor U100310.csv', 'Sensor U106748.csv']
+    test = True
+    if test:
+        try:
+            params_helper = ParamsHelper('esd_params.yml')
+            params_validator = ParamsValidator(params_helper)
 
-experiment_hyperparameters = dict()
-experiment_hyperparameters['train_period_weeks'] = 1
-experiment_hyperparameters['forecast_period_hours'] = 0
-experiment_hyperparameters['retrain_schedule_hours'] = 3
+            metadata = params_helper.get_metadata()
+            data_builder = DataBuilder(metadata)
+            data = data_builder.build()
 
-model_hyperparameters = dict()
-model_hyperparameters['alpha'] = 0.5
+            detector_type = params_helper.get_detector_type()
+            experiment_hyperparameters = params_helper.get_experiment_hyperparams()
+            detector = AnomalyDetectionFactory(detector_type, experiment_hyperparameters).get_detector()
 
-pre_process_task = PreProcessDataTask(*filenames)
-data = pre_process_task.pre_process()
+            model_hyperparameters = params_helper.get_model_hyperparams()
+            df_anomalies = detector.run_anomaly_detection(data, model_hyperparameters, test=True)
+            assert df_anomalies.shape[0] == 464, "Test of esd task failed"
 
-
-
-data.plot()
-plt.show()
-
-sign_task = SignTask(Sign, experiment_hyperparameters)
-sign_task.run_experiment(data, model_hyperparameters, test=False, scale=True)
+        except Exception as e:
+            print(e)

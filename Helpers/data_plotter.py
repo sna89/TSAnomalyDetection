@@ -5,25 +5,18 @@ from pylab import rcParams
 import pandas as pd
 import statsmodels.api as sm
 import pylab as py
+import seaborn as sns
 
 
 class DataPlotter:
     def __init__(self):
-        pass
+        sns.set()
 
     @staticmethod
-    def plot_data_distribution(data, kernel='gaussian'):
-        x = data.values.reshape(-1, 1)
-        int_max_x = int(np.max(x))
-        x_plot = np.linspace(0, int_max_x, int_max_x * 2)[:, np.newaxis]
-
-        kde = KernelDensity(kernel=kernel, bandwidth=0.3).fit(x)
-        logprob = kde.score_samples(x_plot)
-
-        plt.fill_between(x_plot.reshape(1, -1)[0], np.exp(logprob), alpha=0.5)
-        plt.plot(x, np.full_like(x, -0.01), '|k', markeredgewidth=1)
-        plt.xlim(np.min(x), np.max(x))
+    def plot_data_distribution(data):
+        sns.distplot(data)
         plt.show()
+
 
     @classmethod
     def plot_ts_data(cls, data):
