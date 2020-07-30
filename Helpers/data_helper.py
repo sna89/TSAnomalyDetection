@@ -1,6 +1,7 @@
 import pandas as pd
 import copy
 from datetime import timedelta
+from sklearn import preprocessing
 
 
 class DataHelper:
@@ -68,3 +69,21 @@ class DataHelper:
     @staticmethod
     def get_max_idx(df, end):
         return df[df.index <= end].index.max()
+
+    @staticmethod
+    def get_first_and_last_observations(df_):
+        first_obs_time = df_.index.min()
+        last_obs_time = df_.index.max()
+        return first_obs_time, last_obs_time
+
+    @staticmethod
+    def time_in_range(current, start, end):
+        assert start <= end, 'start time must be earlier than end time'
+        return (start <= current.index) & (current.index <= end)
+
+    @staticmethod
+    def scale(data):
+        scaler = preprocessing.StandardScaler()
+        scaler.fit(data)
+        data[data.columns] = scaler.transform(data)
+        return data
