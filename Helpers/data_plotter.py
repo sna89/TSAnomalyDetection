@@ -43,10 +43,11 @@ class DataPlotter:
 
     @staticmethod
     def plot_anomalies(df, df_anomalies):
+        plt.plot(df.iloc[:, 0], 'b')
         if df_anomalies.shape[0]:
             plt.plot(df.iloc[:, 0], 'b')
             x = df_anomalies.index.values
             y = df.loc[df_anomalies.index].values.reshape(1, -1)
             plt.scatter(x=x, y=y, c='r')
-            plt.show()
+        plt.show()
 

@@ -19,7 +19,7 @@ class DataHelper:
         for unique_value in col_unique_values:
             df_ = copy.deepcopy(df[df[pivot_column] == unique_value])
             df_ = DataHelper.drop_duplicated_rows(df_, key_columns=[index, pivot_column])
-            df_[index] = pd.to_datetime(df_[index], format="%d-%m-%y %H:%M")
+            df_[index] = pd.to_datetime(df_[index], format="%d-%m-%y %H:%M", infer_datetime_format=True)
             df_pivoted = df_.pivot(index=index, columns=pivot_column, values=value_columns)
             processed_df = pd.concat([processed_df, df_pivoted], axis=1)
         return processed_df

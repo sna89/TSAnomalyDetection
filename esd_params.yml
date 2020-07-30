@@ -1,17 +1,24 @@
 ---
 detector_type: esd
+test: False
 
 experiment_hyperparameters:
   train_period_weeks: 4
-  forecast_period_hours: 3
-  retrain_schedule_hours: 3
+  forecast_period_hours: 24
+  retrain_schedule_hours: 24
 
 model_hyperparameters:
-  anomaly_ratio: 0.05
-  hybrid: True
+  anomaly_ratio: 0.001
+  hybrid: False
   alpha: 0.1
 
 metadata:
-  - filename: Sensor U106748.csv
-    attribute_name: internaltemp
-    time_column: Time
+#  - filename: Sensor U106748.csv
+#    attribute_name: internaltemp
+#    time_column: Time
+  - filename: 54863.csv
+    attribute_name: temperature
+    time_column: TSMeasurement
+#  - filename: Sensor U106755.csv
+#    attribute_name: internaltemp
+#    time_column: Time

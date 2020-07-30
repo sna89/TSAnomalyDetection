@@ -28,7 +28,9 @@ if __name__ == "__main__":
             model_hyperparameters = params_helper.get_model_hyperparams()
             detector = AnomalyDetectionFactory(detector_type, experiment_hyperparameters, model_hyperparameters).get_detector()
 
-            df_anomalies = detector.run_anomaly_detection(data, test=True)
+            is_test = params_helper.get_test()
+            df_anomalies = detector.run_anomaly_detection(data, is_test)
+
             DataPlotter.plot_anomalies(data, df_anomalies)
         except Exception as e:
             print(e)

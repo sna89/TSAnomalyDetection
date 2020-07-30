@@ -23,3 +23,6 @@ class ParamsHelper:
 
     def get_detector_type(self):
         return self.get_params('detector_type')
+
+    def get_test(self):
+        return self.get_params('test')

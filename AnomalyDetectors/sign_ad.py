@@ -17,5 +17,5 @@ class SignAnomalyDetector(AnomalyDetector):
         model = self.model(df_, self.model_hyperparameters.alpha)
         return self.run(model)
 
-    def filter_anomalies_in_forecast(self, end_time, detected_anomalies):
+    def filter_anomalies_in_forecast(self, forecast_end_time, detected_anomalies):
         return detected_anomalies
