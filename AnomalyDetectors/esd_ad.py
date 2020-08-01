@@ -1,4 +1,4 @@
-from SeasonalESD.seasonal_esd import SeasonalESDHyperParameters
+from Models.SeasonalESD import SeasonalESDHyperParameters
 from AnomalyDetectors.ad import AnomalyDetector
 import pandas as pd
 from statsmodels.tsa.seasonal import seasonal_decompose

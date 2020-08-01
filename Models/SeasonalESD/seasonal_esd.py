@@ -6,7 +6,7 @@ from scipy import stats
 from Helpers.data_plotter import DataPlotter
 from Logger.logger import MethodLogger
 from dataclasses import dataclass
-
+from Models.model import Model
 
 @dataclass
 class SeasonalESDHyperParameters:
@@ -15,14 +15,12 @@ class SeasonalESDHyperParameters:
     alpha: float
 
 
-class SeasonalESD:
+class SeasonalESD(Model):
     def __init__(self, data, anomaly_ratio, alpha, hybrid=False):
+        super(SeasonalESD, self).__init__(data)
         assert anomaly_ratio <= 0.49, "anomaly ratio is too high"
 
         self.data_plotter = DataPlotter()
-
-        assert isinstance(data, pd.DataFrame), "Data must be a pandas dataframe"
-        self.data = data.iloc[:, 0]
 
         self.nobs = self.data.shape[0]
         self.k = math.ceil(float(self.nobs) * anomaly_ratio)
@@ -31,9 +29,6 @@ class SeasonalESD:
         self.alpha = alpha
 
         self.indices = None
-        self.anomaly_df = None
-
-        self.init = False
 
     @MethodLogger
     def run(self):

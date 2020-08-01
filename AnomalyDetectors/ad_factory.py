@@ -1,4 +1,4 @@
-from SeasonalESD.seasonal_esd import SeasonalESD
+from Models.SeasonalESD import SeasonalESD
 from AnomalyDetectors.esd_ad import ESDAnomalyDetector
 
 

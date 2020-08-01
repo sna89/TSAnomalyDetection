@@ -1,4 +1,4 @@
-from SeasonalESD.seasonal_esd import SeasonalESD
+from Models.SeasonalESD.seasonal_esd import SeasonalESD
 import pandas as pd
 from Helpers.data_plotter import DataPlotter
 
