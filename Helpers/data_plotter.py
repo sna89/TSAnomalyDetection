@@ -1,6 +1,4 @@
-from sklearn.neighbors import KernelDensity
 import matplotlib.pyplot as plt
-import numpy as np
 from pylab import rcParams
 import pandas as pd
 import statsmodels.api as sm
@@ -16,7 +14,6 @@ class DataPlotter:
     def plot_data_distribution(data):
         sns.distplot(data)
         plt.show()
-
 
     @classmethod
     def plot_ts_data(cls, data):

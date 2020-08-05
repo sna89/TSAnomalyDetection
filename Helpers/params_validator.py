@@ -11,3 +11,6 @@ class ParamsValidator:
 
         if detector_type == 'esd' and len(metadata) > 1:
             raise Exception('esd is uni-variate model. Got multiple time series in metadata')
+
+        if detector_type == 'arima' and len(metadata) > 1:
+            raise Exception('arima is uni-variate model. Got multiple time series in metadata')

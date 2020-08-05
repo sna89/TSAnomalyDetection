@@ -1,8 +1,15 @@
-from Models.SeasonalESD import SeasonalESDHyperParameters
 from AnomalyDetectors.ad import AnomalyDetector
 import pandas as pd
 from statsmodels.tsa.seasonal import seasonal_decompose
 import matplotlib.pyplot as plt
+from dataclasses import dataclass
+
+
+@dataclass
+class SeasonalESDHyperParameters:
+    anomaly_ratio: float
+    hybrid: bool
+    alpha: float
 
 
 class ESDAnomalyDetector(AnomalyDetector):

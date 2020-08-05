@@ -5,14 +5,10 @@ import math
 from scipy import stats
 from Helpers.data_plotter import DataPlotter
 from Logger.logger import MethodLogger
-from dataclasses import dataclass
 from Models.model import Model
 
-@dataclass
-class SeasonalESDHyperParameters:
-    anomaly_ratio: float
-    hybrid: bool
-    alpha: float
+
+
 
 
 class SeasonalESD(Model):

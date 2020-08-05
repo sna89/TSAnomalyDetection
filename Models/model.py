@@ -1,4 +1,5 @@
 import pandas as pd
+from Logger.logger import get_logger
 
 
 class Model:
@@ -9,6 +10,8 @@ class Model:
 
         self.anomaly_df = None
         self.init = False
+
+        self.logger = get_logger()
 
     def validate_data(self):
         assert isinstance(self.data, pd.DataFrame), "Data must be a pandas dataframe"
