@@ -13,7 +13,7 @@ if __name__ == "__main__":
     np.set_printoptions(threshold=sys.maxsize)
 
     try:
-        params_helper = ParamsHelper('esd_params.yml')
+        params_helper = ParamsHelper('arima_params.yml')
         ParamsValidator(params_helper).validate()
 
         metadata = params_helper.get_metadata()

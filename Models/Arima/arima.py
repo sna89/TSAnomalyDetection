@@ -7,18 +7,24 @@ import numpy as np
 import pandas as pd
 sys.modules['sklearn.externals.six'] = six
 
+SAMPLES_IN_HOUR = 6
+
 
 class Arima(Model):
-    def __init__(self, data, seasonality):
+    def __init__(self, data, seasonality, forecast_periods_hours):
         super(Arima, self).__init__(data)
         self.seasonality = seasonality
         self.fitted_model = None
-        self.train_periods = 6*12
-        self.test_periods = 6
+
+        self.test_periods = forecast_periods_hours * SAMPLES_IN_HOUR
+        self.train_periods = self.data.shape[0] - self.test_periods
+
+        self.train_df = pd.DataFrame(data=self.data.iloc[:self.train_periods],
+                                     index=self.data.iloc[:self.train_periods].index)
 
     def fit(self):
         if not self.init:
-            self.fitted_model = auto_arima(self.data[:self.train_periods], start_p=1, start_q=1,
+            self.fitted_model = auto_arima(self.train_df, start_p=1, start_q=1,
                                          max_p=4, max_q=4, m=self.seasonality,
                                          seasonal=True,
                                          trace=True,
@@ -26,11 +32,14 @@ class Arima(Model):
                                          suppress_warnings=True,
                                          stepwise=True)
 
+            self.logger.info("Chosen Arima model: {}*{}".
+                             format(self.fitted_model.order, self.fitted_model.seasonal_order))
+
             self.init = True
 
-    def get_forecast(self, periods):
+    def get_forecast(self):
         if self.init:
-            forecasts, conf_int = self.fitted_model.predict(periods, return_conf_int=True)
+            forecasts, conf_int = self.fitted_model.predict(self.test_periods, return_conf_int=True)
             return forecasts, conf_int
         else:
             msg = "Need to fit arima model in order to get forecast"

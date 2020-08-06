@@ -47,7 +47,7 @@ class AnomalyDetector(ABC):
         end_time = DataHelper.get_max_idx(df_raw, start_time + relativedelta(weeks=8))
         df_raw = df_raw.loc[start_time:end_time]
         last_obs_time = df_raw.index.max()
-        return df_raw, last_obs_time, end_time
+        return df_raw, last_obs_time
 
     def run_anomaly_detection(self, data, test=True, scale=False):
         self.logger.info("Start running anomaly detection experiment")
@@ -57,7 +57,7 @@ class AnomalyDetector(ABC):
         epoch_start_time, epoch_end_time = self.init_train_period(data, first_obs_time)
 
         if test:
-            data, last_obs_time, epoch_end_time = AnomalyDetector.test(data, epoch_start_time)
+            data, last_obs_time = AnomalyDetector.test(data, first_obs_time)
 
         if scale:
             data = DataHelper.scale(data)
@@ -68,16 +68,21 @@ class AnomalyDetector(ABC):
             self.logger.info('Detecting anomalies between {} to {}'.format(epoch_start_time, epoch_end_time))
 
             df_ = pd.DataFrame(data=copy.deepcopy(df_no_anomalies.loc[epoch_start_time:epoch_end_time]))
-
             detected_anomalies = self.detect_anomalies(df_)
+
             if not detected_anomalies.empty:
-                filtered_anomalies = self.filter_anomalies_in_forecast(epoch_end_time, detected_anomalies)
+                filtered_anomalies = self.filter_anomalies_in_forecast(detected_anomalies, epoch_end_time)
 
                 if not filtered_anomalies.empty:
                     self.logger.info("Filtered anomalies: {}".format(filtered_anomalies))
                     self.df_anomalies = pd.concat([self.df_anomalies, filtered_anomalies], axis=0)
+                else:
+                    self.logger.info("No anomalies detected")
 
                 df_no_anomalies.drop(labels=detected_anomalies.index, axis=0, inplace=True)
+
+            else:
+                self.logger.info("No anomalies detected")
 
             epoch_start_time, epoch_end_time = self.update_train_period(df_no_anomalies,
                                                                         epoch_start_time,
@@ -110,7 +115,7 @@ class AnomalyDetector(ABC):
                                                 + relativedelta(weeks=self.train_period.weeks))
         return epoch_start_time, epoch_end_time
 
-    def filter_anomalies_in_forecast(self, forecast_end_time, detected_anomalies):
+    def filter_anomalies_in_forecast(self, detected_anomalies, forecast_end_time):
         forecast_start_time = forecast_end_time - \
                               relativedelta(hours=self.experiment_hyperparameters.forecast_period_hours)
         filtered = pd.Series(DataHelper.time_in_range(detected_anomalies, forecast_start_time, forecast_end_time),
