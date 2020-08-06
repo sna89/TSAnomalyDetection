@@ -6,18 +6,26 @@ from Logger.logger import get_logger
 from dataclasses import dataclass
 from dateutil.relativedelta import relativedelta
 from time import time
+from typing import Dict
 import copy
 
 
 @dataclass
+class TrainPeriod:
+    hours: int
+    days: int
+    weeks: int
+
+
+@dataclass
 class ExperimentHyperParameters:
-    train_period_weeks: int
+    train_period: Dict
     forecast_period_hours: int
     retrain_schedule_hours: int
 
 
 class AnomalyDetector(ABC):
-    def __init__(self, model, experiment_hyperparameters, model_hyperparameters):
+    def __init__(self, model, experiment_hyperparameters):
         assert model is not None, 'Need to pass a class model'
         self.data_helper = DataHelper()
         self.data_plotter = DataPlotter()
@@ -25,11 +33,9 @@ class AnomalyDetector(ABC):
 
         self.df_anomalies = pd.DataFrame()
         self.model = model
-        # self.attribute = attribute
 
         self.experiment_hyperparameters = ExperimentHyperParameters(**experiment_hyperparameters)
-        self.model_hyperparameters = model_hyperparameters
-        self.extract_model_hyperparameters()
+        self.train_period = TrainPeriod(**self.experiment_hyperparameters.train_period)
 
     @staticmethod
     def run_model(model):
@@ -99,7 +105,9 @@ class AnomalyDetector(ABC):
     def init_train_period(self, data, first_obs_time):
         epoch_start_time = first_obs_time
         epoch_end_time = DataHelper.get_max_idx(data, first_obs_time
-                                          + relativedelta(weeks=self.experiment_hyperparameters.train_period_weeks))
+                                                + relativedelta(hours=self.train_period.hours)
+                                                + relativedelta(days=self.train_period.days)
+                                                + relativedelta(weeks=self.train_period.weeks))
         return epoch_start_time, epoch_end_time
 
     def filter_anomalies_in_forecast(self, forecast_end_time, detected_anomalies):
@@ -112,8 +120,6 @@ class AnomalyDetector(ABC):
         filtered = filtered[filtered['is_filtered'] == True]
         return filtered
 
-    def extract_model_hyperparameters(self):
-        pass
-
+    @abstractmethod
     def detect_anomalies(self, df_):
         pass

@@ -8,9 +8,6 @@ from Logger.logger import MethodLogger
 from Models.model import Model
 
 
-
-
-
 class SeasonalESD(Model):
     def __init__(self, data, anomaly_ratio, alpha, hybrid=False):
         super(SeasonalESD, self).__init__(data)

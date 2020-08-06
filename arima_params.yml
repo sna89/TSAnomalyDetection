@@ -3,7 +3,10 @@ detector_type: arima
 test: True
 
 experiment_hyperparameters:
-  train_period_weeks: 1
+  train_period:
+    hours: 3
+    days: 0
+    weeks: 0
   forecast_period_hours: 12
   retrain_schedule_hours: 12
 

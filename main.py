@@ -13,20 +13,20 @@ if __name__ == "__main__":
     np.set_printoptions(threshold=sys.maxsize)
 
     try:
-        params_helper = ParamsHelper('arima_params.yml')
-        params_validator = ParamsValidator(params_helper)
+        params_helper = ParamsHelper('esd_params.yml')
+        ParamsValidator(params_helper).validate()
 
         metadata = params_helper.get_metadata()
         data_builder = DataBuilder(metadata)
         data = data_builder.build()
 
-        detector_type = params_helper.get_detector_type()
+        detector_name = params_helper.get_detector_name()
         experiment_hyperparameters = params_helper.get_experiment_hyperparams()
         model_hyperparameters = params_helper.get_model_hyperparams()
-        detector = AnomalyDetectionFactory(detector_type, experiment_hyperparameters, model_hyperparameters).get_detector()
+        detector = AnomalyDetectionFactory(detector_name, experiment_hyperparameters, model_hyperparameters).get_detector()
 
         is_test = params_helper.get_test()
-        detector.detect_anomalies(data)
+        detector.run_anomaly_detection(data)
 
 
         # DataPlotter.plot_anomalies(data, df_anomalies)

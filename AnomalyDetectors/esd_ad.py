@@ -14,10 +14,8 @@ class SeasonalESDHyperParameters:
 
 class ESDAnomalyDetector(AnomalyDetector):
     def __init__(self, model, experiment_hyperparameters, model_hyperparameters):
-        super(ESDAnomalyDetector, self).__init__(model, experiment_hyperparameters, model_hyperparameters)
-
-    def extract_model_hyperparameters(self):
-        self.esd_hyperparameters = SeasonalESDHyperParameters(**self.model_hyperparameters)
+        super(ESDAnomalyDetector, self).__init__(model, experiment_hyperparameters)
+        self.esd_hyperparameters = SeasonalESDHyperParameters(**model_hyperparameters)
 
     def detect_anomalies(self, df_):
         model = self.model(df_,

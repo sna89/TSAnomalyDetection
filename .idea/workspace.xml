@@ -2,16 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="27da9a7e-1324-4c59-8a3a-c97de520e9de" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/AnomalyDetectors/arima_ad.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/arima_params.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnomalyDetectors/ad.py" beforeDir="false" afterPath="$PROJECT_DIR$/AnomalyDetectors/ad.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AnomalyDetectors/ad_factory.py" beforeDir="false" afterPath="$PROJECT_DIR$/AnomalyDetectors/ad_factory.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnomalyDetectors/arima_ad.py" beforeDir="false" afterPath="$PROJECT_DIR$/AnomalyDetectors/arima_ad.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AnomalyDetectors/esd_ad.py" beforeDir="false" afterPath="$PROJECT_DIR$/AnomalyDetectors/esd_ad.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Helpers/data_plotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helpers/data_plotter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Helpers/params_helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helpers/params_helper.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Helpers/params_validator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helpers/params_validator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Arima/arima.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Arima/arima.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Models/SeasonalESD/seasonal_esd.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/SeasonalESD/seasonal_esd.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Models/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/arima_params.yml" beforeDir="false" afterPath="$PROJECT_DIR$/arima_params.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/esd_params.yml" beforeDir="false" afterPath="$PROJECT_DIR$/esd_params.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -123,42 +123,56 @@
         <counts>
           <entry key="Python Console" value="77" />
           <entry key="dummy" value="65" />
-          <entry key="py" value="10062" />
-          <entry key="yml" value="233" />
+          <entry key="py" value="11701" />
+          <entry key="yml" value="285" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="PLAIN_TEXT" value="65" />
-          <entry key="Python" value="10139" />
-          <entry key="YAML" value="233" />
+          <entry key="Python" value="11778" />
+          <entry key="YAML" value="285" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="csv" value="2" />
           <entry key="log" value="8" />
-          <entry key="py" value="118" />
-          <entry key="yml" value="7" />
+          <entry key="py" value="123" />
+          <entry key="yml" value="8" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="Log" value="8" />
           <entry key="PLAIN_TEXT" value="2" />
-          <entry key="Python" value="118" />
-          <entry key="YAML" value="7" />
+          <entry key="Python" value="123" />
+          <entry key="YAML" value="8" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Models/model.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="420">
+              <caret line="21" column="12" selection-start-line="21" selection-start-column="8" selection-end-line="21" selection-end-column="12" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
+                <marker date="1596711760133" expanded="true" signature="112:117" ph="..." />
+                <marker date="1596711760133" expanded="true" signature="142:332" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="22" />
+            <state relative-caret-position="200">
+              <caret line="16" column="18" lean-forward="true" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
               <folding>
                 <element signature="e#0#63#0" expanded="true" />
               </folding>
@@ -167,41 +181,60 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Helpers/params_validator.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="180">
+              <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/arima_params.yml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="200">
+              <caret line="10" column="28" lean-forward="true" selection-start-line="10" selection-start-column="28" selection-end-line="10" selection-end-column="28" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/esd_params.yml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="400">
+              <caret line="20" column="16" selection-start-line="20" selection-start-column="5" selection-end-line="20" selection-end-column="16" />
+              <folding>
+                <marker date="1596708618564" expanded="true" signature="375:438" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Helpers/params_helper.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="340">
+              <caret line="17" column="8" selection-start-line="17" selection-start-column="8" selection-end-line="17" selection-end-column="8" />
+              <folding>
+                <marker date="1596708444775" expanded="true" signature="33:38" ph="..." />
+                <marker date="1596708444775" expanded="true" signature="214:379" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/AnomalyDetectors/ad.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="835">
-              <caret line="117" column="8" selection-start-line="117" selection-start-column="8" selection-end-line="117" selection-end-column="8" />
+            <state relative-caret-position="281">
+              <caret line="110" column="47" lean-forward="true" selection-start-line="110" selection-start-column="47" selection-end-line="110" selection-end-column="47" />
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
-                <marker date="1596119385856" expanded="true" signature="343:437" ph="..." />
-                <marker date="1596119385856" expanded="true" signature="464:469" ph="..." />
-                <marker date="1596119385856" expanded="true" signature="1082:1186" ph="..." />
-                <marker date="1596119385856" expanded="true" signature="1465:1466" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/AnomalyDetectors/arima_ad.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="320">
-              <caret line="16" column="34" selection-start-line="16" selection-start-column="34" selection-end-line="16" selection-end-column="34" />
-              <folding>
-                <element signature="e#0#47#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Models/Arima/arima.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="62">
-              <caret line="11" column="29" selection-start-line="11" selection-start-column="29" selection-end-line="11" selection-end-column="29" />
-              <folding>
-                <element signature="e#0#10#0" expanded="true" />
-                <marker date="1596628823386" expanded="true" signature="1302:1307" ph="..." />
+                <marker date="1596709489736" expanded="true" signature="443:532" ph="..." />
+                <marker date="1596709489736" expanded="true" signature="531:532" ph="..." />
+                <marker date="1596709489736" expanded="true" signature="559:564" ph="..." />
+                <marker date="1596709489736" expanded="true" signature="1101:1205" ph="..." />
+                <marker date="1596709489736" expanded="true" signature="1484:1485" ph="..." />
               </folding>
             </state>
           </provider>
@@ -210,21 +243,12 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Models/SeasonalESD/seasonal_esd.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-100">
-              <caret line="14" column="48" selection-start-line="14" selection-start-column="22" selection-end-line="14" selection-end-column="48" />
+            <state relative-caret-position="180">
+              <caret line="9" selection-start-line="9" selection-end-line="9" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
-                <marker date="1596612485059" expanded="true" signature="248:251" ph="..." />
+                <marker date="1596712229155" expanded="true" signature="247:248" ph="..." />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Helpers/data_plotter.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="18" selection-end-line="1" />
             </state>
           </provider>
         </entry>
@@ -232,8 +256,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/AnomalyDetectors/ad_factory.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="17" column="30" selection-start-line="17" selection-start-column="30" selection-end-line="17" selection-end-column="30" />
+            <state relative-caret-position="300">
+              <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
               <folding>
                 <element signature="e#0#55#0" expanded="true" />
               </folding>
@@ -241,23 +265,13 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/AnomalyDetectors/esd_ad.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="274">
-              <caret line="21" column="34" selection-start-line="21" selection-start-column="34" selection-end-line="21" selection-end-column="34" />
+            <state>
               <folding>
                 <element signature="e#0#47#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/arima_params.yml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="100">
-              <caret line="5" column="23" selection-start-line="5" selection-start-column="23" selection-end-line="5" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -286,6 +300,7 @@
       <find>SeasonalESDHyperParameters</find>
       <find>log</find>
       <find>experiment_hyperparameters</find>
+      <find>train_period</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -322,36 +337,36 @@
         <option value="$PROJECT_DIR$/Obsolete/bocd_main.py" />
         <option value="$PROJECT_DIR$/Obsolete/main_sign.py" />
         <option value="$PROJECT_DIR$/main_lstm_autoencoder_keras.py" />
-        <option value="$PROJECT_DIR$/Helpers/params_helper.py" />
-        <option value="$PROJECT_DIR$/AnomalyDetectors/ad.py" />
         <option value="$PROJECT_DIR$/Helpers/data_helper.py" />
-        <option value="$PROJECT_DIR$/esd_params.yml" />
         <option value="$PROJECT_DIR$/SeasonalESD/seasonal_esd.py" />
         <option value="$PROJECT_DIR$/Arima/arima.py" />
         <option value="$PROJECT_DIR$/Models/SeasonalESD/test_esd_data.py" />
         <option value="$PROJECT_DIR$/../../../../../../../Documents/venv/AnomalyDetection/Lib/site-packages/pyramid/arima/auto.py" />
         <option value="$PROJECT_DIR$/Builders/data_builder.py" />
         <option value="$PROJECT_DIR$/AnomalyDetectors/sarima_ad.py" />
-        <option value="$PROJECT_DIR$/Helpers/params_validator.py" />
-        <option value="$PROJECT_DIR$/AnomalyDetectors/ad_factory.py" />
         <option value="$PROJECT_DIR$/arima.py" />
-        <option value="$PROJECT_DIR$/Models/SeasonalESD/seasonal_esd.py" />
-        <option value="$PROJECT_DIR$/AnomalyDetectors/esd_ad.py" />
         <option value="$PROJECT_DIR$/Helpers/data_plotter.py" />
         <option value="$PROJECT_DIR$/Logger/logger.py" />
-        <option value="$PROJECT_DIR$/Models/model.py" />
-        <option value="$PROJECT_DIR$/arima_params.yml" />
         <option value="$PROJECT_DIR$/Models/Arima/arima.py" />
-        <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/AnomalyDetectors/ad_factory.py" />
+        <option value="$PROJECT_DIR$/AnomalyDetectors/esd_ad.py" />
         <option value="$PROJECT_DIR$/AnomalyDetectors/arima_ad.py" />
+        <option value="$PROJECT_DIR$/Helpers/params_helper.py" />
+        <option value="$PROJECT_DIR$/esd_params.yml" />
+        <option value="$PROJECT_DIR$/AnomalyDetectors/ad.py" />
+        <option value="$PROJECT_DIR$/arima_params.yml" />
+        <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/Helpers/params_validator.py" />
+        <option value="$PROJECT_DIR$/Models/SeasonalESD/seasonal_esd.py" />
+        <option value="$PROJECT_DIR$/Models/model.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-1691" />
-    <option name="y" value="22" />
-    <option name="width" value="1440" />
-    <option name="height" value="780" />
+    <option name="x" value="-1928" />
+    <option name="y" value="-129" />
+    <option name="width" value="1936" />
+    <option name="height" value="1056" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -391,29 +406,12 @@
             <path>
               <item name="TSAnomalyDetection" type="b2602c69:ProjectViewProjectNode" />
               <item name="TSAnomalyDetection" type="462c0819:PsiDirectoryNode" />
-              <item name="Helpers" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="TSAnomalyDetection" type="b2602c69:ProjectViewProjectNode" />
-              <item name="TSAnomalyDetection" type="462c0819:PsiDirectoryNode" />
-              <item name="Logger" type="462c0819:PsiDirectoryNode" />
+              <item name="logs" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="TSAnomalyDetection" type="b2602c69:ProjectViewProjectNode" />
               <item name="TSAnomalyDetection" type="462c0819:PsiDirectoryNode" />
               <item name="Models" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="TSAnomalyDetection" type="b2602c69:ProjectViewProjectNode" />
-              <item name="TSAnomalyDetection" type="462c0819:PsiDirectoryNode" />
-              <item name="Models" type="462c0819:PsiDirectoryNode" />
-              <item name="Arima" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="TSAnomalyDetection" type="b2602c69:ProjectViewProjectNode" />
-              <item name="TSAnomalyDetection" type="462c0819:PsiDirectoryNode" />
-              <item name="Models" type="462c0819:PsiDirectoryNode" />
-              <item name="SeasonalESD" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -618,21 +616,22 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-1928" y="-129" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4992785" visible="true" weight="0.10273973" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4992785" visible="true" weight="0.10273973" />
       <window_info id="Structure" order="1" sideWeight="0.5007215" side_tool="true" weight="0.05584826" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3286334" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49894625" weight="0.3557484" />
-      <window_info anchor="bottom" id="TODO" order="3" weight="0.329718" />
-      <window_info anchor="bottom" id="Debug" order="4" weight="0.3396861" />
+      <window_info anchor="bottom" id="TODO" order="3" weight="0.21258135" />
+      <window_info anchor="bottom" id="Debug" order="4" visible="true" weight="0.2527115" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
       <window_info anchor="bottom" id="Docker" order="7" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.329718" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50105375" side_tool="true" weight="0.27006507" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="10" sideWeight="0.49947312" visible="true" weight="0.2462039" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49947312" weight="0.2462039" />
       <window_info anchor="bottom" id="Python Console" order="11" weight="0.329718" />
       <window_info anchor="bottom" id="Messages" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -685,19 +684,14 @@
           <option name="timeStamp" value="246" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Models/SeasonalESD/seasonal_esd.py</url>
-          <line>65</line>
-          <option name="timeStamp" value="247" />
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>28</line>
+          <option name="timeStamp" value="261" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Builders/data_builder.py</url>
-          <line>57</line>
-          <option name="timeStamp" value="252" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/AnomalyDetectors/esd_ad.py</url>
-          <line>9</line>
-          <option name="timeStamp" value="254" />
+          <url>file://$PROJECT_DIR$/Helpers/params_validator.py</url>
+          <line>25</line>
+          <option name="timeStamp" value="267" />
         </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
@@ -744,47 +738,47 @@
     </expressions>
     <expressions id="evaluateExpression">
       <expression>
-        <expression-string>resid</expression-string>
+        <expression-string>'alpha' in model_hyperparameters_keys</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>statistic_df</expression-string>
+        <expression-string>'hybrid' in model_hyperparameters_keys</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>largest_df.index[iter - 1]</expression-string>
+        <expression-string>self.model_hyperparameters.keys()</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>largest_df.index[iter]</expression-string>
+        <expression-string>epoch_start_time</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>largest_df</expression-string>
+        <expression-string>epoch_end_time</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>largest_df.iloc[iter - 1].index</expression-string>
+        <expression-string>self.train_period.weeks</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>largest_df.iloc[iter - 1]</expression-string>
+        <expression-string>self.train_period.hours</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>statistic.nlargest(5, keep='first')</expression-string>
+        <expression-string>experiment_hyperparameters</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>statistic.nlargest(iter, keep='first')</expression-string>
+        <expression-string>self.experiment_hyperparameters</expression-string>
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
@@ -952,43 +946,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Builders/data_builder.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1120">
-          <caret line="59" selection-start-line="59" selection-end-line="59" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-            <marker date="1596469057908" expanded="true" signature="237:242" ph="..." />
-            <marker date="1596469057908" expanded="true" signature="643:971" ph="..." />
-            <marker date="1596469057908" expanded="true" signature="1020:2326" ph="..." />
-            <marker date="1596469057908" expanded="true" signature="1020:2328" ph="..." />
-            <marker date="1596469057908" expanded="true" signature="2380:2381" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Models/SeasonalESD/test_esd_data.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="140">
           <caret line="9" selection-start-line="9" selection-end-line="10" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Helpers/params_helper.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="24" column="47" selection-start-line="24" selection-start-column="47" selection-end-line="24" selection-end-column="47" />
-          <folding>
-            <marker date="1596115521752" expanded="true" signature="33:38" ph="..." />
-            <marker date="1596115521752" expanded="true" signature="214:333" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Helpers/params_validator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="15" column="53" lean-forward="true" selection-start-line="15" selection-start-column="53" selection-end-line="15" selection-end-column="53" />
         </state>
       </provider>
     </entry>
@@ -1020,28 +981,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Models/model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="380">
-          <caret line="19" column="15" selection-start-line="19" selection-start-column="15" selection-end-line="19" selection-end-column="15" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-            <marker date="1596617137947" expanded="true" signature="71:76" ph="..." />
-            <marker date="1596617137947" expanded="true" signature="101:291" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/esd_params.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="24" lean-forward="true" selection-start-line="24" selection-end-line="24" />
-          <folding>
-            <marker date="1596123546296" expanded="true" signature="346:409" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/logs/log_05082020102840.log">
       <provider selected="true" editor-type-id="LogFileEditorProvider" />
     </entry>
@@ -1059,17 +998,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Models/SeasonalESD/seasonal_esd.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-100">
-          <caret line="14" column="48" selection-start-line="14" selection-start-column="22" selection-end-line="14" selection-end-column="48" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-            <marker date="1596612485059" expanded="true" signature="248:251" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Models/Arima/arima.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="62">
@@ -1081,63 +1009,130 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/arima_params.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
-          <caret line="5" column="23" selection-start-line="5" selection-start-column="23" selection-end-line="5" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="22" />
-          <folding>
-            <element signature="e#0#63#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AnomalyDetectors/ad_factory.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="17" column="30" selection-start-line="17" selection-start-column="30" selection-end-line="17" selection-end-column="30" />
-          <folding>
-            <element signature="e#0#55#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/AnomalyDetectors/arima_ad.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="16" column="34" selection-start-line="16" selection-start-column="34" selection-end-line="16" selection-end-column="34" />
+        <state relative-caret-position="280">
+          <caret line="14" column="22" selection-start-line="14" selection-start-column="22" selection-end-line="14" selection-end-column="22" />
           <folding>
             <element signature="e#0#47#0" expanded="true" />
+            <marker date="1596704414593" expanded="true" signature="441:445" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Builders/data_builder.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="227">
+          <caret line="44" column="13" selection-start-line="44" selection-start-column="13" selection-end-line="44" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
+            <marker date="1596469057908" expanded="true" signature="237:242" ph="..." />
+            <marker date="1596469057908" expanded="true" signature="643:971" ph="..." />
+            <marker date="1596469057908" expanded="true" signature="1020:2326" ph="..." />
+            <marker date="1596469057908" expanded="true" signature="1020:2328" ph="..." />
+            <marker date="1596469057908" expanded="true" signature="2380:2381" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/arima_params.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="10" column="28" lean-forward="true" selection-start-line="10" selection-start-column="28" selection-end-line="10" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Helpers/params_helper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="17" column="8" selection-start-line="17" selection-start-column="8" selection-end-line="17" selection-end-column="8" />
+          <folding>
+            <marker date="1596708444775" expanded="true" signature="33:38" ph="..." />
+            <marker date="1596708444775" expanded="true" signature="214:379" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/AnomalyDetectors/ad.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="835">
-          <caret line="117" column="8" selection-start-line="117" selection-start-column="8" selection-end-line="117" selection-end-column="8" />
+        <state relative-caret-position="281">
+          <caret line="110" column="47" lean-forward="true" selection-start-line="110" selection-start-column="47" selection-end-line="110" selection-end-column="47" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
-            <marker date="1596119385856" expanded="true" signature="343:437" ph="..." />
-            <marker date="1596119385856" expanded="true" signature="464:469" ph="..." />
-            <marker date="1596119385856" expanded="true" signature="1082:1186" ph="..." />
-            <marker date="1596119385856" expanded="true" signature="1465:1466" ph="..." />
+            <marker date="1596709489736" expanded="true" signature="443:532" ph="..." />
+            <marker date="1596709489736" expanded="true" signature="531:532" ph="..." />
+            <marker date="1596709489736" expanded="true" signature="559:564" ph="..." />
+            <marker date="1596709489736" expanded="true" signature="1101:1205" ph="..." />
+            <marker date="1596709489736" expanded="true" signature="1484:1485" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Models/SeasonalESD/seasonal_esd.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="9" selection-start-line="9" selection-end-line="9" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <marker date="1596712229155" expanded="true" signature="247:248" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AnomalyDetectors/ad_factory.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
+          <folding>
+            <element signature="e#0#55#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/AnomalyDetectors/esd_ad.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="274">
-          <caret line="21" column="34" selection-start-line="21" selection-start-column="34" selection-end-line="21" selection-end-column="34" />
+        <state>
           <folding>
             <element signature="e#0#47#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="16" column="18" lean-forward="true" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
+          <folding>
+            <element signature="e#0#63#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Helpers/params_validator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/esd_params.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="400">
+          <caret line="20" column="16" selection-start-line="20" selection-start-column="5" selection-end-line="20" selection-end-column="16" />
+          <folding>
+            <marker date="1596708618564" expanded="true" signature="375:438" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Models/model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="21" column="12" selection-start-line="21" selection-start-column="8" selection-end-line="21" selection-end-column="12" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <marker date="1596711760133" expanded="true" signature="112:117" ph="..." />
+            <marker date="1596711760133" expanded="true" signature="142:332" ph="..." />
           </folding>
         </state>
       </provider>

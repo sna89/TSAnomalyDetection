@@ -1,8 +1,9 @@
 import pandas as pd
 from Logger.logger import get_logger
+from abc import ABC, abstractmethod
 
 
-class Model:
+class Model(ABC):
     def __init__(self, data):
         self.data = data
         self.validate_data()
@@ -16,5 +17,6 @@ class Model:
     def validate_data(self):
         assert isinstance(self.data, pd.DataFrame), "Data must be a pandas dataframe"
 
+    @abstractmethod
     def run(self):
-        raise NotImplementedError
+        pass

@@ -9,8 +9,8 @@ class ParamsHelper:
     def get_params(self, param_name):
         try:
             return self.params_dict[param_name]
-        except ValueError as e:
-            raise e
+        except Exception as e:
+            raise ValueError("cannot find parameter {}".format(e))
 
     def get_experiment_hyperparams(self):
         return self.get_params('experiment_hyperparameters')
@@ -21,8 +21,8 @@ class ParamsHelper:
     def get_metadata(self):
         return self.get_params('metadata')
 
-    def get_detector_type(self):
-        return self.get_params('detector_type')
+    def get_detector_name(self):
+        return self.get_params('detector_name')
 
     def get_test(self):
         return self.get_params('test')

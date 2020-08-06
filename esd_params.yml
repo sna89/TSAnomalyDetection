@@ -1,9 +1,12 @@
 ---
-detector_type: esd
-test: False
+detector_name: esd
+test: True
 
 experiment_hyperparameters:
-  train_period_weeks: 4
+  train_period:
+    hours: 0
+    days: 0
+    weeks: 4
   forecast_period_hours: 24
   retrain_schedule_hours: 24
 
