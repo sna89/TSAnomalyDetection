@@ -1,6 +1,13 @@
 ---
-detector_name: esd
-test: True
+detector_name: lstm_ae
+
+preprocess_data_params:
+  test: True
+  test_period:
+    hours: 0
+    days: 0
+    weeks: 8
+  scale: True
 
 experiment_hyperparameters:
   train_period:
@@ -11,9 +18,19 @@ experiment_hyperparameters:
   retrain_schedule_hours: 24
 
 model_hyperparameters:
-  anomaly_ratio: 0.001
-  hybrid: False
-  alpha: 0.1
+  esd:
+    anomaly_ratio: 0.001
+    hybrid: False
+    alpha: 0.05
+
+  arima:
+    seasonality: 6
+
+  lstm_ae:
+    hidden_layer: 128
+    dropout: 0.1
+    batch_size: 16
+    threshold: 99
 
 metadata:
 #  - filename: Sensor U106748.csv

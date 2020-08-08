@@ -21,6 +21,8 @@ class Arima(Model):
 
         self.train_df = pd.DataFrame(data=self.data.iloc[:self.train_periods],
                                      index=self.data.iloc[:self.train_periods].index)
+        self.test_df = pd.DataFrame(data=self.data.iloc[self.train_periods:],
+                                     index=self.data.iloc[self.train_periods:].index)
 
     def fit(self):
         if not self.init:
@@ -76,4 +78,20 @@ class Arima(Model):
 
         return summary_df[summary_df['is_anomaly'] == 1]
 
+    def plot_forecast(self):
+        if self.init:
+            self.show_model_summary()
+            forecasts, conf_int = self.get_forecast()
 
+            plt.plot(self.train_df.index, self.train_df.values, alpha=0.75)
+            plt.plot(self.test_df.index, forecasts, alpha=0.75)  # Forecasts
+            plt.scatter(self.test_df.index, self.test_df.values,
+                        alpha=0.4, marker='x')  # Test data
+            plt.fill_between(self.test_df.index,
+                             conf_int[:, 0], conf_int[:, 1],
+                             alpha=0.1, color='b')
+
+            plt.show()
+        else:
+            msg = "Need to fit arima model in order to plot forecast"
+            self.logger.debug(msg)

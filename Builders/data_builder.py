@@ -1,7 +1,16 @@
 from typing import List
 import pandas as pd
-from Helpers.data_helper import DataHelper
+from Helpers.data_helper import DataHelper, Period
 from dataclasses import dataclass
+from typing import Dict
+from abc import ABC, abstractmethod
+
+
+@dataclass
+class PreprocessDataParams:
+    test: bool
+    test_period: Dict
+    scale: bool
 
 
 @dataclass
@@ -12,21 +21,33 @@ class FileMetadata:
 
 
 class DataBuilder:
-    def __init__(self, metadata: List):
+    def __init__(self, metadata: List, preprocess_data_params):
         self.metadata = metadata
+        self.preprocess_data_params = PreprocessDataParams(**preprocess_data_params)
 
     def build(self):
+        data_builder = None
+
         if len(self.metadata) == 1:
-            data_builder = SingleFileDataBuilder(self.metadata)
-            return data_builder.build()
+            data_builder = SingleFileDataBuilder(self.metadata, self.preprocess_data_params)
+
         if len(self.metadata) > 1:
-            data_builder = MultipleFilesDataBuilder(self.metadata)
-            return data_builder.build()
+            data_builder = MultipleFilesDataBuilder(self.metadata, self.preprocess_data_params)
+
+        data = data_builder.build()
+        scaler = None
+
+        if self.preprocess_data_params.scale:
+            data, scaler = DataHelper.scale(data)
+
+        return data, scaler
 
 
-class AbstractDataBuilder:
-    def __init__(self, metadata):
+class AbstractDataBuilder(ABC):
+    def __init__(self, metadata, preprocess_data_params):
         self.metadata = metadata
+        self.preprocess_data_params = preprocess_data_params
+        self.test_period = Period(**self.preprocess_data_params.test_period)
         self.new_time_column = 'sampletime'
 
     @staticmethod
@@ -36,13 +57,15 @@ class AbstractDataBuilder:
     def get_file_metadata(self, pos):
         return self.metadata[pos]
 
+    @abstractmethod
     def build(self):
-        raise NotImplementedError
+        return
 
 
 class SingleFileDataBuilder(AbstractDataBuilder):
-    def __init__(self, metadata):
-        super().__init__(metadata)
+    def __init__(self, metadata, preprocess_data_params):
+        super(SingleFileDataBuilder, self).__init__(metadata, preprocess_data_params)
+
         if isinstance(metadata, list):
             self.file_metadata = FileMetadata(**self.get_file_metadata(0))
 
@@ -71,12 +94,16 @@ class SingleFileDataBuilder(AbstractDataBuilder):
                     inplace=True)
         data.rename_axis(self.new_time_column, inplace=True)
         data.index = pd.to_datetime(data.index)
+
+        if self.preprocess_data_params.test:
+            data = DataHelper.extract_test_period(data, self.test_period)
+
         return data
 
 
 class MultipleFilesDataBuilder(AbstractDataBuilder):
-    def __init__(self, metadata: List):
-        super().__init__(metadata)
+    def __init__(self, metadata, preprocess_data_params):
+        super(MultipleFilesDataBuilder, self).__init__(metadata, preprocess_data_params)
 
     def build(self):
         dfs = [SingleFileDataBuilder(file_metadata).build() for file_metadata in self.metadata]

@@ -16,7 +16,10 @@ class ParamsHelper:
         return self.get_params('experiment_hyperparameters')
 
     def get_model_hyperparams(self):
-        return self.get_params('model_hyperparameters')
+        detector = self.get_detector_name()
+        model_hyperparameters_dict = self.get_params('model_hyperparameters')
+        model_hyperparameters = model_hyperparameters_dict[detector]
+        return model_hyperparameters
 
     def get_metadata(self):
         return self.get_params('metadata')
@@ -24,5 +27,5 @@ class ParamsHelper:
     def get_detector_name(self):
         return self.get_params('detector_name')
 
-    def get_test(self):
-        return self.get_params('test')
+    def get_preprocess_data_params(self):
+        return self.get_params('preprocess_data_params')

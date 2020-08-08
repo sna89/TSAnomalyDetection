@@ -2,6 +2,15 @@ import pandas as pd
 import copy
 from datetime import timedelta
 from sklearn import preprocessing
+from dateutil.relativedelta import relativedelta
+from dataclasses import dataclass
+
+
+@dataclass
+class Period:
+    hours: int
+    days: int
+    weeks: int
 
 
 class DataHelper:
@@ -86,4 +95,19 @@ class DataHelper:
         scaler = preprocessing.StandardScaler()
         scaler.fit(data)
         data[data.columns] = scaler.transform(data)
-        return data
+        return data, scaler
+
+    @staticmethod
+    def extract_test_period(data, test_period):
+        start_time, _ = DataHelper.get_first_and_last_observations(data)
+        end_time = DataHelper.get_max_idx(data, DataHelper.relative_delta_time(start_time,
+                                                                    hours=test_period.hours,
+                                                                    days=test_period.days,
+                                                                    weeks=test_period.weeks))
+
+        df_test = data.loc[start_time:end_time]
+        return df_test
+
+    @staticmethod
+    def relative_delta_time(current_time, hours, days, weeks):
+        return current_time + relativedelta(hours=hours) + relativedelta(days=days) + relativedelta(weeks=weeks)

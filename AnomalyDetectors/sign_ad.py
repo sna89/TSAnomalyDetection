@@ -1,6 +1,7 @@
 from AnomalyDetectors.ad import AnomalyDetector
 from dataclasses import dataclass
 
+
 @dataclass
 class SignHyperParameters:
     alpha: float

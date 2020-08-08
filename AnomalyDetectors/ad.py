@@ -1,20 +1,13 @@
 from abc import ABC, abstractmethod
 import pandas as pd
-from Helpers.data_helper import DataHelper
+from Helpers.data_helper import DataHelper, Period
 from Helpers.data_plotter import DataPlotter
 from Logger.logger import get_logger
 from dataclasses import dataclass
-from dateutil.relativedelta import relativedelta
 from time import time
 from typing import Dict
 import copy
-
-
-@dataclass
-class TrainPeriod:
-    hours: int
-    days: int
-    weeks: int
+from dateutil.relativedelta import relativedelta
 
 
 @dataclass
@@ -35,32 +28,19 @@ class AnomalyDetector(ABC):
         self.model = model
 
         self.experiment_hyperparameters = ExperimentHyperParameters(**experiment_hyperparameters)
-        self.train_period = TrainPeriod(**self.experiment_hyperparameters.train_period)
+        self.train_period = Period(**self.experiment_hyperparameters.train_period)
 
     @staticmethod
     def run_model(model):
         assert hasattr(model, 'run'), 'Model must implement "run" function'
         return model.run()
 
-    @staticmethod
-    def test(df_raw, start_time):
-        end_time = DataHelper.get_max_idx(df_raw, start_time + relativedelta(weeks=8))
-        df_raw = df_raw.loc[start_time:end_time]
-        last_obs_time = df_raw.index.max()
-        return df_raw, last_obs_time
-
-    def run_anomaly_detection(self, data, test=True, scale=False):
+    def run_anomaly_detection(self, data):
         self.logger.info("Start running anomaly detection experiment")
         start = time()
 
         first_obs_time, last_obs_time = DataHelper.get_first_and_last_observations(data)
         epoch_start_time, epoch_end_time = self.init_train_period(data, first_obs_time)
-
-        if test:
-            data, last_obs_time = AnomalyDetector.test(data, first_obs_time)
-
-        if scale:
-            data = DataHelper.scale(data)
 
         df_no_anomalies = copy.deepcopy(data)
 
@@ -109,10 +89,10 @@ class AnomalyDetector(ABC):
 
     def init_train_period(self, data, first_obs_time):
         epoch_start_time = first_obs_time
-        epoch_end_time = DataHelper.get_max_idx(data, first_obs_time
-                                                + relativedelta(hours=self.train_period.hours)
-                                                + relativedelta(days=self.train_period.days)
-                                                + relativedelta(weeks=self.train_period.weeks))
+        epoch_end_time = DataHelper.get_max_idx(data, DataHelper.relative_delta_time(first_obs_time,
+                                                                                     hours=self.train_period.hours,
+                                                                                     days=self.train_period.days,
+                                                                                     weeks=self.train_period.weeks))
         return epoch_start_time, epoch_end_time
 
     def filter_anomalies_in_forecast(self, detected_anomalies, forecast_end_time):
