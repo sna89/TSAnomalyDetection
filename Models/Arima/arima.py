@@ -5,9 +5,8 @@ from Models.model import Model
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from Helpers.data_helper import DataHelper
 sys.modules['sklearn.externals.six'] = six
-
-SAMPLES_IN_HOUR = 6
 
 
 class Arima(Model):
@@ -16,13 +15,9 @@ class Arima(Model):
         self.seasonality = seasonality
         self.fitted_model = None
 
-        self.test_periods = forecast_periods_hours * SAMPLES_IN_HOUR
-        self.train_periods = self.data.shape[0] - self.test_periods
-
-        self.train_df = pd.DataFrame(data=self.data.iloc[:self.train_periods],
-                                     index=self.data.iloc[:self.train_periods].index)
-        self.test_df = pd.DataFrame(data=self.data.iloc[self.train_periods:],
-                                     index=self.data.iloc[self.train_periods:].index)
+        self.train_df, self.test_df = DataHelper.split_train_test(self.data, forecast_periods_hours)
+        self.train_periods = self.train_df.shape[0]
+        self.test_periods = self.test_df.shape[0]
 
     def fit(self):
         if not self.init:

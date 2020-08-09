@@ -20,14 +20,15 @@ if __name__ == "__main__":
         metadata = params_helper.get_metadata()
         preprocess_data_params = params_helper.get_preprocess_data_params()
         data_builder = DataBuilder(metadata, preprocess_data_params)
-        data, scaler = data_builder.build()
+        data = data_builder.build()
 
         detector_name = params_helper.get_detector_name()
         experiment_hyperparameters = params_helper.get_experiment_hyperparams()
         model_hyperparameters = params_helper.get_model_hyperparams()
-        detector = AnomalyDetectionFactory(detector_name, experiment_hyperparameters, model_hyperparameters).get_detector()
+        detector = AnomalyDetectionFactory(detector_name, experiment_hyperparameters, model_hyperparameters)\
+            .get_detector()
 
-        detector.run_anomaly_detection(data)
+        detector.detect_anomalies(data)
 
         # DataPlotter.plot_anomalies(data, df_anomalies)
     except Exception as e:

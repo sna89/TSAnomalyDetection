@@ -5,17 +5,17 @@ preprocess_data_params:
   test: True
   test_period:
     hours: 0
-    days: 0
-    weeks: 8
-  scale: True
+    days: 1
+    weeks: 0
 
 experiment_hyperparameters:
   train_period:
     hours: 0
-    days: 0
-    weeks: 4
-  forecast_period_hours: 24
-  retrain_schedule_hours: 24
+    days: 1
+    weeks: 0
+  forecast_period_hours: 1
+  retrain_schedule_hours: 1
+  scale: True
 
 model_hyperparameters:
   esd:
@@ -33,12 +33,12 @@ model_hyperparameters:
     threshold: 99
 
 metadata:
-#  - filename: Sensor U106748.csv
-#    attribute_name: internaltemp
-#    time_column: Time
-  - filename: 54863.csv
-    attribute_name: temperature
-    time_column: TSMeasurement
+  - filename: Sensor U106748.csv
+    attribute_name: internaltemp
+    time_column: Time
+#  - filename: 54863.csv
+#    attribute_name: temperature
+#    time_column: TSMeasurement
 #  - filename: Sensor U106755.csv
 #    attribute_name: internaltemp
 #    time_column: Time

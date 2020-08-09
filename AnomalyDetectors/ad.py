@@ -15,6 +15,7 @@ class ExperimentHyperParameters:
     train_period: Dict
     forecast_period_hours: int
     retrain_schedule_hours: int
+    scale: bool
 
 
 class AnomalyDetector(ABC):
@@ -48,6 +49,7 @@ class AnomalyDetector(ABC):
             self.logger.info('Detecting anomalies between {} to {}'.format(epoch_start_time, epoch_end_time))
 
             df_ = pd.DataFrame(data=copy.deepcopy(df_no_anomalies.loc[epoch_start_time:epoch_end_time]))
+
             detected_anomalies = self.detect_anomalies(df_)
 
             if not detected_anomalies.empty:

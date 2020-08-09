@@ -10,7 +10,6 @@ from abc import ABC, abstractmethod
 class PreprocessDataParams:
     test: bool
     test_period: Dict
-    scale: bool
 
 
 @dataclass
@@ -35,12 +34,7 @@ class DataBuilder:
             data_builder = MultipleFilesDataBuilder(self.metadata, self.preprocess_data_params)
 
         data = data_builder.build()
-        scaler = None
-
-        if self.preprocess_data_params.scale:
-            data, scaler = DataHelper.scale(data)
-
-        return data, scaler
+        return data
 
 
 class AbstractDataBuilder(ABC):
@@ -96,7 +90,7 @@ class SingleFileDataBuilder(AbstractDataBuilder):
         data.index = pd.to_datetime(data.index)
 
         if self.preprocess_data_params.test:
-            data = DataHelper.extract_test_period(data, self.test_period)
+            data = DataHelper.extract_first_period(data, self.test_period)
 
         return data
 

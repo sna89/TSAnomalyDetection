@@ -13,6 +13,10 @@ class Period:
     weeks: int
 
 
+class DataConst:
+    SAMPLES_PER_HOUR = 6
+
+
 class DataHelper:
     def __init__(self):
         pass
@@ -91,23 +95,47 @@ class DataHelper:
         return (start <= current.index) & (current.index <= end)
 
     @staticmethod
-    def scale(data):
+    def scale(data, forecast_periods_hours=0):
         scaler = preprocessing.StandardScaler()
-        scaler.fit(data)
-        data[data.columns] = scaler.transform(data)
+
+        if forecast_periods_hours > 0:
+            train_df, test_df = DataHelper.split_train_test(data, forecast_periods_hours)
+            scaler = scaler.fit(train_df)
+
+            train_df[data.columns] = scaler.transform(train_df)
+            test_df[data.columns] = scaler.transform(test_df)
+
+            data = pd.concat([train_df, test_df], axis=1)
+
+        else:
+            scaler = scaler.fit(data)
+            data = scaler.transform(data)
+
         return data, scaler
 
     @staticmethod
-    def extract_test_period(data, test_period):
+    def extract_first_period(data, period):
         start_time, _ = DataHelper.get_first_and_last_observations(data)
         end_time = DataHelper.get_max_idx(data, DataHelper.relative_delta_time(start_time,
-                                                                    hours=test_period.hours,
-                                                                    days=test_period.days,
-                                                                    weeks=test_period.weeks))
+                                                                    hours=period.hours,
+                                                                    days=period.days,
+                                                                    weeks=period.weeks))
 
-        df_test = data.loc[start_time:end_time]
-        return df_test
+        data_first_period = data.loc[start_time:end_time]
+        return data_first_period
 
     @staticmethod
     def relative_delta_time(current_time, hours, days, weeks):
         return current_time + relativedelta(hours=hours) + relativedelta(days=days) + relativedelta(weeks=weeks)
+
+    @staticmethod
+    def split_train_test(data, forecast_periods_hours):
+        test_periods = forecast_periods_hours * DataConst.SAMPLES_PER_HOUR
+        train_periods = data.shape[0] - test_periods
+
+        train_df = pd.DataFrame(data=data.iloc[:train_periods],
+                                index=data.iloc[:train_periods].index)
+        test_df = pd.DataFrame(data=data.iloc[train_periods:],
+                               index=data.iloc[train_periods:].index)
+
+        return train_df, test_df
