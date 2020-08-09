@@ -73,12 +73,14 @@ class ParamsValidator:
         return
 
     def validate_train_time(self):
-        now = datetime.now()
-        test_end_time = DataHelper.relative_delta_time(now, hours=self.test_period.hours,
-                                                       days=self.test_period.days,
-                                                       weeks=self.test_period.weeks)
-        train_end_time = DataHelper.relative_delta_time(now, hours=self.train_period.hours,
-                                                        days=self.train_period.days,
-                                                        weeks=self.train_period.weeks)
-        if train_end_time > test_end_time:
-            raise ValueError('Initial train epoch time interval must be smaller than test time interval')
+        is_test = self.preprocess_data_params.test
+        if is_test:
+            now = datetime.now()
+            test_end_time = DataHelper.relative_delta_time(now, hours=self.test_period.hours,
+                                                           days=self.test_period.days,
+                                                           weeks=self.test_period.weeks)
+            train_end_time = DataHelper.relative_delta_time(now, hours=self.train_period.hours,
+                                                            days=self.train_period.days,
+                                                            weeks=self.train_period.weeks)
+            if train_end_time > test_end_time:
+                raise ValueError('Initial train epoch time interval must be smaller than test time interval')

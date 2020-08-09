@@ -6,6 +6,7 @@ from Logger.logger import create_logger
 from Helpers.params_helper import ParamsHelper
 from Helpers.params_validator import ParamsValidator
 from Builders.data_builder import DataBuilder
+from Helpers.data_plotter import DataPlotter
 
 
 if __name__ == "__main__":
@@ -28,8 +29,9 @@ if __name__ == "__main__":
         detector = AnomalyDetectionFactory(detector_name, experiment_hyperparameters, model_hyperparameters)\
             .get_detector()
 
-        detector.detect_anomalies(data)
+        anomalies = detector.run_anomaly_detection(data)
 
-        # DataPlotter.plot_anomalies(data, df_anomalies)
+        DataPlotter.plot_anomalies(data, anomalies)
+
     except Exception as e:
         print(e)

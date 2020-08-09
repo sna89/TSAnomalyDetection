@@ -105,7 +105,7 @@ class DataHelper:
             train_df[data.columns] = scaler.transform(train_df)
             test_df[data.columns] = scaler.transform(test_df)
 
-            data = pd.concat([train_df, test_df], axis=1)
+            data = pd.concat([train_df, test_df], axis=0)
 
         else:
             scaler = scaler.fit(data)
