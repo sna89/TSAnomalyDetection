@@ -1,30 +1,23 @@
 import os
+from os import path
 
+G_COLAB_PATH = '/content/TSAnomalyDetection/'
 
 class FileHelper:
     def __init__(self):
         pass
 
     @staticmethod
-    def get_file_path(filename, cwd=None):
-        path = None
+    def get_file_path(params_filename):
+        if path.exists(params_filename):
+            return params_filename
+        else:
+            fullpath = G_COLAB_PATH + params_filename
+            if path.exists(fullpath):
+                return fullpath
+            else:
+                raise ValueError("Cannot file file: {}".format(params_filename))
 
-        if not cwd:
-            cwd = os.getcwd()
-
-        for current_filename in os.listdir(cwd):
-            if current_filename == filename:
-                path = cwd + '\\' + filename
-
-            if os.path.isdir(current_filename):
-                wd = current_filename
-                sub_wd = cwd + '\\' + wd
-                path = FileHelper.get_file_path(filename, sub_wd)
-
-            if path:
-                return path
-
-        return path
 
     @staticmethod
     def get_logs_path():

@@ -20,6 +20,9 @@ class LstmAE(Model):
 
         self.train_df, self.test_df = DataHelper.split_train_test(data, forecast_period_hours)
 
+
+        self.model = None
+
     @staticmethod
     def prepare_data_lstm(data, forecast_period_hours):
         forecast_samples = forecast_period_hours * DataConst.SAMPLES_PER_HOUR
@@ -34,8 +37,23 @@ class LstmAE(Model):
 
         timesteps = train_data.shape[1]
         num_features = train_data.shape[2]
-        model = self.build_lstm_ae_model(timesteps, num_features)
-        self.train(model, train_data)
+        self.model = self.build_lstm_ae_model(timesteps, num_features)
+        self.train(train_data)
+
+        train_pred = self.predict(train_data)
+        test_pred = self.predict(test_data)
+
+        train_mse_loss = self.calc_mse(train_data, train_pred)
+        test_mse_loss = self.calc_mse(test_data, test_pred)
+        thresold_precentile = np.percentile(train_mse_loss, self.threshold)
+
+        test_score_df = pd.DataFrame(test_data[self.forecast_period_hours:])
+        test_score_df['loss'] = test_mse_loss
+        test_score_df['threshold'] = thresold_precentile
+        test_score_df['anomaly'] = test_score_df.loss > test_score_df.threshold
+        test_score_df['data'] = test_data[self.forecast_period_hours:, :]
+        anomalies = test_score_df[test_score_df.anomaly == True]
+        return anomalies
 
     def build_lstm_ae_model(self, timesteps, num_features):
         model = Sequential([
@@ -51,10 +69,10 @@ class LstmAE(Model):
 
         return model
 
-    def train(self, model, train_data):
+    def train(self, train_data):
         es = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=3, mode='min')
 
-        model.fit(
+        self.model.fit(
             train_data, train_data,
             epochs=100,
             batch_size=16,
@@ -63,6 +81,11 @@ class LstmAE(Model):
             shuffle=False
         )
 
-    def predict(self):
-        pass
+    def predict(self, data):
+        pred = self.model.predict(data)
+        return pred
 
+    @staticmethod
+    def calc_mse(true, pred):
+        mse_loss = pd.DataFrame(np.mean((pred - true) ** 2, axis=1), columns=['Error'])
+        return mse_loss

@@ -39,7 +39,7 @@ class DataPlotter:
 
     @staticmethod
     def plot_anomalies(df, df_anomalies, plot_name=None):
-        plt.rcParams['date.epoch'] = '0000-12-31T00:00:00'
+        plt.rcParams['date.epoch'] = '0000-12-31T00:00:00'  # workaround for date issue in plot
 
         plt.plot(df.iloc[:, 0], 'b')
 

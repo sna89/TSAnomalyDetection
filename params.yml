@@ -1,5 +1,5 @@
 ---
-detector_name: esd
+detector_name: lstm_ae
 
 output:
   csv: True
