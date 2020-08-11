@@ -4,6 +4,7 @@ from Helpers.data_helper import DataHelper, Period
 from dataclasses import dataclass
 from typing import Dict
 from abc import ABC, abstractmethod
+from Helpers.file_helper import FileHelper
 
 
 @dataclass
@@ -46,7 +47,8 @@ class AbstractDataBuilder(ABC):
 
     @staticmethod
     def read_data(filename):
-        return pd.read_csv(filename)
+        filename_path = FileHelper.get_file_path(filename)
+        return pd.read_csv(filename_path)
 
     def get_file_metadata(self, pos):
         return self.metadata[pos]

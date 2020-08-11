@@ -5,15 +5,14 @@ from Builders.data_builder import PreprocessDataParams
 from AnomalyDetectors.ad import ExperimentHyperParameters
 
 
-DETECTORS = ['esd', 'arima', 'lstm_ae']
-
-
 class ParamsValidator:
     def __init__(self, params_helper: ParamsHelper):
         self.params_helper = params_helper
+
         self.detector_name = self.params_helper.get_detector_name()
         self.metadata = self.params_helper.get_metadata()
         self.model_hyperparameters = self.params_helper.get_model_hyperparams()
+        self.detectors = self.params_helper.get_detectors()
 
         self.experiment_hyperparameters = ExperimentHyperParameters(**self.params_helper.get_experiment_hyperparams())
         self.train_period = Period(**self.experiment_hyperparameters.train_period)
@@ -24,7 +23,7 @@ class ParamsValidator:
     def validate(self):
         self.validate_metadata()
 
-        if self.detector_name in DETECTORS:
+        if self.detector_name in self.detectors:
             self.validate_uni_variate()
         else:
             raise ValueError('{} detector in not implemented'.format(self.detector_name))

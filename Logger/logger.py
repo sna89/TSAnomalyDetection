@@ -3,18 +3,9 @@ from datetime import datetime
 import functools
 from functools import partial
 import os
+from Helpers.file_helper import FileHelper
 
 LOGGER_NAME = 'TSAnomalyDetectionLogger'
-
-
-def get_logs_path():
-    path = os.getcwd()
-    logs_path = path + '\logs'
-    return logs_path
-
-
-def path_exists(path):
-    return os.path.isdir(path)
 
 
 def create_logger():
@@ -24,8 +15,8 @@ def create_logger():
     logger = logging.getLogger(LOGGER_NAME)
     logger.setLevel(logging.DEBUG)
 
-    logs_path = get_logs_path()
-    if not path_exists(logs_path):
+    logs_path = FileHelper.get_logs_path()
+    if not FileHelper.path_exists(logs_path):
         os.mkdir(logs_path)
 
     f_handler = logging.FileHandler(logs_path + '\log_{}.log'.format(dt_string))

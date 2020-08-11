@@ -8,14 +8,13 @@ from Helpers.params_validator import ParamsValidator
 from Builders.data_builder import DataBuilder
 from Helpers.data_plotter import DataPlotter
 
-
 if __name__ == "__main__":
     create_logger()
     pd.set_option('display.max_rows', None)
     np.set_printoptions(threshold=sys.maxsize)
 
     try:
-        params_helper = ParamsHelper('params.yml')
+        params_helper = ParamsHelper()
         ParamsValidator(params_helper).validate()
 
         metadata = params_helper.get_metadata()
@@ -31,7 +30,16 @@ if __name__ == "__main__":
 
         anomalies = detector.run_anomaly_detection(data)
 
-        DataPlotter.plot_anomalies(data, anomalies)
+        is_output = params_helper.get_is_output()
+        experiment_name = params_helper.create_experiment_name()
+
+        if is_output.csv:
+            anomalies.to_csv(experiment_name + '.csv')
+
+        if is_output.plot:
+            DataPlotter.plot_anomalies(data, anomalies, experiment_name)
+        else:
+            DataPlotter.plot_anomalies(data, anomalies)
 
     except Exception as e:
         print(e)
