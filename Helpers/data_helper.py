@@ -26,16 +26,13 @@ class DataHelper:
         assert isinstance(data, pd.DataFrame), "Data must be a data frame"
 
     @staticmethod
-    def pivot(df, index, pivot_column, value_columns):
-        col_unique_values = df[pivot_column].unique()
-        processed_df = pd.DataFrame()
-        for unique_value in col_unique_values:
-            df_ = copy.deepcopy(df[df[pivot_column] == unique_value])
-            df_ = DataHelper.drop_duplicated_rows(df_, key_columns=[index, pivot_column])
-            df_[index] = pd.to_datetime(df_[index], format="%d-%m-%y %H:%M", infer_datetime_format=True)
-            df_pivoted = df_.pivot(index=index, columns=pivot_column, values=value_columns)
-            processed_df = pd.concat([processed_df, df_pivoted], axis=1)
-        return processed_df
+    def filter(df, index, type_column, value_column, attribute_name):
+        df_ = copy.deepcopy(df[df[type_column] == attribute_name])
+        df_ = DataHelper.drop_duplicated_rows(df_, key_columns=[index, value_column])
+        df_.index = pd.to_datetime(df_[index], format="%d-%m-%y %H:%M", infer_datetime_format=True)
+        df_ = df_[[value_column]]
+        df_.rename({value_column: attribute_name}, axis=1, inplace=True)
+        return df_
 
     @staticmethod
     def drop_duplicated_rows(df_, key_columns):

@@ -78,8 +78,10 @@ class SingleFileDataBuilder(AbstractDataBuilder):
             data.set_index(self.file_metadata.time_column, inplace=True)
             data = pd.DataFrame(data[self.file_metadata.attribute_name])
         else:
-            data = DataHelper.pivot(data, index=self.file_metadata.time_column, pivot_column='Type', value_columns=['Value'])
-            data = pd.DataFrame(data=data['Value'][self.file_metadata.attribute_name])
+            data = DataHelper.filter(data, index=self.file_metadata.time_column,
+                                     type_column='Type',
+                                     value_column='Value',
+                                     attribute_name=self.file_metadata.attribute_name)
 
         filename = self.file_metadata.filename. \
             replace('.csv', ''). \

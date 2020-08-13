@@ -37,7 +37,7 @@ model_hyperparameters:
     threshold: 99
 
 metadata:
-  - filename: Sensor U106748.csv
+  - filename: Sensor U106748 LSTM.csv
     attribute_name: internaltemp
     time_column: Time
 #  - filename: 54863.csv

@@ -1,5 +1,4 @@
 from Models.model import Model
-import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, LSTM, Dropout, RepeatVector, TimeDistributed
 from tensorflow import keras
@@ -40,6 +39,7 @@ class LstmAE(Model):
         self.model = self.build_lstm_ae_model(timesteps, num_features)
         self.train(train_data)
 
+
         train_pred = self.predict(train_data)
         test_pred = self.predict(test_data)
 
@@ -70,7 +70,7 @@ class LstmAE(Model):
         return model
 
     def train(self, train_data):
-        es = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=3, mode='min')
+        es = keras.callbacks.EarlyStopping(monitor='val_loss', patience=3, mode='min')
 
         self.model.fit(
             train_data, train_data,
