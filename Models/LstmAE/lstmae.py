@@ -5,6 +5,7 @@ from tensorflow import keras
 import pandas as pd
 import numpy as np
 from Helpers.data_helper import DataHelper, DataConst
+
 pd.options.mode.chained_assignment = None
 
 
@@ -31,7 +32,7 @@ class LstmAE(Model):
         train_df_raw, test_df_raw = DataHelper.split_train_test(self.data, self.forecast_period_hours * 2)
 
         train_data = LstmAE.prepare_data_lstm(train_df_raw, self.forecast_period_hours)
-        test_data = LstmAE.prepare_data_lstm(test_df_raw, 0)
+        test_data = LstmAE.prepare_data_lstm(test_df_raw, self.forecast_period_hours)
 
         timesteps = train_data.shape[1]
         num_features = train_data.shape[2]
@@ -45,12 +46,14 @@ class LstmAE(Model):
         test_mse_loss = self.calc_mse(test_data, test_pred)
 
         thresold_precentile = np.percentile(train_mse_loss, self.threshold)
-
-        test_score_df = pd.DataFrame(test_data[self.forecast_period_hours * DataConst.SAMPLES_PER_HOUR:])
-        test_score_df['loss'] = test_mse_loss
+        test_score_df = pd.DataFrame(test_df_raw[self.forecast_period_hours * DataConst.SAMPLES_PER_HOUR:])
+        test_score_df['loss'] = test_mse_loss.values
         test_score_df['threshold'] = thresold_precentile
+
         test_score_df['anomaly'] = test_score_df.loss > test_score_df.threshold
         anomalies = test_score_df[test_score_df.anomaly == True]
+        anomalies = anomalies.drop(columns=['loss', 'threshold', 'anomaly'])
+
         return anomalies
 
     def build_lstm_ae_model(self, timesteps, num_features):

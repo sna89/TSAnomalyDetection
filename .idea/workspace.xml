@@ -3,6 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="27da9a7e-1324-4c59-8a3a-c97de520e9de" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnomalyDetectors/lstm_ae_ad.py" beforeDir="false" afterPath="$PROJECT_DIR$/AnomalyDetectors/lstm_ae_ad.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/LstmAE/lstmae.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/LstmAE/lstmae.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/params.yml" beforeDir="false" afterPath="$PROJECT_DIR$/params.yml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -118,15 +121,15 @@
         <counts>
           <entry key="Python Console" value="103" />
           <entry key="dummy" value="88" />
-          <entry key="py" value="18693" />
-          <entry key="yml" value="640" />
+          <entry key="py" value="18754" />
+          <entry key="yml" value="646" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="PLAIN_TEXT" value="88" />
-          <entry key="Python" value="18796" />
-          <entry key="YAML" value="640" />
+          <entry key="Python" value="18857" />
+          <entry key="YAML" value="646" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -155,7 +158,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="380">
+            <state relative-caret-position="320">
               <caret line="22" column="29" selection-start-line="22" selection-start-column="29" selection-end-line="22" selection-end-column="29" />
               <folding>
                 <element signature="e#0#63#0" expanded="true" />
@@ -164,11 +167,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/AnomalyDetectors/lstm_ae_ad.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="294">
-              <caret line="20" column="41" selection-start-line="20" selection-start-column="41" selection-end-line="20" selection-end-column="41" />
+            <state relative-caret-position="551">
+              <caret line="35" lean-forward="true" selection-start-line="35" selection-end-line="35" />
               <folding>
                 <element signature="e#0#47#0" expanded="true" />
               </folding>
@@ -216,13 +219,13 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Models/LstmAE/lstmae.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="780">
-              <caret line="47" column="55" selection-start-line="47" selection-start-column="55" selection-end-line="47" selection-end-column="55" />
+            <state relative-caret-position="560">
+              <caret line="55" lean-forward="true" selection-start-line="55" selection-end-line="55" />
               <folding>
                 <element signature="e#0#30#0" expanded="true" />
-                <marker date="1597307776614" expanded="true" signature="352:353" ph="..." />
-                <marker date="1597307776614" expanded="true" signature="896:1144" ph="..." />
-                <marker date="1597307776614" expanded="true" signature="2298:2749" ph="..." />
+                <marker date="1597318991118" expanded="true" signature="353:354" ph="..." />
+                <marker date="1597318991118" expanded="true" signature="800:1048" ph="..." />
+                <marker date="1597318991118" expanded="true" signature="2350:2801" ph="..." />
               </folding>
             </state>
           </provider>
@@ -231,8 +234,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/params.yml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="20">
-              <caret line="4" column="11" lean-forward="true" selection-start-line="4" selection-start-column="11" selection-end-line="4" selection-end-column="11" />
+            <state relative-caret-position="300">
+              <caret line="15" column="15" lean-forward="true" selection-start-line="15" selection-start-column="15" selection-end-line="15" selection-end-column="15" />
             </state>
           </provider>
         </entry>
@@ -263,10 +266,10 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Helpers/data_helper.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="211">
+            <state relative-caret-position="620">
               <caret line="31" column="57" lean-forward="true" selection-start-line="31" selection-start-column="56" selection-end-line="31" selection-end-column="57" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
@@ -354,17 +357,17 @@
         <option value="$PROJECT_DIR$/main_lstm_autoencoder_keras.py" />
         <option value="$PROJECT_DIR$/Models/Arima/arima.py" />
         <option value="$PROJECT_DIR$/AnomalyDetectors/ad.py" />
-        <option value="$PROJECT_DIR$/AnomalyDetectors/lstm_ae_ad.py" />
         <option value="$PROJECT_DIR$/main.py" />
         <option value="$PROJECT_DIR$/Logger/logger.py" />
         <option value="$PROJECT_DIR$/Helpers/params_validator.py" />
         <option value="$PROJECT_DIR$/Helpers/params_helper.py" />
         <option value="$PROJECT_DIR$/Helpers/file_helper.py" />
         <option value="$PROJECT_DIR$/Helpers/data_plotter.py" />
-        <option value="$PROJECT_DIR$/params.yml" />
         <option value="$PROJECT_DIR$/Builders/data_builder.py" />
-        <option value="$PROJECT_DIR$/Models/LstmAE/lstmae.py" />
         <option value="$PROJECT_DIR$/Helpers/data_helper.py" />
+        <option value="$PROJECT_DIR$/params.yml" />
+        <option value="$PROJECT_DIR$/Models/LstmAE/lstmae.py" />
+        <option value="$PROJECT_DIR$/AnomalyDetectors/lstm_ae_ad.py" />
       </list>
     </option>
   </component>
@@ -722,19 +725,9 @@
           <option name="timeStamp" value="314" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Models/LstmAE/lstmae.py</url>
-          <line>39</line>
-          <option name="timeStamp" value="315" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Helpers/data_plotter.py</url>
           <line>48</line>
           <option name="timeStamp" value="325" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Models/LstmAE/lstmae.py</url>
-          <line>42</line>
-          <option name="timeStamp" value="326" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Builders/data_builder.py</url>
@@ -1022,16 +1015,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="380">
-          <caret line="22" column="29" selection-start-line="22" selection-start-column="29" selection-end-line="22" selection-end-column="29" />
-          <folding>
-            <element signature="e#0#63#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Builders/data_builder.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="244">
@@ -1053,43 +1036,53 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/params.yml">
+    <entry file="file://$PROJECT_DIR$/Helpers/data_helper.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="20">
-          <caret line="4" column="11" lean-forward="true" selection-start-line="4" selection-start-column="11" selection-end-line="4" selection-end-column="11" />
+        <state relative-caret-position="620">
+          <caret line="31" column="57" lean-forward="true" selection-start-line="31" selection-start-column="56" selection-end-line="31" selection-end-column="57" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <marker date="1597307726814" expanded="true" signature="269:297" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AnomalyDetectors/lstm_ae_ad.py">
+    <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
-          <caret line="20" column="41" selection-start-line="20" selection-start-column="41" selection-end-line="20" selection-end-column="41" />
+        <state relative-caret-position="320">
+          <caret line="22" column="29" selection-start-line="22" selection-start-column="29" selection-end-line="22" selection-end-column="29" />
           <folding>
-            <element signature="e#0#47#0" expanded="true" />
+            <element signature="e#0#63#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/params.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="15" column="15" lean-forward="true" selection-start-line="15" selection-start-column="15" selection-end-line="15" selection-end-column="15" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Models/LstmAE/lstmae.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="780">
-          <caret line="47" column="55" selection-start-line="47" selection-start-column="55" selection-end-line="47" selection-end-column="55" />
+        <state relative-caret-position="560">
+          <caret line="55" lean-forward="true" selection-start-line="55" selection-end-line="55" />
           <folding>
             <element signature="e#0#30#0" expanded="true" />
-            <marker date="1597307776614" expanded="true" signature="352:353" ph="..." />
-            <marker date="1597307776614" expanded="true" signature="896:1144" ph="..." />
-            <marker date="1597307776614" expanded="true" signature="2298:2749" ph="..." />
+            <marker date="1597318991118" expanded="true" signature="353:354" ph="..." />
+            <marker date="1597318991118" expanded="true" signature="800:1048" ph="..." />
+            <marker date="1597318991118" expanded="true" signature="2350:2801" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Helpers/data_helper.py">
+    <entry file="file://$PROJECT_DIR$/AnomalyDetectors/lstm_ae_ad.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="211">
-          <caret line="31" column="57" lean-forward="true" selection-start-line="31" selection-start-column="56" selection-end-line="31" selection-end-column="57" />
+        <state relative-caret-position="551">
+          <caret line="35" lean-forward="true" selection-start-line="35" selection-end-line="35" />
           <folding>
-            <element signature="e#0#19#0" expanded="true" />
-            <marker date="1597307726814" expanded="true" signature="269:297" ph="..." />
+            <element signature="e#0#47#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -17,6 +17,8 @@ class LSTMAEAnomalyDetector(AnomalyDetector):
         self.lstm_ae_hyperparameters = LSTMAEHyperParameters(**model_hyperparameters)
 
     def detect_anomalies(self, data):
+        scaler = None
+
         if self.experiment_hyperparameters.scale:
             data, scaler = DataHelper.scale(data, self.experiment_hyperparameters.forecast_period_hours)
 
@@ -28,6 +30,9 @@ class LSTMAEAnomalyDetector(AnomalyDetector):
                            self.experiment_hyperparameters.forecast_period_hours)
 
         anomalies = model.run()
-        # TODO inverse scaler on anomalies.
+
+        if scaler:
+            anomalies[anomalies.columns] = scaler.inverse_transform(anomalies)
+
         return anomalies
 
