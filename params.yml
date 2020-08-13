@@ -17,8 +17,8 @@ experiment_hyperparameters:
     hours: 0
     days: 0
     weeks: 4
-  forecast_period_hours: 24
-  retrain_schedule_hours: 24
+  forecast_period_hours: 3
+  retrain_schedule_hours: 3
   scale: False
 
 model_hyperparameters:

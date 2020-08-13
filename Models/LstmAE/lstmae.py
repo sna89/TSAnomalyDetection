@@ -17,9 +17,6 @@ class LstmAE(Model):
         self.threshold = threshold
         self.forecast_period_hours = forecast_period_hours
 
-        self.train_df, self.test_df = DataHelper.split_train_test(data, forecast_period_hours)
-
-
         self.model = None
 
     @staticmethod
@@ -31,27 +28,28 @@ class LstmAE(Model):
         return np.array(Xs)
 
     def run(self):
-        train_data = LstmAE.prepare_data_lstm(self.train_df, self.forecast_period_hours)
-        test_data = LstmAE.prepare_data_lstm(self.test_df, self.forecast_period_hours)
+        train_df_raw, test_df_raw = DataHelper.split_train_test(self.data, self.forecast_period_hours * 2)
+
+        train_data = LstmAE.prepare_data_lstm(train_df_raw, self.forecast_period_hours)
+        test_data = LstmAE.prepare_data_lstm(test_df_raw, 0)
 
         timesteps = train_data.shape[1]
         num_features = train_data.shape[2]
         self.model = self.build_lstm_ae_model(timesteps, num_features)
         self.train(train_data)
 
-
         train_pred = self.predict(train_data)
         test_pred = self.predict(test_data)
 
         train_mse_loss = self.calc_mse(train_data, train_pred)
         test_mse_loss = self.calc_mse(test_data, test_pred)
+
         thresold_precentile = np.percentile(train_mse_loss, self.threshold)
 
-        test_score_df = pd.DataFrame(test_data[self.forecast_period_hours:])
+        test_score_df = pd.DataFrame(test_data[self.forecast_period_hours * DataConst.SAMPLES_PER_HOUR:])
         test_score_df['loss'] = test_mse_loss
         test_score_df['threshold'] = thresold_precentile
         test_score_df['anomaly'] = test_score_df.loss > test_score_df.threshold
-        test_score_df['data'] = test_data[self.forecast_period_hours:, :]
         anomalies = test_score_df[test_score_df.anomaly == True]
         return anomalies
 
