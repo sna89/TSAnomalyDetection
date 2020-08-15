@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="27da9a7e-1324-4c59-8a3a-c97de520e9de" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Helpers/file_helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helpers/file_helper.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -118,14 +119,14 @@
         <counts>
           <entry key="Python Console" value="206" />
           <entry key="dummy" value="88" />
-          <entry key="py" value="19389" />
+          <entry key="py" value="19620" />
           <entry key="yml" value="692" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="PLAIN_TEXT" value="88" />
-          <entry key="Python" value="19595" />
+          <entry key="Python" value="19826" />
           <entry key="YAML" value="692" />
         </counts>
       </usages-collector>
@@ -134,7 +135,7 @@
           <entry key="csv" value="3" />
           <entry key="jpg" value="1" />
           <entry key="log" value="15" />
-          <entry key="py" value="205" />
+          <entry key="py" value="210" />
           <entry key="txt" value="5" />
           <entry key="yml" value="19" />
         </counts>
@@ -144,7 +145,7 @@
           <entry key="Image" value="1" />
           <entry key="Log" value="15" />
           <entry key="PLAIN_TEXT" value="8" />
-          <entry key="Python" value="205" />
+          <entry key="Python" value="210" />
           <entry key="YAML" value="19" />
         </counts>
       </usages-collector>
@@ -155,11 +156,30 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="234">
-              <caret line="19" selection-start-line="19" selection-end-line="19" />
+            <state>
               <folding>
                 <element signature="e#0#63#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/AnomalyDetectors/ad_factory.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <folding>
+                <element signature="e#0#55#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Models/SeasonalESD/seasonal_esd.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="40">
+              <caret line="6" selection-start-line="6" selection-end-line="6" />
             </state>
           </provider>
         </entry>
@@ -177,29 +197,36 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tests/test_params.py">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Helpers/file_helper.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="380">
-              <caret line="19" selection-start-line="19" selection-end-line="19" />
+            <state relative-caret-position="280">
+              <caret line="14" column="22" selection-start-line="14" selection-start-column="22" selection-end-line="14" selection-end-column="22" />
               <folding>
-                <element signature="e#0#15#0" expanded="true" />
-                <marker date="1597486003960" expanded="true" signature="101:842" ph="..." />
-                <marker date="1597486003960" expanded="true" signature="122:127" ph="..." />
+                <element signature="e#0#9#0" expanded="true" />
+                <marker date="1597488028290" expanded="true" signature="78:97" ph="..." />
+                <marker date="1597488028290" expanded="true" signature="513:545" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Helpers/file_helper.py">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Models/model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
+            <state relative-caret-position="20">
+              <caret line="1" column="16" lean-forward="true" selection-start-line="1" selection-end-line="2" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Logger/logger.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="340">
+              <caret line="17" selection-start-line="17" selection-end-line="19" selection-end-column="27" />
               <folding>
-                <element signature="e#0#9#0" expanded="true" />
-                <marker date="1597487138340" expanded="true" signature="54:59" ph="..." />
-                <marker date="1597487138340" expanded="true" signature="446:478" ph="..." />
+                <element signature="e#0#14#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -208,8 +235,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Builders/data_builder.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="800">
-              <caret line="49" column="46" selection-start-line="49" selection-start-column="46" selection-end-line="49" selection-end-column="46" />
+            <state relative-caret-position="37">
+              <caret line="23" column="8" selection-start-line="23" selection-start-column="8" selection-end-line="23" selection-end-column="8" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
               </folding>
@@ -220,32 +247,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/AnomalyDetectors/ad.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="164">
-              <caret line="12" selection-start-line="12" selection-end-line="18" />
-              <folding>
-                <element signature="e#0#35#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/params.yml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="12" column="12" selection-start-line="12" selection-start-column="12" selection-end-line="12" selection-end-column="12" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Helpers/params_helper.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="208">
-              <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
-              <folding>
-                <element signature="e#0#11#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="80">
+              <caret line="4" column="34" selection-start-line="4" selection-end-line="5" />
             </state>
           </provider>
         </entry>
@@ -280,6 +283,8 @@
       <find>col</find>
       <find>batch_outputs</find>
       <find>experiment_hyperparameters</find>
+      <find>get_logger</find>
+      <find>from Logger\.logger import get_logger\n</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -326,23 +331,23 @@
         <option value="$PROJECT_DIR$/main_lstm_autoencoder_keras.py" />
         <option value="$PROJECT_DIR$/Models/Arima/arima.py" />
         <option value="$PROJECT_DIR$/AnomalyDetectors/ad.py" />
-        <option value="$PROJECT_DIR$/Logger/logger.py" />
         <option value="$PROJECT_DIR$/Helpers/params_validator.py" />
         <option value="$PROJECT_DIR$/Helpers/data_plotter.py" />
         <option value="$PROJECT_DIR$/Builders/data_builder.py" />
         <option value="$PROJECT_DIR$/Helpers/data_helper.py" />
         <option value="$PROJECT_DIR$/Models/LstmAE/lstmae.py" />
         <option value="$PROJECT_DIR$/AnomalyDetectors/lstm_ae_ad.py" />
-        <option value="$PROJECT_DIR$/main.py" />
         <option value="$PROJECT_DIR$/tests/params_test.yml" />
         <option value="$PROJECT_DIR$/tests/test_params.py" />
         <option value="$PROJECT_DIR$/params.yml" />
         <option value="$PROJECT_DIR$/Helpers/params_helper.py" />
+        <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/Logger/logger.py" />
         <option value="$PROJECT_DIR$/Helpers/file_helper.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="-9" />
     <option name="y" value="23" />
     <option name="width" value="1696" />
@@ -381,6 +386,11 @@
               <item name="TSAnomalyDetection" type="b2602c69:ProjectViewProjectNode" />
               <item name="TSAnomalyDetection" type="462c0819:PsiDirectoryNode" />
               <item name="Helpers" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="TSAnomalyDetection" type="b2602c69:ProjectViewProjectNode" />
+              <item name="TSAnomalyDetection" type="462c0819:PsiDirectoryNode" />
+              <item name="Logger" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -612,7 +622,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4985207" visible="true" weight="0.13540569" />
@@ -620,7 +630,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3275488" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49894625" weight="0.3362256" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49894625" visible="true" weight="0.3362256" />
       <window_info anchor="bottom" id="TODO" order="3" weight="0.21258135" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.3470716" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
@@ -628,7 +638,7 @@
       <window_info anchor="bottom" id="Docker" order="7" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.33071747" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5015806" side_tool="true" weight="0.24295011" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="10" sideWeight="0.49841937" visible="true" weight="0.24186552" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49841937" weight="0.24186552" />
       <window_info anchor="bottom" id="Python Console" order="11" weight="0.3286334" />
       <window_info anchor="bottom" id="Messages" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -807,7 +817,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../../../../../../../Documents/venv/AnomalyDetection/Lib/site-packages/pyramid/arima/auto.py" />
     <entry file="file://$PROJECT_DIR$/Models/SeasonalESD/test_esd_data.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="140">
@@ -859,13 +868,6 @@
     <entry file="file://$PROJECT_DIR$/../../../../../../../Documents/venv/AnomalyDetection/Lib/site-packages/pmdarima/compat/numpy.py" />
     <entry file="file://$PROJECT_DIR$/../../../../../../../Documents/venv/AnomalyDetection/Lib/site-packages/pmdarima/arima/auto.py" />
     <entry file="file://$PROJECT_DIR$/logs/log_06082020162923.log" />
-    <entry file="file://$PROJECT_DIR$/Models/SeasonalESD/seasonal_esd.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="40">
-          <caret line="9" selection-start-line="9" selection-end-line="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../../../../../../Documents/venv/AnomalyDetection/Lib/site-packages/dateutil/relativedelta.py" />
     <entry file="file://$USER_HOME$/.PyCharmCE2018.2/system/python_stubs/968412516/builtins.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -876,13 +878,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/arima_params.yml" />
     <entry file="file://$PROJECT_DIR$/lstm_ae_params.yml" />
-    <entry file="file://$PROJECT_DIR$/Models/model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="380">
-          <caret line="19" column="4" selection-start-line="19" selection-start-column="4" selection-end-line="21" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../../../../../../Documents/venv/AnomalyDetection/Lib/site-packages/numpy/random/tests/test_randomstate.py" />
     <entry file="file://$PROJECT_DIR$/main_lstm_autoencoder_keras.py" />
     <entry file="file://$PROJECT_DIR$/AnomalyDetectors/esd_ad.py">
@@ -896,13 +891,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1080">
           <caret line="61" selection-start-line="61" selection-end-line="61" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AnomalyDetectors/ad_factory.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="22" column="19" selection-start-line="22" selection-start-column="19" selection-end-line="22" selection-end-column="19" />
         </state>
       </provider>
     </entry>
@@ -978,16 +966,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Logger/logger.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="440">
-          <caret line="28" column="12" lean-forward="true" selection-start-line="28" selection-start-column="12" selection-end-line="28" selection-end-column="12" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Anaconda3/envs/TSAnomalyDetectionEnv/Lib/unittest/case.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="364">
@@ -1033,42 +1011,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Builders/data_builder.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="800">
-          <caret line="49" column="46" selection-start-line="49" selection-start-column="46" selection-end-line="49" selection-end-column="46" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AnomalyDetectors/ad.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="164">
-          <caret line="12" selection-start-line="12" selection-end-line="18" />
-          <folding>
-            <element signature="e#0#35#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Helpers/params_helper.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="208">
           <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="19" selection-start-line="19" selection-end-line="19" />
-          <folding>
-            <element signature="e#0#63#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1084,14 +1032,80 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Builders/data_builder.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="37">
+          <caret line="23" column="8" selection-start-line="23" selection-start-column="8" selection-end-line="23" selection-end-column="8" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Models/model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="20">
+          <caret line="1" column="16" lean-forward="true" selection-start-line="1" selection-end-line="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AnomalyDetectors/ad.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="4" column="34" selection-start-line="4" selection-end-line="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AnomalyDetectors/ad_factory.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#55#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Models/SeasonalESD/seasonal_esd.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="40">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Anaconda3/envs/TSAnomalyDetectionEnv/Lib/logging/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="1013" column="8" selection-start-line="1013" selection-start-column="8" selection-end-line="1013" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Logger/logger.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="17" selection-start-line="17" selection-end-line="19" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#63#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Helpers/file_helper.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
+        <state relative-caret-position="280">
+          <caret line="14" column="22" selection-start-line="14" selection-start-column="22" selection-end-line="14" selection-end-column="22" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
-            <marker date="1597487138340" expanded="true" signature="54:59" ph="..." />
-            <marker date="1597487138340" expanded="true" signature="446:478" ph="..." />
+            <marker date="1597488028290" expanded="true" signature="78:97" ph="..." />
+            <marker date="1597488028290" expanded="true" signature="513:545" ph="..." />
           </folding>
         </state>
       </provider>

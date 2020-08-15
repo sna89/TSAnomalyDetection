@@ -1,27 +1,20 @@
 import os
 from pathlib import Path
-from Logger.logger import get_logger
-
 
 class FileHelper:
-    logger = get_logger()
+    def __init__(self):
+        pass
 
-    @classmethod
-    def get_file_path(cls, filename):
+    @staticmethod
+    def get_file_path(filename):
         curr_path = Path(os.getcwd())
-        parent_path = FileHelper.get_parent_directory(curr_path)
 
-        for path in Path(parent_path).rglob('*.*'):
+        for path in Path(curr_path).rglob('*.*'):
             if path.name == filename:
                 return path
 
         msg = "Can't find filename: {}".format(filename)
-        cls.logger.error(msg)
         raise ValueError(msg)
-
-    @staticmethod
-    def get_parent_directory(cwd: Path):
-        return cwd.parent
 
     @staticmethod
     def get_logs_path():
