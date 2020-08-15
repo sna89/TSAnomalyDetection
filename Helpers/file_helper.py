@@ -1,5 +1,5 @@
 import os
-from os import path
+from pathlib import Path
 
 G_COLAB_PATH = '/content/TSAnomalyDetection/'
 
@@ -8,16 +8,19 @@ class FileHelper:
         pass
 
     @staticmethod
-    def get_file_path(params_filename):
-        if path.exists(params_filename):
-            return params_filename
-        else:
-            fullpath = G_COLAB_PATH + params_filename
-            if path.exists(fullpath):
-                return fullpath
-            else:
-                raise ValueError("Cannot file file: {}".format(params_filename))
+    def get_file_path(filename):
+        curr_path = Path(os.getcwd())
+        parent_path = FileHelper.get_parent_directory(curr_path)
 
+        for path in Path(parent_path).rglob('*.*'):
+            if path.name == filename:
+                return path
+
+        return None
+
+    @staticmethod
+    def get_parent_directory(cwd: Path):
+        return cwd.parent
 
     @staticmethod
     def get_logs_path():

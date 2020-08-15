@@ -10,7 +10,7 @@ preprocess_data_params:
   test_period:
     hours: 0
     days: 1
-    weeks: 0
+    weeks: 4
 
 experiment_hyperparameters:
   train_period:
