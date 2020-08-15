@@ -2,7 +2,7 @@ from AnomalyDetectors.ad_factory import AnomalyDetectionFactory
 import pandas as pd
 import sys
 import numpy as np
-from Logger.logger import create_logger
+from Logger.logger import create_logger, get_logger
 from Helpers.params_helper import ParamsHelper
 from Helpers.params_validator import ParamsValidator
 from Builders.data_builder import DataBuilder
@@ -42,4 +42,5 @@ if __name__ == "__main__":
             DataPlotter.plot_anomalies(data, anomalies)
 
     except Exception as e:
-        print(e)
+        logger = get_logger()
+        logger.error(e)

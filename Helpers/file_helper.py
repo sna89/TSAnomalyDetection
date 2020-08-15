@@ -1,14 +1,13 @@
 import os
 from pathlib import Path
+from Logger.logger import get_logger
 
-G_COLAB_PATH = '/content/TSAnomalyDetection/'
 
 class FileHelper:
-    def __init__(self):
-        pass
+    logger = get_logger()
 
-    @staticmethod
-    def get_file_path(filename):
+    @classmethod
+    def get_file_path(cls, filename):
         curr_path = Path(os.getcwd())
         parent_path = FileHelper.get_parent_directory(curr_path)
 
@@ -16,7 +15,9 @@ class FileHelper:
             if path.name == filename:
                 return path
 
-        return None
+        msg = "Can't find filename: {}".format(filename)
+        cls.logger.error(msg)
+        raise ValueError(msg)
 
     @staticmethod
     def get_parent_directory(cwd: Path):
