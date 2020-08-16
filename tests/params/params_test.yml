@@ -10,7 +10,8 @@ preprocess_data_params:
   test_period:
     hours: 0
     days: 1
-    weeks: 0
+    weeks: 4
+  fill: 'ignore'
 
 experiment_hyperparameters:
   train_period:
@@ -27,6 +28,7 @@ model_hyperparameters:
 
 
 metadata:
-  - filename: Sensor U106748.csv
+  - source: csv
+    filename: type_1_test.csv
     attribute_name: internaltemp
     time_column: Time

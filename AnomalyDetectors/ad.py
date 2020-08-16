@@ -23,7 +23,7 @@ class AnomalyDetector(ABC):
         assert model is not None, 'Need to pass a class model'
         self.data_helper = DataHelper()
         self.data_plotter = DataPlotter()
-        self.logger = get_logger()
+        self.logger = get_logger(__class__.__name__)
 
         self.df_anomalies = pd.DataFrame()
         self.model = model
@@ -92,6 +92,7 @@ class AnomalyDetector(ABC):
     def init_train_period(self, data, first_obs_time):
         epoch_start_time = first_obs_time
         epoch_end_time = DataHelper.get_max_idx(data, DataHelper.relative_delta_time(first_obs_time,
+                                                                                     minutes=0,
                                                                                      hours=self.train_period.hours,
                                                                                      days=self.train_period.days,
                                                                                      weeks=self.train_period.weeks))

@@ -20,5 +20,6 @@ class TestParams(unittest.TestCase):
         assert 'test_test_hyperparameter_key=test_hyperparameter_value_' in experiment_name, \
             "Error creating experiment name"
 
+
 if __name__ == '__main__':
     unittest.main()

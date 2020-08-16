@@ -26,8 +26,8 @@ def create_logger():
     logger.addHandler(f_handler)
 
 
-def get_logger():
-    return logging.getLogger(LOGGER_NAME)
+def get_logger(name):
+    return logging.getLogger(name)
 
 
 class MethodLogger:

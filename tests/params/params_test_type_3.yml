@@ -1,0 +1,35 @@
+---
+detector_name: test
+
+output:
+  csv: True
+  plot: True
+
+preprocess_data_params:
+  test: True
+  test_period:
+    hours: 0
+    days: 1
+    weeks: 4
+  fill: 'ignore'
+  skiprows: 6
+
+experiment_hyperparameters:
+  train_period:
+    hours: 0
+    days: 0
+    weeks: 4
+  forecast_period_hours: 3
+  retrain_schedule_hours: 3
+  scale: False
+
+model_hyperparameters:
+  test:
+    test_hyperparameter_key: "test_hyperparameter_value"
+
+
+metadata:
+  - source: csv
+    filename: type_3_test.csv
+    attribute_name: internaltemp
+    time_column: Time

@@ -2,6 +2,7 @@ import yaml
 from Helpers.file_helper import FileHelper
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Dict
 
 
 @dataclass
@@ -9,6 +10,21 @@ class Output:
     csv: bool
     plot: bool
 
+
+@dataclass
+class Metadata:
+    source: str
+    filename: str
+    attribute_name: str
+    time_column: str
+
+
+@dataclass
+class PreprocessDataParams:
+    test: bool
+    test_period: Dict
+    fill: str
+    skiprows: int
 
 class ParamsHelper:
     def __init__(self, filename='params.yml'):

@@ -4,6 +4,7 @@ from datetime import timedelta
 from sklearn import preprocessing
 from dateutil.relativedelta import relativedelta
 from dataclasses import dataclass
+import numpy as np
 
 
 @dataclass
@@ -15,6 +16,7 @@ class Period:
 
 class DataConst:
     SAMPLES_PER_HOUR = 6
+    FILL_METHODS = ['ignore', 'bfill', 'ffill', 'interpolate']
 
 
 class DataHelper:
@@ -29,7 +31,7 @@ class DataHelper:
     def filter(df, index, type_column, value_column, attribute_name):
         df_ = copy.deepcopy(df[df[type_column] == attribute_name])
         df_ = DataHelper.drop_duplicated_rows(df_, key_columns=[index, value_column])
-        df_.index = pd.to_datetime(df_[index], format="%d-%m-%y %H:%M", infer_datetime_format=True)
+        df_.index = pd.to_datetime(df_[index], format="%d-%m-%y %H:%M", infer_datetime_format=True, dayfirst=True)
         df_ = df_[[value_column]]
         df_.rename({value_column: attribute_name}, axis=1, inplace=True)
         return df_
@@ -114,6 +116,7 @@ class DataHelper:
     def extract_first_period(data, period):
         start_time, _ = DataHelper.get_first_and_last_observations(data)
         end_time = DataHelper.get_max_idx(data, DataHelper.relative_delta_time(start_time,
+                                                                    minutes=0,
                                                                     hours=period.hours,
                                                                     days=period.days,
                                                                     weeks=period.weeks))
@@ -122,8 +125,12 @@ class DataHelper:
         return data_first_period
 
     @staticmethod
-    def relative_delta_time(current_time, hours, days, weeks):
-        return current_time + relativedelta(hours=hours) + relativedelta(days=days) + relativedelta(weeks=weeks)
+    def relative_delta_time(current_time, minutes, hours, days, weeks):
+        return current_time + \
+               relativedelta(minutes=minutes) + \
+               relativedelta(hours=hours) + \
+               relativedelta(days=days) + \
+               relativedelta(weeks=weeks)
 
     @staticmethod
     def split_train_test(data, forecast_periods_hours):
@@ -136,3 +143,63 @@ class DataHelper:
                                index=data.iloc[train_periods:].index)
 
         return train_df, test_df
+
+    @staticmethod
+    def fill_missing_time(data, method='ignore'):
+        if method == 'ignore':
+            return data
+
+        elif method == 'bfill' or method == 'ffill' or method == 'interpolate':
+            raw_data = copy.deepcopy(data)
+            columns = list(raw_data.columns)
+
+            data['time'] = data.index
+            data['date_diff'] = (data.time.shift(-1) - data.time).fillna(0)
+
+            for loc_idx, (idx, row) in enumerate(data.iterrows()):
+                if row['date_diff'] > timedelta(minutes=15):
+                    days = row['date_diff'].days % 7
+                    weeks = row['date_diff'].days / 7
+                    hours = row['date_diff'].seconds // 3600
+                    minutes = (row['date_diff'].seconds // 60) % 60
+
+                    start = DataHelper.relative_delta_time(row['time'],
+                                                         minutes=10,
+                                                         hours=0,
+                                                         days=0,
+                                                         weeks=0)
+                    end = DataHelper.relative_delta_time(row['time'],
+                                                         minutes=minutes - 10,
+                                                         hours=hours,
+                                                         days=days,
+                                                         weeks=weeks)
+                    range_to_fill = pd.date_range(start=start,
+                                                  end=end,
+                                                  freq='10min')
+                    periods = len(range_to_fill)
+
+                    value = None
+                    if method == 'bfill':
+                        value = row.iloc[0]
+                    elif method == 'ffill':
+                        value = raw_data.iloc[loc_idx+1].iloc[0]
+                    elif method == 'interpolate':
+                        b_val = row.iloc[0]
+                        f_val = raw_data.iloc[loc_idx+1].iloc[0]
+                        new = pd.DataFrame(index=range_to_fill, columns=columns, dtype='float')
+                        new.iloc[0] = b_val
+                        new.iloc[-1] = f_val
+                        new.interpolate(inplace=True)
+                        raw_data = pd.concat([raw_data, new], axis=0).sort_index()
+                        continue
+
+                    new = pd.DataFrame(data=np.full((periods, 1), value), index=range_to_fill, columns=columns)
+                    raw_data = pd.concat([raw_data, new], axis=0).sort_index()
+            return raw_data
+        else:
+            raise ValueError('No such fill method')
+
+
+
+
+

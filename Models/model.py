@@ -12,7 +12,7 @@ class Model(ABC):
         self.anomaly_df = None
         self.init = False
 
-        self.logger = get_logger()
+        self.logger = get_logger(__class__.__name__)
 
     def validate_data(self):
         assert isinstance(self.data, pd.DataFrame), "Data must be a pandas dataframe"

@@ -1,110 +1,115 @@
-from typing import List
+from typing import List, Dict
 import pandas as pd
 from Helpers.data_helper import DataHelper, Period
-from dataclasses import dataclass
-from typing import Dict
 from abc import ABC, abstractmethod
-from Helpers.file_helper import FileHelper
+from Helpers.params_helper import Metadata, PreprocessDataParams
+from Logger.logger import get_logger
+from Helpers.data_reader import DataReaderFactory
 
 
-@dataclass
-class PreprocessDataParams:
-    test: bool
-    test_period: Dict
-
-
-@dataclass
-class FileMetadata:
-    filename: str
-    attribute_name: str
-    time_column: str
-
-
-class DataBuilder:
-    def __init__(self, metadata: List, preprocess_data_params):
+class DataConstructor:
+    def __init__(self, metadata: List, preprocess_data_params: Dict):
         self.metadata = metadata
         self.preprocess_data_params = PreprocessDataParams(**preprocess_data_params)
+        self.logger = get_logger(__class__.__name__)
+
+        self.raw_data = []
+
+    def read(self):
+        for metadata_object in self.metadata:
+            data_reader = DataReaderFactory(metadata_object).get_data_reader()
+            self.raw_data.append(data_reader.read_data(metadata_object))
+
+        return self
 
     def build(self):
-        data_builder = None
-
         if len(self.metadata) == 1:
-            data_builder = SingleFileDataBuilder(self.metadata, self.preprocess_data_params)
+            return SingleFileDataBuilder(self.metadata, self.preprocess_data_params)\
+                .build(raw_data=self.raw_data[0])
 
-        if len(self.metadata) > 1:
-            data_builder = MultipleFilesDataBuilder(self.metadata, self.preprocess_data_params)
+        elif len(self.metadata) > 1:
+            return MultipleFilesDataBuilder(self.metadata, self.preprocess_data_params)\
+                .build(raw_data=self.raw_data)
 
-        data = data_builder.build()
-        return data
+        else:
+            msg = "Metadata is empty"
+            self.logger(msg)
+            raise ValueError(msg)
 
 
 class AbstractDataBuilder(ABC):
     def __init__(self, metadata, preprocess_data_params):
         self.metadata = metadata
         self.preprocess_data_params = preprocess_data_params
+
         self.test_period = Period(**self.preprocess_data_params.test_period)
         self.new_time_column = 'sampletime'
 
-    @staticmethod
-    def read_data(filename):
-        filename_path = FileHelper.get_file_path(filename)
-        return pd.read_csv(filename_path)
-
-    def get_file_metadata(self, pos):
-        return self.metadata[pos]
+        self.logger = get_logger(__class__.__name__)
 
     @abstractmethod
-    def build(self):
+    def build(self, raw_data):
         return
 
 
 class SingleFileDataBuilder(AbstractDataBuilder):
-    def __init__(self, metadata, preprocess_data_params):
+    def __init__(self, metadata: List, preprocess_data_params: PreprocessDataParams):
         super(SingleFileDataBuilder, self).__init__(metadata, preprocess_data_params)
+        self.metadata_object = Metadata(**self.metadata[0])
 
-        if isinstance(metadata, list):
-            self.file_metadata = FileMetadata(**self.get_file_metadata(0))
+    def build(self, raw_data: pd.DataFrame):
+        data = raw_data
 
-        elif isinstance(metadata, dict):
-            self.file_metadata = FileMetadata(**self.metadata)
-
+        if self.metadata_object.attribute_name in data.columns:
+            data.set_index(self.metadata_object.time_column, inplace=True)
+            data = pd.DataFrame(data[self.metadata_object.attribute_name])
         else:
-            raise ValueError
-
-    def build(self):
-        data = SingleFileDataBuilder.read_data(self.file_metadata.filename)
-
-        if self.file_metadata.attribute_name in data.columns:
-            data.set_index(self.file_metadata.time_column, inplace=True)
-            data = pd.DataFrame(data[self.file_metadata.attribute_name])
-        else:
-            data = DataHelper.filter(data, index=self.file_metadata.time_column,
+            data = DataHelper.filter(data, index=self.metadata_object.time_column,
                                      type_column='Type',
                                      value_column='Value',
-                                     attribute_name=self.file_metadata.attribute_name)
+                                     attribute_name=self.metadata_object.attribute_name)
 
-        filename = self.file_metadata.filename. \
+        data = self.update_schema(data)
+        data = self.preprocess_data(data)
+
+        return data
+
+    def update_schema(self, data):
+        filename = self.metadata_object.filename. \
             replace('.csv', ''). \
             replace(' ', '_'). \
             lower()
-        data.rename({self.file_metadata.attribute_name: self.file_metadata.attribute_name + '_' + filename},
+        data.rename({self.metadata_object.attribute_name: self.metadata_object.attribute_name + '_' + filename},
                     axis=1,
                     inplace=True)
         data.rename_axis(self.new_time_column, inplace=True)
         data.index = pd.to_datetime(data.index)
+        return data
+
+    def preprocess_data(self, data):
+        fill_method = self.preprocess_data_params.fill
+        data = DataHelper.fill_missing_time(data, method=fill_method)
 
         if self.preprocess_data_params.test:
             data = DataHelper.extract_first_period(data, self.test_period)
+
+        skiprows = self.preprocess_data_params.skiprows
+        if skiprows > 0:
+            indices_to_drop = [i for i in range(len(data)) if i % skiprows != 0]
+            data = data.drop(data.index[indices_to_drop])
 
         return data
 
 
 class MultipleFilesDataBuilder(AbstractDataBuilder):
-    def __init__(self, metadata, preprocess_data_params):
+    def __init__(self, metadata: List, preprocess_data_params: PreprocessDataParams):
         super(MultipleFilesDataBuilder, self).__init__(metadata, preprocess_data_params)
 
-    def build(self):
-        dfs = [SingleFileDataBuilder(file_metadata).build() for file_metadata in self.metadata]
+    def build(self, raw_data: List):
+        dfs = [SingleFileDataBuilder(metadata_object, self.preprocess_data_params).build(raw_data[idx])
+               for idx, metadata_object
+               in enumerate(self.metadata)]
+
         start_idx = max(list(map(lambda x: x.index.min(), dfs)))
         end_idx = min(list(map(lambda x: x.index.max(), dfs)))
         dfs = [self.update_index(df, start_idx, end_idx, '10min')

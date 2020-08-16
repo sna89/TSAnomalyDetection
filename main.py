@@ -5,7 +5,7 @@ import numpy as np
 from Logger.logger import create_logger, get_logger
 from Helpers.params_helper import ParamsHelper
 from Helpers.params_validator import ParamsValidator
-from Builders.data_builder import DataBuilder
+from Builders.data_builder import DataConstructor
 from Helpers.data_plotter import DataPlotter
 
 if __name__ == "__main__":
@@ -19,8 +19,8 @@ if __name__ == "__main__":
 
         metadata = params_helper.get_metadata()
         preprocess_data_params = params_helper.get_preprocess_data_params()
-        data_builder = DataBuilder(metadata, preprocess_data_params)
-        data = data_builder.build()
+
+        data = DataConstructor(metadata, preprocess_data_params).read().build()
 
         detector_name = params_helper.get_detector_name()
         experiment_hyperparameters = params_helper.get_experiment_hyperparams()
@@ -42,5 +42,5 @@ if __name__ == "__main__":
             DataPlotter.plot_anomalies(data, anomalies)
 
     except Exception as e:
-        logger = get_logger()
+        logger = get_logger('main')
         logger.error(e)
