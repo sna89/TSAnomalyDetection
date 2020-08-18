@@ -134,13 +134,19 @@ class DataHelper:
 
     @staticmethod
     def split_train_test(data, forecast_periods_hours):
-        test_periods = forecast_periods_hours * DataConst.SAMPLES_PER_HOUR
-        train_periods = data.shape[0] - test_periods
+        last_sampletime = data.index.max()
 
-        train_df = pd.DataFrame(data=data.iloc[:train_periods],
-                                index=data.iloc[:train_periods].index)
-        test_df = pd.DataFrame(data=data.iloc[train_periods:],
-                               index=data.iloc[train_periods:].index)
+        train_end_time = DataHelper.relative_delta_time(last_sampletime,
+                                                        minutes=0,
+                                                        hours=-forecast_periods_hours,
+                                                        days=0,
+                                                        weeks=0)
+        train_df = pd.DataFrame(data=data.loc[:train_end_time],
+                                index=data.loc[:train_end_time].index)
+
+        train_samples = train_df.shape[0]
+        test_df = pd.DataFrame(data=data.iloc[train_samples:],
+                               index=data.iloc[train_samples:].index)
 
         return train_df, test_df
 
@@ -157,7 +163,7 @@ class DataHelper:
             data['date_diff'] = (data.time.shift(-1) - data.time).fillna(0)
 
             for loc_idx, (idx, row) in enumerate(data.iterrows()):
-                if row['date_diff'] > timedelta(minutes=15):
+                if row['date_diff'] > timedelta(minutes=20):
                     days = row['date_diff'].days % 7
                     weeks = row['date_diff'].days / 7
                     hours = row['date_diff'].seconds // 3600

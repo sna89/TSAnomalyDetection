@@ -58,20 +58,23 @@ class Arima(Model):
             self.logger.debug(msg)
 
     def run(self):
-        self.fit()
-        forecasts, conf_int = self.get_forecast()
+        if not self.is_constant_train_data():
+            self.fit()
+            forecasts, conf_int = self.get_forecast()
 
-        summary_df = pd.DataFrame(data={'forecasts': forecasts,
-                                        'lower_limit_conf_int': conf_int[:, 0],
-                                        'upper_limit_conf_int': conf_int[:, 1]},
-                                  index=self.data[self.train_periods:self.train_periods + self.test_periods].index)
+            summary_df = pd.DataFrame(data={'forecasts': forecasts,
+                                            'lower_limit_conf_int': conf_int[:, 0],
+                                            'upper_limit_conf_int': conf_int[:, 1]},
+                                      index=self.data[self.train_periods:].index)
 
-        summary_df['is_anomaly'] = np.where((summary_df.forecasts < summary_df.lower_limit_conf_int) |
-                                            (summary_df.forecasts > summary_df.upper_limit_conf_int),
-                                            1,
-                                            0)
+            summary_df['is_anomaly'] = np.where((summary_df.forecasts < summary_df.lower_limit_conf_int) |
+                                                (summary_df.forecasts > summary_df.upper_limit_conf_int),
+                                                1,
+                                                0)
 
-        return summary_df[summary_df['is_anomaly'] == 1]
+            return summary_df[summary_df['is_anomaly'] == 1]
+        else:
+            return pd.DataFrame()
 
     def plot_forecast(self):
         if self.init:
@@ -90,3 +93,8 @@ class Arima(Model):
         else:
             msg = "Need to fit arima model in order to plot forecast"
             self.logger.debug(msg)
+
+    def is_constant_train_data(self):
+        unique_values = self.train_df.nunique().values[0]
+        return True if unique_values == 1 else False
+

@@ -116,7 +116,6 @@ class MultipleFilesDataBuilder(AbstractDataBuilder):
                for df in dfs]
         df = pd.concat(dfs, axis=1)
         df = df.fillna(method='bfill')
-        df.to_csv('test.csv')
         return df
 
     def update_index(self, df: pd.DataFrame, start_idx: pd.DatetimeIndex, end_idx: pd.DatetimeIndex, freq='10min'):

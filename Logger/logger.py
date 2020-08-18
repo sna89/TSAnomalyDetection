@@ -13,7 +13,7 @@ def create_logger():
     dt_string = now.strftime("%d%m%Y%H%M%S")
 
     logger = logging.getLogger(LOGGER_NAME)
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
 
     logs_path = FileHelper.get_logs_path()
     if not FileHelper.path_exists(logs_path):

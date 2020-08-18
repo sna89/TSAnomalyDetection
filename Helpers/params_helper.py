@@ -70,8 +70,11 @@ class ParamsHelper:
         date_time = now.strftime("%m%d%Y%H%M%S")
         detector_name = self.get_detector_name()
         model_hyperparameters = self.get_model_hyperparams()
+        get_preprocess_data_params = self.get_preprocess_data_params()
 
         experiment_name = detector_name + '_' +\
                           '_'.join("{}={}".format(key,val) for (key,val) in model_hyperparameters.items()) + '_' + \
+                          '_'.join("{}={}".format(key,val) for (key,val) in get_preprocess_data_params.items() if
+                                   key != 'test_period') + '_' + \
                           date_time
         return experiment_name
