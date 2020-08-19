@@ -5,9 +5,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Builders/data_builder.py" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/data_builder.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Helpers/data_helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helpers/data_helper.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Helpers/params_helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helpers/params_helper.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logger/logger.py" beforeDir="false" afterPath="$PROJECT_DIR$/Logger/logger.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Arima/arima.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Arima/arima.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/params.yml" beforeDir="false" afterPath="$PROJECT_DIR$/params.yml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -126,15 +123,15 @@
         <counts>
           <entry key="Python Console" value="386" />
           <entry key="dummy" value="113" />
-          <entry key="py" value="26599" />
-          <entry key="yml" value="996" />
+          <entry key="py" value="26619" />
+          <entry key="yml" value="1013" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="PLAIN_TEXT" value="113" />
-          <entry key="Python" value="26985" />
-          <entry key="YAML" value="996" />
+          <entry key="Python" value="27005" />
+          <entry key="YAML" value="1013" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -143,8 +140,8 @@
           <entry key="gitignore" value="1" />
           <entry key="jpg" value="1" />
           <entry key="log" value="24" />
-          <entry key="py" value="271" />
-          <entry key="txt" value="7" />
+          <entry key="py" value="272" />
+          <entry key="txt" value="8" />
           <entry key="yml" value="36" />
         </counts>
       </usages-collector>
@@ -152,8 +149,8 @@
         <counts>
           <entry key="Image" value="1" />
           <entry key="Log" value="24" />
-          <entry key="PLAIN_TEXT" value="18" />
-          <entry key="Python" value="271" />
+          <entry key="PLAIN_TEXT" value="19" />
+          <entry key="Python" value="272" />
           <entry key="YAML" value="36" />
         </counts>
       </usages-collector>
@@ -164,8 +161,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="19" lean-forward="true" selection-start-column="19" selection-end-column="19" />
+            <state relative-caret-position="396">
+              <caret line="22" column="76" selection-start-line="22" selection-start-column="76" selection-end-line="22" selection-end-column="76" />
+              <folding>
+                <element signature="e#0#63#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -173,8 +173,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/AnomalyDetectors/ad.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="247">
-              <caret line="68" selection-start-line="68" selection-end-line="68" />
+            <state relative-caret-position="387">
+              <caret line="63" column="16" selection-start-line="63" selection-start-column="16" selection-end-line="63" selection-end-column="16" />
             </state>
           </provider>
         </entry>
@@ -184,6 +184,15 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="176">
               <caret line="23" column="55" selection-start-line="23" selection-start-column="43" selection-end-line="23" selection-end-column="56" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/requirements.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="619">
+              <caret line="223" column="14" selection-start-line="223" selection-end-line="224" />
             </state>
           </provider>
         </entry>
@@ -200,8 +209,21 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/params.yml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="380">
-              <caret line="22" column="27" selection-start-line="22" selection-start-column="27" selection-end-line="22" selection-end-column="27" />
+            <state relative-caret-position="440">
+              <caret line="46" column="19" selection-start-line="46" selection-start-column="19" selection-end-line="46" selection-end-column="19" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tests/test_data_builder.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1056">
+              <caret line="54" selection-start-line="54" selection-end-line="54" />
+              <folding>
+                <element signature="e#0#15#0" expanded="true" />
+                <marker date="1597587097197" expanded="true" signature="324:328" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -209,11 +231,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Helpers/data_helper.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="427">
-              <caret line="146" column="41" lean-forward="true" selection-start-line="146" selection-start-column="41" selection-end-line="146" selection-end-column="41" />
+            <state relative-caret-position="-628">
+              <caret line="38" column="8" selection-start-line="38" selection-start-column="8" selection-end-line="38" selection-end-column="8" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
-                <marker date="1597743466642" expanded="true" signature="288:379" ph="..." />
+                <marker date="1597829916086" expanded="true" signature="288:379" ph="..." />
               </folding>
             </state>
           </provider>
@@ -222,8 +244,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Builders/data_builder.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="207">
-              <caret line="100" selection-start-line="100" selection-end-line="100" />
+            <state relative-caret-position="232">
+              <caret line="71" column="43" lean-forward="true" selection-start-line="71" selection-start-column="43" selection-end-line="71" selection-end-column="43" />
+              <folding>
+                <element signature="e#0#29#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -263,6 +288,7 @@
       <find>raise</find>
       <find>apply</find>
       <find>test.csv</find>
+      <find>fillna</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -317,10 +343,10 @@
         <option value="$PROJECT_DIR$/Helpers/params_helper.py" />
         <option value="$PROJECT_DIR$/Logger/logger.py" />
         <option value="$PROJECT_DIR$/Models/SeasonalESD/seasonal_esd.py" />
-        <option value="$PROJECT_DIR$/Builders/data_builder.py" />
         <option value="$PROJECT_DIR$/main.py" />
-        <option value="$PROJECT_DIR$/Helpers/data_helper.py" />
         <option value="$PROJECT_DIR$/Models/Arima/arima.py" />
+        <option value="$PROJECT_DIR$/Helpers/data_helper.py" />
+        <option value="$PROJECT_DIR$/Builders/data_builder.py" />
         <option value="$PROJECT_DIR$/params.yml" />
       </list>
     </option>
@@ -363,35 +389,7 @@
             <path>
               <item name="TSAnomalyDetection" type="b2602c69:ProjectViewProjectNode" />
               <item name="TSAnomalyDetection" type="462c0819:PsiDirectoryNode" />
-              <item name="Helpers" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="TSAnomalyDetection" type="b2602c69:ProjectViewProjectNode" />
-              <item name="TSAnomalyDetection" type="462c0819:PsiDirectoryNode" />
-              <item name="Logger" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="TSAnomalyDetection" type="b2602c69:ProjectViewProjectNode" />
-              <item name="TSAnomalyDetection" type="462c0819:PsiDirectoryNode" />
-              <item name="Models" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="TSAnomalyDetection" type="b2602c69:ProjectViewProjectNode" />
-              <item name="TSAnomalyDetection" type="462c0819:PsiDirectoryNode" />
-              <item name="Models" type="462c0819:PsiDirectoryNode" />
-              <item name="Arima" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="TSAnomalyDetection" type="b2602c69:ProjectViewProjectNode" />
-              <item name="TSAnomalyDetection" type="462c0819:PsiDirectoryNode" />
-              <item name="Models" type="462c0819:PsiDirectoryNode" />
-              <item name="LstmAE" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="TSAnomalyDetection" type="b2602c69:ProjectViewProjectNode" />
-              <item name="TSAnomalyDetection" type="462c0819:PsiDirectoryNode" />
-              <item name="Models" type="462c0819:PsiDirectoryNode" />
-              <item name="SeasonalESD" type="462c0819:PsiDirectoryNode" />
+              <item name="tests" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -522,8 +520,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
-        <item itemvalue="Python tests.pytest for test_params.TestParams" />
         <item itemvalue="Python tests.pytest for test_data_builder.TestDataBuilder" />
+        <item itemvalue="Python tests.pytest for test_params.TestParams" />
         <item itemvalue="Python tests.pytest for test_data_builder.TestDataBuilder.test_schema_type_3" />
         <item itemvalue="Python tests.pytest in test_data_builder.py" />
       </list>
@@ -565,12 +563,6 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="pytest_in_test_data_builder_py - 2020.08.16 at 16h 45m 40s.xml">
-      <configuration name="pytest in test_data_builder.py" configurationId="tests" />
-    </history-entry>
-    <history-entry file="pytest_in_test_data_builder_py - 2020.08.16 at 16h 46m 04s.xml">
-      <configuration name="pytest in test_data_builder.py" configurationId="tests" />
-    </history-entry>
     <history-entry file="pytest_for_test_data_builder_TestDataBuilder_test_schema_type_3 - 2020.08.16 at 17h 05m 40s.xml">
       <configuration name="pytest for test_data_builder.TestDataBuilder.test_schema_type_3" configurationId="tests" />
     </history-entry>
@@ -595,6 +587,12 @@
     <history-entry file="pytest_for_test_params_TestParams - 2020.08.16 at 17h 33m 15s.xml">
       <configuration name="pytest for test_params.TestParams" configurationId="tests" />
     </history-entry>
+    <history-entry file="pytest_for_test_data_builder_TestDataBuilder - 2020.08.19 at 12h 36m 20s.xml">
+      <configuration name="pytest for test_data_builder.TestDataBuilder" configurationId="tests" />
+    </history-entry>
+    <history-entry file="pytest_for_test_data_builder_TestDataBuilder - 2020.08.19 at 13h 41m 55s.xml">
+      <configuration name="pytest for test_data_builder.TestDataBuilder" configurationId="tests" />
+    </history-entry>
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -608,12 +606,12 @@
   <component name="ToolWindowManager">
     <frame x="-1928" y="-129" width="1936" height="1056" extended-state="7" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49726775" visible="true" weight="0.117492095" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49726775" visible="true" weight="0.10273973" />
       <window_info id="Structure" order="1" sideWeight="0.5027322" side_tool="true" weight="0.07481559" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3275488" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49894625" visible="true" weight="0.25813448" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49894625" visible="true" weight="0.25813448" />
       <window_info anchor="bottom" id="TODO" order="3" weight="0.21258135" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.27440348" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
@@ -717,6 +715,16 @@
           <url>file://$PROJECT_DIR$/Models/Arima/arima.py</url>
           <line>31</line>
           <option name="timeStamp" value="447" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>22</line>
+          <option name="timeStamp" value="448" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Helpers/data_helper.py</url>
+          <line>160</line>
+          <option name="timeStamp" value="449" />
         </line-breakpoint>
       </breakpoints>
       <breakpoints-dialog>
@@ -983,24 +991,6 @@
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/requirements.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4460">
-          <caret line="223" column="14" selection-start-line="223" selection-end-line="224" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tests/test_data_builder.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="960">
-          <caret line="54" selection-start-line="54" selection-end-line="54" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-            <marker date="1597587097197" expanded="true" signature="324:328" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Helpers/params_validator.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="834">
@@ -1089,42 +1079,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Builders/data_builder.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
-          <caret line="100" selection-start-line="100" selection-end-line="100" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Anaconda3/envs/TSAnomalyDetectionEnv/Lib/site-packages/statsmodels/regression/linear_model.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1534">
           <caret line="1619" selection-start-line="1619" selection-end-line="1619" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Helpers/data_helper.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="427">
-          <caret line="146" column="41" lean-forward="true" selection-start-line="146" selection-start-column="41" selection-end-line="146" selection-end-column="41" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-            <marker date="1597743466642" expanded="true" signature="288:379" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="19" lean-forward="true" selection-start-column="19" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AnomalyDetectors/ad.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="68" selection-start-line="68" selection-end-line="68" />
         </state>
       </provider>
     </entry>
@@ -1142,10 +1100,66 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/AnomalyDetectors/ad.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="387">
+          <caret line="63" column="16" selection-start-line="63" selection-start-column="16" selection-end-line="63" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/test_data_builder.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1056">
+          <caret line="54" selection-start-line="54" selection-end-line="54" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+            <marker date="1597587097197" expanded="true" signature="324:328" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Builders/data_builder.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="232">
+          <caret line="71" column="43" lean-forward="true" selection-start-line="71" selection-start-column="43" selection-end-line="71" selection-end-column="43" />
+          <folding>
+            <element signature="e#0#29#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Helpers/data_helper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-628">
+          <caret line="38" column="8" selection-start-line="38" selection-start-column="8" selection-end-line="38" selection-end-column="8" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <marker date="1597829916086" expanded="true" signature="288:379" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/requirements.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="619">
+          <caret line="223" column="14" selection-start-line="223" selection-end-line="224" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="22" column="76" selection-start-line="22" selection-start-column="76" selection-end-line="22" selection-end-column="76" />
+          <folding>
+            <element signature="e#0#63#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/params.yml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="380">
-          <caret line="22" column="27" selection-start-line="22" selection-start-column="27" selection-end-line="22" selection-end-column="27" />
+        <state relative-caret-position="440">
+          <caret line="46" column="19" selection-start-line="46" selection-start-column="19" selection-end-line="46" selection-end-column="19" />
         </state>
       </provider>
     </entry>

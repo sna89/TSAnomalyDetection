@@ -1,5 +1,5 @@
 ---
-detector_name: arima
+detector_name: esd
 
 output:
   csv: True
@@ -10,18 +10,18 @@ preprocess_data_params:
   test_period:
     hours: 0
     days: 0
-    weeks: 4
+    weeks: 2
   fill: bfill
-  skiprows: 72
+  skiprows: 0
 
 experiment_hyperparameters:
   train_period:
     hours: 0
     days: 0
     weeks: 1
-  forecast_period_hours: 6
-  retrain_schedule_hours: 6
-  scale: False
+  forecast_period_hours: 24
+  retrain_schedule_hours: 24
+  scale: True
 
 model_hyperparameters:
   esd:

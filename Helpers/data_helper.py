@@ -30,17 +30,15 @@ class DataHelper:
     @staticmethod
     def filter(df, index, type_column, value_column, attribute_name):
         df_ = copy.deepcopy(df[df[type_column] == attribute_name])
-        df_ = DataHelper.drop_duplicated_rows(df_, key_columns=[index, value_column])
         df_.index = pd.to_datetime(df_[index], format="%d-%m-%y %H:%M", infer_datetime_format=True, dayfirst=True)
         df_ = df_[[value_column]]
         df_.rename({value_column: attribute_name}, axis=1, inplace=True)
         return df_
 
     @staticmethod
-    def drop_duplicated_rows(df_, key_columns):
-        # for logging
-        df_['duplicated'] = df_.duplicated(subset=key_columns)
-        df_ = df_[~df_['duplicated']]
+    def drop_duplicated_rows(df_):
+        df_['duplicated'] = df_.index.duplicated(keep='first')
+        df_ = df_[df_['duplicated'] == False]
         return df_.drop(labels=['duplicated'], axis=1)
 
     @staticmethod
@@ -160,7 +158,7 @@ class DataHelper:
             columns = list(raw_data.columns)
 
             data['time'] = data.index
-            data['date_diff'] = (data.time.shift(-1) - data.time).fillna(0)
+            data['date_diff'] = (data.time.shift(-1) - data.time).fillna(pd.Timedelta(seconds=0))
 
             for loc_idx, (idx, row) in enumerate(data.iterrows()):
                 if row['date_diff'] > timedelta(minutes=20):

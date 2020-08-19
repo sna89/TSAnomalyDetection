@@ -69,6 +69,7 @@ class SingleFileDataBuilder(AbstractDataBuilder):
                                      value_column='Value',
                                      attribute_name=self.metadata_object.attribute_name)
 
+        data = DataHelper.drop_duplicated_rows(data)
         data = self.update_schema(data)
         data = self.preprocess_data(data)
 
@@ -87,6 +88,8 @@ class SingleFileDataBuilder(AbstractDataBuilder):
         return data
 
     def preprocess_data(self, data):
+        data = DataHelper.drop_duplicated_rows(data)
+
         fill_method = self.preprocess_data_params.fill
         data = DataHelper.fill_missing_time(data, method=fill_method)
 
@@ -122,7 +125,7 @@ class MultipleFilesDataBuilder(AbstractDataBuilder):
         df, start_idx, end_idx = DataHelper.get_mutual_slice(df, start_idx, end_idx)
         df = df.reset_index()
         df[self.new_time_column] = df.apply(lambda x: DataHelper.round_to_10_minutes(x[self.new_time_column]), axis=1)
-        df = DataHelper.drop_duplicated_rows(df, [self.new_time_column])
+
 
         df.set_index(keys=self.new_time_column, drop=True, inplace=True)
         new_index = DataHelper.create_new_rnd_index(start_idx, end_idx, freq)
