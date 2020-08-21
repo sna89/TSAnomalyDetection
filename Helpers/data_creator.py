@@ -68,7 +68,7 @@ class DataCreator:
 
     @staticmethod
     def create_anomaly_df(anomalies, index):
-        anomalies_idx = np.asarray(anomalies[idx] for idx in index if anomalies[idx] != 0)
+        anomalies_idx = np.asarray([idx for i, idx in enumerate(index) if anomalies[i] != 0])
         anomalies_df = pd.DataFrame(data={'Anomaly': [anomaly for anomaly in anomalies if anomaly != 0]},
                                     index=anomalies_idx)
         return anomalies_df

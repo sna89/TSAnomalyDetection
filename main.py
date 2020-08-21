@@ -64,7 +64,7 @@ if __name__ == "__main__":
 
         create_data_params = params_helper.get_create_synthetic_data()
         anomalies_true_df = pd.DataFrame()
-        if create_data_params.create:
+        if create_data_params.to_create:
             anomalies_true_df = create_synthetic_data(create_data_params)
 
         data = contruct_data(params_helper)

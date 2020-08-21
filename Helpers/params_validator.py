@@ -1,9 +1,10 @@
-from Helpers.params_helper import ParamsHelper, CreateSyntheticData
+from Helpers.params_helper import ParamsHelper, Metadata
 from Helpers.data_helper import DataHelper, Period, DataConst
 from datetime import datetime
 from Builders.data_builder import PreprocessDataParams
 from AnomalyDetectors.ad import ExperimentHyperParameters
 from Logger.logger import get_logger
+
 
 class ParamsValidator:
     def __init__(self, params_helper: ParamsHelper):
@@ -20,7 +21,7 @@ class ParamsValidator:
         self.preprocess_data_params = PreprocessDataParams(**self.params_helper.get_preprocess_data_params())
         self.test_period = Period(**self.preprocess_data_params.test_period)
 
-        self.create_data = self.params_helper.get_create_data()
+        self.create_data = self.params_helper.get_create_synthetic_data()
 
         self.logger = get_logger(__class__.__name__)
 
@@ -37,6 +38,7 @@ class ParamsValidator:
         self.validate_experiment_hyperparameters()
         self.validate_train_time()
         self.validate_preprocess_data_params()
+        self.validate_data_creator()
 
     def validate_uni_variate(self):
         num_files = len(self.metadata)
@@ -86,7 +88,7 @@ class ParamsValidator:
         return
 
     def get_filenames(self):
-        return [file_metadata.filename for file_metadata in self.metadata]
+        return [Metadata(**file_metadata).filename for file_metadata in self.metadata]
 
     def validate_train_time(self):
         is_test = self.preprocess_data_params.test
@@ -120,7 +122,7 @@ class ParamsValidator:
             raise ValueError(msg)
 
     def validate_data_creator(self):
-        if self.create_data.create:
+        if self.create_data.to_create:
             filenames = self.get_filenames()
             if self.create_data.filename not in filenames:
                 msg = 'new created data not in metadata'
