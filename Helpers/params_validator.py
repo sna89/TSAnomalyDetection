@@ -1,4 +1,4 @@
-from Helpers.params_helper import ParamsHelper
+from Helpers.params_helper import ParamsHelper, CreateData
 from Helpers.data_helper import DataHelper, Period, DataConst
 from datetime import datetime
 from Builders.data_builder import PreprocessDataParams
@@ -19,6 +19,8 @@ class ParamsValidator:
 
         self.preprocess_data_params = PreprocessDataParams(**self.params_helper.get_preprocess_data_params())
         self.test_period = Period(**self.preprocess_data_params.test_period)
+
+        self.create_data = self.params_helper.get_create_data()
 
         self.logger = get_logger(__class__.__name__)
 
@@ -83,6 +85,9 @@ class ParamsValidator:
                         raise Exception(msg)
         return
 
+    def get_filenames(self):
+        return [file_metadata.filename for file_metadata in self.metadata]
+
     def validate_train_time(self):
         is_test = self.preprocess_data_params.test
         if is_test:
@@ -113,3 +118,11 @@ class ParamsValidator:
             msg = 'skiprows parameter must be greated than 0.'
             self.logger(msg)
             raise ValueError(msg)
+
+    def validate_data_creator(self):
+        if self.create_data.create:
+            filenames = self.get_filenames()
+            if self.create_data.filename not in filenames:
+                msg = 'new created data not in metadata'
+                self.logger(msg)
+                raise ValueError(msg)

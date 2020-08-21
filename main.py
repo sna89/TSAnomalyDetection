@@ -7,6 +7,7 @@ from Helpers.params_helper import ParamsHelper
 from Helpers.params_validator import ParamsValidator
 from Builders.data_builder import DataConstructor
 from Helpers.data_plotter import DataPlotter
+from Helpers.data_creator import DataCreator
 
 if __name__ == "__main__":
     create_logger()
@@ -16,6 +17,13 @@ if __name__ == "__main__":
     try:
         params_helper = ParamsHelper()
         ParamsValidator(params_helper).validate()
+
+        create_data = params_helper.get_create_data()
+        if create_data.create:
+            filename = create_data.filename
+            data_creator = DataCreator()
+            df = data_creator.create_data('2020-01-01 00:00', '2020-01-08 00:00', '10min')
+            data_creator.save_to_csv(df, filename)
 
         metadata = params_helper.get_metadata()
         preprocess_data_params = params_helper.get_preprocess_data_params()

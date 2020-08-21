@@ -5,6 +5,7 @@ import statsmodels.api as sm
 import pylab as py
 import seaborn as sns
 
+
 class DataPlotter:
     def __init__(self):
         sns.set()

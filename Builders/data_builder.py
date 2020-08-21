@@ -125,8 +125,6 @@ class MultipleFilesDataBuilder(AbstractDataBuilder):
         df, start_idx, end_idx = DataHelper.get_mutual_slice(df, start_idx, end_idx)
         df = df.reset_index()
         df[self.new_time_column] = df.apply(lambda x: DataHelper.round_to_10_minutes(x[self.new_time_column]), axis=1)
-
-
         df.set_index(keys=self.new_time_column, drop=True, inplace=True)
         new_index = DataHelper.create_new_rnd_index(start_idx, end_idx, freq)
         df = df.reindex(new_index)

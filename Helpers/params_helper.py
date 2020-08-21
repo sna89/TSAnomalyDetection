@@ -26,6 +26,13 @@ class PreprocessDataParams:
     fill: str
     skiprows: int
 
+
+@dataclass
+class CreateData:
+    create: bool
+    filename: str
+
+
 class ParamsHelper:
     def __init__(self, filename='params.yml'):
         params_path = FileHelper.get_file_path(filename)
@@ -78,3 +85,6 @@ class ParamsHelper:
                                    key != 'test_period') + '_' + \
                           date_time
         return experiment_name
+
+    def get_create_data(self):
+        return CreateData(**self.get_params('create_data'))
