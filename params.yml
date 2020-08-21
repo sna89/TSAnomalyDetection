@@ -1,8 +1,8 @@
 ---
 detector_name: esd
 
-create_data:
-  create: True
+create_synthetic_data:
+  to_create: True
   filename: Synthetic.csv
 
 output:

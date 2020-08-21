@@ -28,8 +28,8 @@ class PreprocessDataParams:
 
 
 @dataclass
-class CreateData:
-    create: bool
+class CreateSyntheticData:
+    to_create: bool
     filename: str
 
 
@@ -86,5 +86,5 @@ class ParamsHelper:
                           date_time
         return experiment_name
 
-    def get_create_data(self):
-        return CreateData(**self.get_params('create_data'))
+    def get_create_synthetic_data(self):
+        return CreateSyntheticData(**self.get_params('create_synthetic_data'))

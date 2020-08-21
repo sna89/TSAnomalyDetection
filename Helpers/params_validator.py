@@ -1,4 +1,4 @@
-from Helpers.params_helper import ParamsHelper, CreateData
+from Helpers.params_helper import ParamsHelper, CreateSyntheticData
 from Helpers.data_helper import DataHelper, Period, DataConst
 from datetime import datetime
 from Builders.data_builder import PreprocessDataParams
