@@ -4,7 +4,7 @@ import pandas as pd
 
 class DataCreatorConst:
     ANOMALY_ADDITION = 2
-    NUN_OF_ANOMALIES = 16
+    NUN_OF_ANOMALIES = 10
     A = 1
     W = 1
     DAYS = 7
@@ -58,17 +58,22 @@ class DataCreator:
 
     @staticmethod
     def create_anomaly_data(T):
-        anomalies = np.asarray([DataCreatorConst.ANOMALY_ADDITION
-                                if i % int(T / DataCreatorConst.NUN_OF_ANOMALIES) == 0
-                                     and i != 0
-                                     and i != T - 1
-                                else 0
-                                for i in range(T)])
+        anomalies = np.zeros(T)
+        indices = np.arange(T)
+        for _ in range(DataCreatorConst.NUN_OF_ANOMALIES):
+            anomaly_idx = np.random.choice(indices, 1, replace=True)
+
+            for iter in range(5):
+                curr_idx = anomaly_idx + iter
+                if curr_idx <= T:
+                    anomalies[curr_idx] = DataCreatorConst.ANOMALY_ADDITION - iter*0.4
+                    indices = np.delete(indices, curr_idx, 0)
+
         return anomalies
 
     @staticmethod
     def create_anomaly_df(anomalies, index):
-        anomalies_idx = np.asarray([idx for i, idx in enumerate(index) if anomalies[i] != 0])
+        anomalies_dt_indices = [index[idx] for idx, anomaly in enumerate(anomalies) if anomaly != 0]
         anomalies_df = pd.DataFrame(data={'Anomaly': [anomaly for anomaly in anomalies if anomaly != 0]},
-                                    index=anomalies_idx)
+                                    index=anomalies_dt_indices)
         return anomalies_df

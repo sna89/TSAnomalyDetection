@@ -20,11 +20,11 @@ preprocess_data_params:
 
 experiment_hyperparameters:
   train_period:
-    hours: 12
+    hours: 6
     days: 0
     weeks: 0
-  forecast_period_hours: 6
-  retrain_schedule_hours: 6
+  forecast_period_hours: 2
+  retrain_schedule_hours: 2
   scale: False
 
 model_hyperparameters:

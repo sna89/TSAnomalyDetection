@@ -23,6 +23,7 @@ def create_synthetic_data(create_data_params):
     data_creator.save_to_csv(df, filename)
     return anomalies_df
 
+
 def contruct_data(params_helper):
     metadata = params_helper.get_metadata()
     preprocess_data_params = params_helper.get_preprocess_data_params()
@@ -41,7 +42,7 @@ def run_experiment(params_helper, data):
     return anomalies
 
 
-def output_results(params_helper, data, anomalies_pred_df, anomalies_true_df=None):
+def output_results(params_helper, data, anomalies_pred_df, anomalies_true_df=pd.DataFrame()):
     is_output = params_helper.get_is_output()
     experiment_name = params_helper.create_experiment_name()
 
@@ -49,9 +50,14 @@ def output_results(params_helper, data, anomalies_pred_df, anomalies_true_df=Non
         anomalies_pred_df.to_csv(experiment_name + '.csv')
 
     if is_output.plot:
-        DataPlotter.plot_anomalies(data, anomalies_pred_df, experiment_name)
+        DataPlotter.plot_anomalies(data=data,
+                                   df_anomalies=anomalies_pred_df,
+                                   plot_name=experiment_name,
+                                   anomalies_true_df=anomalies_true_df)
     else:
-        DataPlotter.plot_anomalies(data, anomalies_pred_df)
+        DataPlotter.plot_anomalies(data=data,
+                                   df_anomalies=anomalies_pred_df,
+                                   anomalies_true_df=anomalies_true_df)
 
 
 if __name__ == "__main__":
