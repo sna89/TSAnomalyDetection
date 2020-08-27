@@ -7,7 +7,7 @@ class DataCreatorConst:
     NUN_OF_ANOMALIES = 10
     A = 1
     W = 1
-    DAYS = 7
+    DAYS = 14
     CYCLE_PER_DAY = 4
 
 
@@ -59,7 +59,7 @@ class DataCreator:
     @staticmethod
     def create_anomaly_data(T):
         anomalies = np.zeros(T)
-        indices = np.arange(T)
+        indices = np.arange(start=int(T*0.6), stop=T, step=1)
         for _ in range(DataCreatorConst.NUN_OF_ANOMALIES):
             anomaly_idx = np.random.choice(indices, 1, replace=True)
 

@@ -19,7 +19,7 @@ def get_parameters(filename='params.yml'):
 def create_synthetic_data(create_data_params):
     filename = create_data_params.filename
     data_creator = DataCreator()
-    df, anomalies_df = data_creator.create_data('2020-01-01 00:00', '2020-01-08 00:00', '10min')
+    df, anomalies_df = data_creator.create_data('2020-01-01 00:00', '2020-01-15 00:00', '10min')
     data_creator.save_to_csv(df, filename)
     return anomalies_df
 
@@ -74,6 +74,7 @@ if __name__ == "__main__":
             anomalies_true_df = create_synthetic_data(create_data_params)
 
         data = contruct_data(params_helper)
+        data.to_csv('processed.csv')
         anomalies_pred_df = run_experiment(params_helper, data)
         output_results(params_helper, data, anomalies_pred_df, anomalies_true_df)
 

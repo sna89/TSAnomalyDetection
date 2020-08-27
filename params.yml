@@ -15,16 +15,16 @@ preprocess_data_params:
     hours: 0
     days: 0
     weeks: 2
-  fill: bfill
+  fill: ignore
   skiprows: 0
 
 experiment_hyperparameters:
   train_period:
-    hours: 6
+    hours: 0
     days: 0
-    weeks: 0
-  forecast_period_hours: 2
-  retrain_schedule_hours: 2
+    weeks: 1
+  forecast_period_hours: 24
+  retrain_schedule_hours: 24
   scale: False
 
 model_hyperparameters:
