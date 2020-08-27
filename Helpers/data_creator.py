@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-
+from Logger.logger import get_logger
 
 class DataCreatorConst:
     ANOMALY_ADDITION = 2
@@ -12,11 +12,15 @@ class DataCreatorConst:
 
 
 class DataCreator:
-    def __init__(self):
-        pass
+    logger = get_logger("DataCreator")
 
-    @staticmethod
-    def create_data(start, end, freq):
+    @classmethod
+    def create_data(cls, start, end, freq):
+        cls.logger.info("Start creating synthetic dataset:"
+                        "start date: {},"
+                        "end date: {},"
+                        "freq: {}".format(start, end, freq))
+
         dt_index = DataCreator.create_index(start, end, freq)
         T = len(dt_index)
 
@@ -38,11 +42,13 @@ class DataCreator:
 
         anomalies_df = DataCreator.create_anomaly_df(anomalies, dt_index)
 
+        cls.logger.info("Synthetic data was created successfully")
         return df, anomalies_df
 
-    @staticmethod
-    def save_to_csv(df, csv_name):
+    @classmethod
+    def save_to_csv(cls, df, csv_name):
         df.to_csv(csv_name)
+        cls.logger.info("Synthetic data was saved successfully - filename: {}".format(csv_name))
 
     @staticmethod
     def create_index(start, end, freq):

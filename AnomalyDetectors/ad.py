@@ -59,12 +59,12 @@ class AnomalyDetector(ABC):
                     self.logger.info("Filtered anomalies: {}".format(filtered_anomalies))
                     self.df_anomalies = pd.concat([self.df_anomalies, filtered_anomalies], axis=0)
                 else:
-                    self.logger.info("No anomalies detected")
+                    self.logger.info("No anomalies detected in current iteration")
 
                 df_no_anomalies.drop(labels=detected_anomalies.index, axis=0, inplace=True)
 
             else:
-                self.logger.info("No anomalies detected")
+                self.logger.info("No anomalies detected in current iteration")
 
             epoch_start_time, epoch_end_time = self.update_train_period(df_no_anomalies,
                                                                         epoch_start_time,

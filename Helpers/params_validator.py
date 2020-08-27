@@ -26,6 +26,8 @@ class ParamsValidator:
         self.logger = get_logger(__class__.__name__)
 
     def validate(self):
+        self.logger.info("Validating experiment parameters")
+
         self.validate_metadata()
 
         if self.detector_name in self.detectors:
@@ -39,6 +41,8 @@ class ParamsValidator:
         self.validate_train_time()
         self.validate_preprocess_data_params()
         self.validate_data_creator()
+
+        self.logger.info("Experiment parameters validated successfully")
 
     def validate_uni_variate(self):
         num_files = len(self.metadata)

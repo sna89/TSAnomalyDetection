@@ -16,6 +16,7 @@ class DataConstructor:
         self.raw_data = []
 
     def read(self):
+        self.logger.info("Start reading from data sources:")
         for metadata_object in self.metadata:
             data_reader = DataReaderFactory(metadata_object).get_data_reader()
             self.raw_data.append(data_reader.read_data(metadata_object))
@@ -58,6 +59,8 @@ class SingleFileDataBuilder(AbstractDataBuilder):
         self.metadata_object = Metadata(**self.metadata[0])
 
     def build(self, raw_data: pd.DataFrame):
+        self.logger.info("Start processing data")
+
         data = raw_data
 
         if self.metadata_object.attribute_name in data.columns:
@@ -73,6 +76,7 @@ class SingleFileDataBuilder(AbstractDataBuilder):
         data = self.update_schema(data)
         data = self.preprocess_data(data)
 
+        self.logger.info("Finished processing data successfully")
         return data
 
     def update_schema(self, data):

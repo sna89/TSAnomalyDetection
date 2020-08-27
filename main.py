@@ -2,12 +2,14 @@ from AnomalyDetectors.ad_factory import AnomalyDetectionFactory
 import pandas as pd
 import sys
 import numpy as np
-from Logger.logger import create_logger, get_logger
+from Logger.logger import get_logger
 from Helpers.params_helper import ParamsHelper
 from Helpers.params_validator import ParamsValidator
 from Builders.data_builder import DataConstructor
 from Helpers.data_plotter import DataPlotter
 from Helpers.data_creator import DataCreator
+pd.set_option('display.max_rows', None)
+np.set_printoptions(threshold=sys.maxsize)
 
 
 def get_parameters(filename='params.yml'):
@@ -38,6 +40,8 @@ def run_experiment(params_helper, data):
     detector = AnomalyDetectionFactory(detector_name, experiment_hyperparameters, model_hyperparameters) \
         .get_detector()
 
+    logger = get_logger('run_experiment')
+    logger.info("Starting experiment for anomaly detector: {}".format(detector_name))
     anomalies = detector.run_anomaly_detection(data)
     return anomalies
 
@@ -61,9 +65,8 @@ def output_results(params_helper, data, anomalies_pred_df, anomalies_true_df=pd.
 
 
 if __name__ == "__main__":
-    create_logger()
-    pd.set_option('display.max_rows', None)
-    np.set_printoptions(threshold=sys.maxsize)
+    logger = get_logger('Main')
+    logger.info('Starting')
 
     try:
         params_helper = get_parameters()
@@ -74,10 +77,11 @@ if __name__ == "__main__":
             anomalies_true_df = create_synthetic_data(create_data_params)
 
         data = contruct_data(params_helper)
-        data.to_csv('processed.csv')
         anomalies_pred_df = run_experiment(params_helper, data)
         output_results(params_helper, data, anomalies_pred_df, anomalies_true_df)
 
     except Exception as e:
-        logger = get_logger('main')
         logger.error(e)
+
+    finally:
+        logger.info('Finished')

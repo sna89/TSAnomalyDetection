@@ -8,12 +8,11 @@ from Helpers.file_helper import FileHelper
 LOGGER_NAME = 'TSAnomalyDetectionLogger'
 
 
-def create_logger():
+def get_logger(name):
     now = datetime.now()
     dt_string = now.strftime("%d%m%Y%H%M%S")
 
-    logger = logging.getLogger(LOGGER_NAME)
-    logger.setLevel(logging.INFO)
+    logger = logging.getLogger(name)
 
     logs_path = FileHelper.get_logs_path()
     if not FileHelper.path_exists(logs_path):
@@ -22,12 +21,18 @@ def create_logger():
     f_handler = logging.FileHandler(logs_path + '\log_{}.log'.format(dt_string))
     f_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     f_handler.setFormatter(f_format)
-
+    f_handler.setLevel(logging.DEBUG)
     logger.addHandler(f_handler)
 
+    c_handler = logging.StreamHandler()
+    c_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    c_handler.setFormatter(c_format)
+    c_handler.setLevel(logging.DEBUG)
+    logger.addHandler(c_handler)
 
-def get_logger(name):
-    return logging.getLogger(name)
+    logger.setLevel(logging.DEBUG)
+
+    return logger
 
 
 class MethodLogger:

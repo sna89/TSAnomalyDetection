@@ -3,6 +3,8 @@ import pandas as pd
 from abc import ABC, abstractmethod
 from Helpers.params_helper import Metadata
 from typing import Union
+from Logger.logger import get_logger
+
 
 class DataReaderFactory:
     def __init__(self, metadata_object: dict):
@@ -31,9 +33,18 @@ class CsvDataReader(DataReader):
 
     @staticmethod
     def read_data(metadata: Union[None, dict], filename=None) -> pd.DataFrame:
-        if metadata:
-            metadata = Metadata(**metadata)
-            filename = metadata.filename
+        logger = get_logger(__class__.__name__)
 
-        filename_path = FileHelper.get_file_path(filename)
-        return pd.read_csv(filename_path, dayfirst=True)
+        try:
+            if metadata:
+                metadata = Metadata(**metadata)
+                filename = metadata.filename
+
+            logger.info("Reading data from csv file: {}".format(filename))
+            filename_path = FileHelper.get_file_path(filename)
+            df = pd.read_csv(filename_path, dayfirst=True)
+            logger.info("Reading data finished successfully")
+            return df
+
+        except Exception as e:
+            logger.error("Error reading data: {}".format(e))
