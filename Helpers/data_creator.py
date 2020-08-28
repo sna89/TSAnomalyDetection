@@ -2,9 +2,12 @@ import numpy as np
 import pandas as pd
 from Logger.logger import get_logger
 
+
 class DataCreatorConst:
-    ANOMALY_ADDITION = 2
-    NUN_OF_ANOMALIES = 10
+    ANOMALY_ADDITION = 4
+    ANOMALY_DECREASE = 0.5
+    ITERATIONS = 5
+    NUN_OF_ANOMALIES = 5
     A = 1
     W = 1
     DAYS = 14
@@ -34,11 +37,14 @@ class DataCreator:
         y1 = DataCreator.multiply_arr(y1, DataCreatorConst.DAYS)
         y2 = DataCreator.multiply_arr(y2, DataCreatorConst.DAYS * DataCreatorConst.CYCLE_PER_DAY)
 
-        noise = np.random.normal(loc=0, scale=float(2 * DataCreatorConst.A) / 10, size=T)
+        noise = np.random.normal(loc=0, scale=float(DataCreatorConst.A) / 10, size=T)
         anomalies = DataCreator.create_anomaly_data(T)
 
         y = y1 + y2 + noise + anomalies
         df = pd.DataFrame(data={'Value': y, 'index': dt_index})
+
+        # df['Value'] = df['Value'].diff(1)
+        # df = df.dropna()
 
         anomalies_df = DataCreator.create_anomaly_df(anomalies, dt_index)
 
@@ -69,11 +75,17 @@ class DataCreator:
         for _ in range(DataCreatorConst.NUN_OF_ANOMALIES):
             anomaly_idx = np.random.choice(indices, 1, replace=True)
 
-            for iter in range(5):
+            for iter in range(1, DataCreatorConst.ITERATIONS + 1):
                 curr_idx = anomaly_idx + iter
                 if curr_idx <= T:
-                    anomalies[curr_idx] = DataCreatorConst.ANOMALY_ADDITION - iter*0.4
+                    anomalies[curr_idx] = DataCreatorConst.ANOMALY_ADDITION - iter*DataCreatorConst.ANOMALY_DECREASE
                     indices = np.delete(indices, curr_idx, 0)
+
+            for iter in range(1, DataCreatorConst.ITERATIONS + 1):
+                curr_idx = anomaly_idx - iter
+                anomalies[curr_idx] = DataCreatorConst.ANOMALY_ADDITION - \
+                                      ((DataCreatorConst.ITERATIONS - iter) * DataCreatorConst.ANOMALY_DECREASE)
+                indices = np.delete(indices, curr_idx, 0)
 
         return anomalies
 

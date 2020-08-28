@@ -106,6 +106,7 @@ class AnomalyDetector(ABC):
                              name='is_filtered')
         filtered = pd.concat([detected_anomalies, filtered], axis=1)
         filtered = filtered[filtered['is_filtered'] == True]
+        filtered.drop(columns=['is_filtered'], axis=1, inplace=True)
         return filtered
 
     @abstractmethod
