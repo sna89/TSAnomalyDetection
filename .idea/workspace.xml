@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="27da9a7e-1324-4c59-8a3a-c97de520e9de" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Builders/eval_builder.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AnomalyDetectors/ad.py" beforeDir="false" afterPath="$PROJECT_DIR$/AnomalyDetectors/ad.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Helpers/data_creator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helpers/data_creator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/params.yml" beforeDir="false" afterPath="$PROJECT_DIR$/params.yml" afterDir="false" />
-    </list>
+    <list default="true" id="27da9a7e-1324-4c59-8a3a-c97de520e9de" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,7 +91,7 @@
     <session id="1078613096">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="31" />
+          <entry key="project.closed" value="32" />
           <entry key="project.open.time.1" value="1" />
           <entry key="project.open.time.10" value="2" />
           <entry key="project.open.time.12" value="4" />
@@ -396,6 +389,11 @@
               <item name="TSAnomalyDetection" type="b2602c69:ProjectViewProjectNode" />
               <item name="TSAnomalyDetection" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="TSAnomalyDetection" type="b2602c69:ProjectViewProjectNode" />
+              <item name="TSAnomalyDetection" type="462c0819:PsiDirectoryNode" />
+              <item name="Builders" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -610,14 +608,13 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1696" height="1026" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49726775" visible="true" weight="0.11700844" />
       <window_info id="Structure" order="1" sideWeight="0.5027322" side_tool="true" weight="0.07481559" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3275488" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49894625" visible="true" weight="0.2544843" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49894625" weight="0.2544843" />
       <window_info anchor="bottom" id="TODO" order="3" weight="0.21258135" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.33188722" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
@@ -625,7 +622,7 @@
       <window_info anchor="bottom" id="Docker" order="7" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.329718" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5015806" side_tool="true" weight="0.24295011" />
-      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49841937" weight="0.23210412" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" sideWeight="0.49841937" visible="true" weight="0.23206279" />
       <window_info anchor="bottom" id="Python Console" order="11" weight="0.29501083" />
       <window_info anchor="bottom" id="Messages" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />

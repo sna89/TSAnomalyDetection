@@ -2,6 +2,8 @@ import pandas as pd
 from sklearn.metrics import confusion_matrix
 from Logger.logger import get_logger
 from sklearn.metrics import classification_report
+from sklearn.metrics import roc_auc_score
+
 
 class EvalBuilder:
     def __init__(self, data, y_true_df, y_pred_df):
@@ -34,3 +36,6 @@ class EvalBuilder:
     def output_classification_report(self):
         self.logger.info("classification report: ")
         self.logger.info(classification_report(self.y_true, self.y_pred))
+
+        self.logger.info("AUC: ")
+        self.logger.info(roc_auc_score(self.y_true, self.y_pred))
