@@ -5,6 +5,9 @@ from sklearn import preprocessing
 from dateutil.relativedelta import relativedelta
 from dataclasses import dataclass
 import numpy as np
+from Logger.logger import get_logger
+from time import time
+import functools
 
 
 @dataclass
@@ -79,12 +82,6 @@ class DataHelper:
     @staticmethod
     def get_max_idx(df, end):
         return df[df.index <= end].index.max()
-
-    @staticmethod
-    def get_first_and_last_observations(df_):
-        first_obs_time = df_.index.min()
-        last_obs_time = df_.index.max()
-        return first_obs_time, last_obs_time
 
     @staticmethod
     def time_in_range(current, start, end):
@@ -204,6 +201,17 @@ class DataHelper:
             raise ValueError('No such fill method')
 
 
+def timer(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        logger = get_logger("timer")
 
+        start = time()
+        out = func(*args, **kwargs)
+        end = time()
 
+        logger.info("Total runtime of anomaly detection experiment: {0} minutes"
+                    .format((end - start) / float(60)))
+        return out
+    return wrapper
 

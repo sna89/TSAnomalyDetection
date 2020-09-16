@@ -1,7 +1,7 @@
 import six
 import sys
 from pmdarima.arima import auto_arima
-from Models.model import Model
+from Models.anomaly_detection_model import AnomalyDetectionModel
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -9,7 +9,7 @@ from Helpers.data_helper import DataHelper
 sys.modules['sklearn.externals.six'] = six
 
 
-class Arima(Model):
+class Arima(AnomalyDetectionModel):
     def __init__(self, data, seasonality, forecast_periods_hours):
         super(Arima, self).__init__(data)
         self.seasonality = seasonality

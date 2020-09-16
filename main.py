@@ -13,14 +13,14 @@ pd.set_option('display.max_rows', None)
 np.set_printoptions(threshold=sys.maxsize)
 
 
-def get_parameters(filename='params.yml'):
+def get_and_validate_parameters(filename='params.yml'):
     params_helper = ParamsHelper(filename)
     ParamsValidator(params_helper).validate()
     return params_helper
 
 
-def create_synthetic_data(create_data_params):
-    filename = create_data_params.filename
+def create_synthetic_data(synthetic_data_params):
+    filename = synthetic_data_params.filename
     data_creator = DataCreator()
     df, anomalies_df = data_creator.create_data('2020-01-01 00:00', '2020-01-15 00:00', '10min')
     data_creator.save_to_csv(df, filename)
@@ -43,7 +43,7 @@ def run_experiment(params_helper, data):
 
     logger = get_logger('run_experiment')
     logger.info("Starting experiment for anomaly detector: {}".format(detector_name))
-    anomalies = detector.run_anomaly_detection(data)
+    anomalies = detector.run_anomaly_detection_experiment(data)
     return anomalies
 
 
@@ -82,12 +82,11 @@ if __name__ == "__main__":
     logger.info('Starting')
 
     try:
-        params_helper = get_parameters()
-
-        create_data_params = params_helper.get_create_synthetic_data()
+        params_helper = get_and_validate_parameters()
+        synthetic_data_params = params_helper.get_synthetic_data_params()
         anomalies_true_df = pd.DataFrame()
-        if create_data_params.to_create:
-            anomalies_true_df = create_synthetic_data(create_data_params)
+        if synthetic_data_params.to_create:
+            anomalies_true_df = create_synthetic_data(synthetic_data_params)
 
         data = contruct_data(params_helper)
         anomalies_pred_df = run_experiment(params_helper, data)

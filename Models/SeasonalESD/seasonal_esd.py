@@ -4,49 +4,50 @@ from statsmodels.tsa.seasonal import seasonal_decompose
 import math
 from scipy import stats
 from Helpers.data_plotter import DataPlotter
-from Logger.logger import MethodLogger
-from Models.model import Model
+from Models.anomaly_detection_model import AnomalyDetectionModel, validate_anomaly_df_schema
 
 
-class SeasonalESD(Model):
+class SeasonalESD(AnomalyDetectionModel):
     def __init__(self, data, anomaly_ratio, alpha, hybrid=False):
         super(SeasonalESD, self).__init__(data)
         assert anomaly_ratio <= 0.49, "anomaly ratio is too high"
 
-        self.data_plotter = DataPlotter()
-
         self.nobs = self.data.shape[0]
         self.k = math.ceil(float(self.nobs) * anomaly_ratio)
-
         self.hybrid = hybrid
         self.alpha = alpha
 
         self.indices = None
 
-    @MethodLogger
-    def run(self):
+    def fit(self):
+        return self
+
+    @validate_anomaly_df_schema
+    def detect(self):
         if not self.init:
             self.init = True
-            resid = self._get_updated_resid()
-            self.indices = self._esd(resid)
-
-            if not self.indices.empty:
-                self.anomaly_df = self.data.loc[self.indices.values]
-                return self.anomaly_df.sort_index()
-            else:
-                return pd.Series()
         else:
             print("Already executed Seasonal-ESD algorithm")
+            return
 
-    def _get_seasonal_decomposition(self, model='additive', period=7):
-        result = seasonal_decompose(self.data, model=model, period=period)
-        return result
+        resid = self._get_updated_resid()
+        self.indices = self._esd(resid)
+
+        if not self.indices.empty:
+            self.anomaly_df = self.data.loc[self.indices.values]
+            return self.anomaly_df
+        else:
+            return pd.Series()
 
     def _get_updated_resid(self):
         median = self.data.median()
         result = self._get_seasonal_decomposition()
         resid = pd.Series(data=self.data - result.seasonal - median, name='resid')
         return resid
+
+    def _get_seasonal_decomposition(self, model='additive', period=7):
+        result = seasonal_decompose(self.data, model=model, period=period)
+        return result
 
     def _esd(self, resid):
         critical_values = self._calc_critical_values()
@@ -126,5 +127,5 @@ class SeasonalESD(Model):
 
     def plot_residual_distribution(self):
         resid = self._get_updated_resid()
-        self.data_plotter.plot_data_distribution(resid)
-        self.data_plotter.qqplot(resid)
+        DataPlotter.plot_data_distribution(resid)
+        DataPlotter.qqplot(resid)

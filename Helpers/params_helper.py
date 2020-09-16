@@ -86,5 +86,5 @@ class ParamsHelper:
                           date_time
         return experiment_name
 
-    def get_create_synthetic_data(self):
+    def get_synthetic_data_params(self):
         return CreateSyntheticData(**self.get_params('create_synthetic_data'))

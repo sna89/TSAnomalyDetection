@@ -1,4 +1,4 @@
-from Models.model import Model
+from Models.anomaly_detection_model import AnomalyDetectionModel
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, LSTM, Dropout, RepeatVector, TimeDistributed
 from tensorflow import keras
@@ -9,7 +9,7 @@ from Helpers.data_helper import DataHelper, DataConst
 pd.options.mode.chained_assignment = None
 
 
-class LstmAE(Model):
+class LstmAE(AnomalyDetectionModel):
     def __init__(self, data, hidden_layer, dropout, batch_size, threshold, forecast_period_hours):
         super(LstmAE, self).__init__(data)
         self.hidden_layer = hidden_layer

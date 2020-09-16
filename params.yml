@@ -20,16 +20,19 @@ preprocess_data_params:
 
 experiment_hyperparameters:
   train_period:
-    hours: 18
-    days: 0
+    hours: 0
+    days: 13
     weeks: 0
-  forecast_period_hours: 6
-  retrain_schedule_hours: 6
+  train_freq:
+    hours: 0
+    days: 1
+    weeks: 0
+  forecast_period_hours: 3
   scale: False
 
 model_hyperparameters:
   esd:
-    anomaly_ratio: 0.025
+    anomaly_ratio: 0.01
     hybrid: True
     alpha: 0.05
 
@@ -41,6 +44,9 @@ model_hyperparameters:
     dropout: 0.1
     batch_size: 16
     threshold: 99
+
+  prophet:
+    interval_width: 0.9
 
 metadata:
 #  - source: csv

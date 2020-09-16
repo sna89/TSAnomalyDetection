@@ -15,11 +15,11 @@ class DataPlotter:
         sns.distplot(data)
         plt.show()
 
-    @classmethod
-    def plot_ts_data(cls, data):
-        cls._update_figure_size(17, 8)
-        cls.plot_data(data)
-        cls._update_figure_size(6.4, 4.8)
+    @staticmethod
+    def plot_ts_data(data):
+        DataPlotter._update_figure_size(17, 8)
+        DataPlotter.plot_data(data)
+        DataPlotter._update_figure_size(6.4, 4.8)
 
     @staticmethod
     def plot_data(data):

@@ -21,7 +21,7 @@ class ParamsValidator:
         self.preprocess_data_params = PreprocessDataParams(**self.params_helper.get_preprocess_data_params())
         self.test_period = Period(**self.preprocess_data_params.test_period)
 
-        self.create_data = self.params_helper.get_create_synthetic_data()
+        self.create_data = self.params_helper.get_synthetic_data_params()
 
         self.logger = get_logger(__class__.__name__)
 
@@ -54,8 +54,7 @@ class ParamsValidator:
     def validate_experiment_hyperparameters(self):
         experiment_hyperparameters_keys = list(self.experiment_hyperparameters.__annotations__.keys())
 
-        if 'retrain_schedule_hours' not in experiment_hyperparameters_keys \
-            or 'forecast_period_hours' not in experiment_hyperparameters_keys \
+        if 'forecast_period_hours' not in experiment_hyperparameters_keys \
                 or 'train_period' not in experiment_hyperparameters_keys:
                 msg = 'experiment hyperparamaters need to include: ' \
                                 'retrain_schedule_hours, ' \
@@ -63,15 +62,6 @@ class ParamsValidator:
                                 'train_period'
                 self.logger(msg)
                 raise Exception(msg)
-
-        retrain_schedule_hours = self.experiment_hyperparameters.retrain_schedule_hours
-        forecast_period_hours = self.experiment_hyperparameters.forecast_period_hours
-
-        if retrain_schedule_hours > forecast_period_hours:
-            msg = 'In experiment hyperparameters:' \
-                  'retrain_schedule_hours must be lower or equal to forecast_period_hours'
-            self.logger(msg)
-            raise ValueError()
 
         return
 

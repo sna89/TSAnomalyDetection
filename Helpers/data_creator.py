@@ -71,7 +71,7 @@ class DataCreator:
     @staticmethod
     def create_anomaly_data(T):
         anomalies = np.zeros(T)
-        indices = np.arange(start=int(T*0.6), stop=T, step=1)
+        indices = np.arange(start=int(T*0.2), stop=T-1, step=1)
         for _ in range(DataCreatorConst.NUN_OF_ANOMALIES):
             anomaly_idx = np.random.choice(indices, 1, replace=True)
 
@@ -79,13 +79,13 @@ class DataCreator:
                 curr_idx = anomaly_idx + iter
                 if curr_idx <= T:
                     anomalies[curr_idx] = DataCreatorConst.ANOMALY_ADDITION - iter*DataCreatorConst.ANOMALY_DECREASE
-                    indices = np.delete(indices, curr_idx, 0)
+                    indices = indices[indices != curr_idx]
 
             for iter in range(1, DataCreatorConst.ITERATIONS + 1):
                 curr_idx = anomaly_idx - iter
                 anomalies[curr_idx] = DataCreatorConst.ANOMALY_ADDITION - \
                                       ((DataCreatorConst.ITERATIONS - iter) * DataCreatorConst.ANOMALY_DECREASE)
-                indices = np.delete(indices, curr_idx, 0)
+                indices = indices[indices != curr_idx]
 
         return anomalies
 

@@ -10,7 +10,7 @@ LOGGER_NAME = 'TSAnomalyDetectionLogger'
 
 def get_logger(name):
     now = datetime.now()
-    dt_string = now.strftime("%d%m%Y%H%M%S")
+    dt_string = now.strftime("%d%m%Y%H%M")
 
     logger = logging.getLogger(name)
 
