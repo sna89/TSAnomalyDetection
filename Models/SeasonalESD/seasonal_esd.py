@@ -8,27 +8,28 @@ from Models.anomaly_detection_model import AnomalyDetectionModel, validate_anoma
 
 
 class SeasonalESD(AnomalyDetectionModel):
-    def __init__(self, data, anomaly_ratio, alpha, hybrid=False):
-        super(SeasonalESD, self).__init__(data)
+    def __init__(self, anomaly_ratio, alpha, hybrid=False):
+        super(SeasonalESD, self).__init__()
         assert anomaly_ratio <= 0.49, "anomaly ratio is too high"
 
-        self.nobs = self.data.shape[0]
-        self.k = math.ceil(float(self.nobs) * anomaly_ratio)
+        self.anomaly_ratio = anomaly_ratio
         self.hybrid = hybrid
         self.alpha = alpha
 
         self.indices = None
 
-    def fit(self):
+    def fit(self, data):
         return self
 
+    def _init_data(self, data):
+        self.data = AnomalyDetectionModel.init_data(data)
+        self.nobs = self.data.shape[0]
+        self.k = math.ceil(float(self.nobs) * self.anomaly_ratio)
+
     @validate_anomaly_df_schema
-    def detect(self):
-        if not self.init:
-            self.init = True
-        else:
-            print("Already executed Seasonal-ESD algorithm")
-            return
+    def detect(self, data):
+
+        self._init_data(data)
 
         resid = self._get_updated_resid()
         self.indices = self._esd(resid)
@@ -108,13 +109,15 @@ class SeasonalESD(AnomalyDetectionModel):
         return mad
 
     def get_summary_df(self):
-        if self.init:
+        try:
             self.summary_df.set_index(keys='index', drop=True, inplace=True)
             self.summary_df.drop(labels=['level_0'], axis=1, inplace=True)
             self.summary_df['value'] = self.data.loc[self.indices.values]
             return self.summary_df
-        else:
-            print('Need to call run() first')
+
+        except Exception as e:
+            print("Must run detect function in esd to get summary_df")
+            return pd.DataFrame()
 
     def _get_predicted_anomalies_indices(self):
         self.summary_df = self.summary_df.reset_index()

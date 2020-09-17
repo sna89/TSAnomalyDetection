@@ -12,7 +12,9 @@ class DataCreatorConst:
     W = 1
     DAYS = 14
     CYCLE_PER_DAY = 4
-
+    START_DATE = '2020-01-01 00:00'
+    END_DATE = '2020-01-15 00:00'
+    FREQ = '10min'
 
 class DataCreator:
     logger = get_logger("DataCreator")
@@ -71,7 +73,7 @@ class DataCreator:
     @staticmethod
     def create_anomaly_data(T):
         anomalies = np.zeros(T)
-        indices = np.arange(start=int(T*0.2), stop=T-1, step=1)
+        indices = np.arange(start=int(T*0.6), stop=T-1, step=1)
         for _ in range(DataCreatorConst.NUN_OF_ANOMALIES):
             anomaly_idx = np.random.choice(indices, 1, replace=True)
 

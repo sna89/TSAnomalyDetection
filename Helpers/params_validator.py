@@ -17,11 +17,12 @@ class ParamsValidator:
 
         self.experiment_hyperparameters = ExperimentHyperParameters(**self.params_helper.get_experiment_hyperparams())
         self.train_period = Period(**self.experiment_hyperparameters.train_period)
+        self.train_freq = Period(**self.experiment_hyperparameters.train_freq)
 
         self.preprocess_data_params = PreprocessDataParams(**self.params_helper.get_preprocess_data_params())
         self.test_period = Period(**self.preprocess_data_params.test_period)
 
-        self.create_data = self.params_helper.get_synthetic_data_params()
+        self.synthetic_data_params = self.params_helper.get_synthetic_data_params()
 
         self.logger = get_logger(__class__.__name__)
 
@@ -34,7 +35,7 @@ class ParamsValidator:
             self.validate_uni_variate()
         else:
             msg = '{} detector in not implemented'.format(self.detector_name)
-            self.logger(msg)
+            self.logger.error(msg)
             raise ValueError(msg)
 
         self.validate_experiment_hyperparameters()
@@ -48,19 +49,20 @@ class ParamsValidator:
         num_files = len(self.metadata)
         if num_files > 1:
             msg = '{} is uni-variate model. Got {} files in metadata'.format(self.detector_name, num_files)
-            self.logger(msg)
+            self.logger.error(msg)
             raise Exception(msg)
 
     def validate_experiment_hyperparameters(self):
         experiment_hyperparameters_keys = list(self.experiment_hyperparameters.__annotations__.keys())
 
         if 'forecast_period_hours' not in experiment_hyperparameters_keys \
-                or 'train_period' not in experiment_hyperparameters_keys:
+                or 'train_period' not in experiment_hyperparameters_keys\
+                    or 'train_freq' not in experiment_hyperparameters_keys:
                 msg = 'experiment hyperparamaters need to include: ' \
                                 'retrain_schedule_hours, ' \
                                 'forecast_period_hours, ' \
                                 'train_period'
-                self.logger(msg)
+                self.logger.error(msg)
                 raise Exception(msg)
 
         return
@@ -77,7 +79,7 @@ class ParamsValidator:
                 or 'attribute_name' not in file_metadata_keys \
                     or'filename' not in file_metadata_keys:
                         msg = 'Missing metadata fields for model {}'.format(self.detector_name)
-                        self.logger(msg)
+                        self.logger.error(msg)
                         raise Exception(msg)
         return
 
@@ -100,7 +102,7 @@ class ParamsValidator:
                                                             weeks=self.train_period.weeks)
             if train_end_time > test_end_time:
                 msg = 'Initial train epoch time interval must be smaller than test time interval'
-                self.logger(msg)
+                self.logger.error(msg)
                 raise ValueError(msg)
 
     def validate_preprocess_data_params(self):
@@ -112,13 +114,13 @@ class ParamsValidator:
 
         if self.preprocess_data_params.skiprows < 0:
             msg = 'skiprows parameter must be greated than 0.'
-            self.logger(msg)
+            self.logger.error(msg)
             raise ValueError(msg)
 
     def validate_data_creator(self):
-        if self.create_data.to_create:
+        if self.synthetic_data_params.to_create:
             filenames = self.get_filenames()
-            if self.create_data.filename not in filenames:
+            if self.synthetic_data_params.filename not in filenames:
                 msg = 'new created data not in metadata'
-                self.logger(msg)
+                self.logger.error(msg)
                 raise ValueError(msg)

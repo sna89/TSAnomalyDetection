@@ -109,7 +109,7 @@ class DataHelper:
 
     @staticmethod
     def extract_first_period(data, period):
-        start_time, _ = DataHelper.get_first_and_last_observations(data)
+        start_time = data.index.min()
         end_time = DataHelper.get_max_idx(data, DataHelper.relative_delta_time(start_time,
                                                                     minutes=0,
                                                                     hours=period.hours,

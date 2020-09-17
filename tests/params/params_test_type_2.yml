@@ -1,6 +1,10 @@
 ---
 detector_name: test
 
+create_synthetic_data:
+  to_create: False
+  filename: Synthetic.csv
+
 output:
   csv: True
   plot: True
@@ -19,8 +23,11 @@ experiment_hyperparameters:
     hours: 0
     days: 0
     weeks: 4
+  train_freq:
+    hours: 3
+    days: 0
+    weeks: 0
   forecast_period_hours: 3
-  retrain_schedule_hours: 3
   scale: False
 
 model_hyperparameters:

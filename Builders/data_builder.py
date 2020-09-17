@@ -34,7 +34,7 @@ class DataConstructor:
 
         else:
             msg = "Metadata is empty"
-            self.logger(msg)
+            self.logger.error(msg)
             raise ValueError(msg)
 
 
@@ -92,8 +92,6 @@ class SingleFileDataBuilder(AbstractDataBuilder):
         return data
 
     def preprocess_data(self, data):
-        data = DataHelper.drop_duplicated_rows(data)
-
         fill_method = self.preprocess_data_params.fill
         data = DataHelper.fill_missing_time(data, method=fill_method)
 

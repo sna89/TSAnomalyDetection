@@ -37,5 +37,6 @@ class EvalBuilder:
         self.logger.info("classification report: ")
         self.logger.info(classification_report(self.y_true, self.y_pred))
 
-        self.logger.info("AUC: ")
-        self.logger.info(roc_auc_score(self.y_true, self.y_pred))
+    def output_auc(self):
+        auc = roc_auc_score(self.y_true, self.y_pred)
+        self.logger.info("AUC: {}".format(auc))

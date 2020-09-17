@@ -17,17 +17,6 @@ class SeasonalESDHyperParameters:
 class ESDAnomalyDetector(AnomalyDetector):
     def __init__(self, model, experiment_hyperparameters, model_hyperparameters):
         super(ESDAnomalyDetector, self).__init__(model, experiment_hyperparameters, model_hyperparameters)
-        # self.esd_hyperparameters = SeasonalESDHyperParameters(**model_hyperparameters)
-
-    # def fit_model(self, df_):
-    #     model = self.model(df_,
-    #                        self.esd_hyperparameters.anomaly_ratio,
-    #                        self.esd_hyperparameters.alpha,
-    #                        self.esd_hyperparameters.hybrid)
-    #     self.fitted_model = model.fit()
-
-    # def detect_anomalies(self):
-    #     return self.fitted_model.detect()
 
     def plot_seasonality_per_period(self, data, freq='M'):
         periods = DataHelper.split(data, freq)

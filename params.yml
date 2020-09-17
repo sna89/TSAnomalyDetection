@@ -21,7 +21,7 @@ preprocess_data_params:
 experiment_hyperparameters:
   train_period:
     hours: 0
-    days: 13
+    days: 7
     weeks: 0
   train_freq:
     hours: 0

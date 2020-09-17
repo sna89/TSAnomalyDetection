@@ -3,7 +3,6 @@ from Models.Arima.arima import Arima
 from Models.LstmAE.lstmae import LstmAE
 from Models.FBProphet.fbprophet import FBProphet
 from AnomalyDetectors.ad import AnomalyDetector
-from AnomalyDetectors.arima_ad import ArimaAnomalyDetector
 from AnomalyDetectors.lstm_ae_ad import LSTMAEAnomalyDetector
 from AnomalyDetectors.prophet_ad import ProphetAnomalyDetector
 
@@ -19,7 +18,7 @@ class AnomalyDetectionFactory:
             return AnomalyDetector(SeasonalESD, self.experiment_hyperparameters, self.model_hyperparameters)
 
         elif self.detector_name == 'arima':
-            return ArimaAnomalyDetector(Arima, self.experiment_hyperparameters, self.model_hyperparameters)
+            return AnomalyDetector(Arima, self.experiment_hyperparameters, self.model_hyperparameters)
 
         elif self.detector_name == 'lstm_ae':
             return LSTMAEAnomalyDetector(LstmAE, self.experiment_hyperparameters, self.model_hyperparameters)
