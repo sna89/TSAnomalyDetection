@@ -62,7 +62,7 @@ class LstmAE(AnomalyDetectionModel):
         test_score_df['threshold'] = thresold_precentile
         test_score_df['anomaly'] = test_score_df.loss > test_score_df.threshold
         anomalies = test_score_df[test_score_df.anomaly == True]
-        anomalies = anomalies.drop(columns=['loss', 'threshold', 'anomaly'])
+        anomalies = anomalies.iloc[:, 0]
 
         return anomalies
 

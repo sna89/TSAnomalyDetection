@@ -72,10 +72,11 @@ class AnomalyDetector():
 
             detected_anomalies = model.detect(df_)
 
-            if self.scaler:
-                detected_anomalies[detected_anomalies.columns] = self.scaler.inverse_transform(detected_anomalies)
-
             if not detected_anomalies.empty:
+                if self.scaler:
+                    detected_anomalies = pd.Series(data=self.scaler.inverse_transform(detected_anomalies),
+                                                   index=detected_anomalies.index)
+
                 filtered_anomalies = self.filter_anomalies_in_forecast(detected_anomalies, epoch_end_time)
 
                 if not filtered_anomalies.empty:
