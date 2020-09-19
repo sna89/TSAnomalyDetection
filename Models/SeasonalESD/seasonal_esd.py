@@ -5,16 +5,24 @@ import math
 from scipy import stats
 from Helpers.data_plotter import DataPlotter
 from Models.anomaly_detection_model import AnomalyDetectionModel, validate_anomaly_df_schema
+from Logger.logger import get_logger
 
 
 class SeasonalESD(AnomalyDetectionModel):
-    def __init__(self, anomaly_ratio, alpha, hybrid=False):
+    def __init__(self, model_hyperparameters):
         super(SeasonalESD, self).__init__()
-        assert anomaly_ratio <= 0.49, "anomaly ratio is too high"
 
-        self.anomaly_ratio = anomaly_ratio
-        self.hybrid = hybrid
-        self.alpha = alpha
+        self.logger = get_logger(__class__.__name__)
+        try:
+            self.anomaly_ratio = model_hyperparameters['anomaly_ratio']
+            self.hybrid = model_hyperparameters['hybrid']
+            self.alpha = model_hyperparameters['alpha']
+        except Exception as e:
+            msg = "Missing model parameter: {}".format(e)
+            self.logger.error(msg)
+            raise Exception(msg)
+
+        assert self.anomaly_ratio <= 0.49, "anomaly ratio is too high"
 
         self.indices = None
 

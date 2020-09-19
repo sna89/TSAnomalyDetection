@@ -33,6 +33,7 @@ class AnomalyDetector():
                                 timedelta(weeks=train_freq.weeks)
 
         self.model_hyperparameters = model_hyperparameters
+        self.model_hyperparameters['forecast_period_hours'] = self.experiment_hyperparameters.forecast_period_hours
 
     @timer
     def run_anomaly_detection_experiment(self, data):
@@ -43,7 +44,7 @@ class AnomalyDetector():
 
         df_no_anomalies = copy.deepcopy(data)
         df_ = pd.DataFrame(data=copy.deepcopy(df_no_anomalies.loc[epoch_start_time:epoch_end_time]))
-        model = self.model(**self.model_hyperparameters)
+        model = self.model(self.model_hyperparameters)
         epoch = 1
         elapsed_time = timedelta(hours=0)
         fit = True
@@ -56,7 +57,8 @@ class AnomalyDetector():
                                     epoch_end_time))
 
             if elapsed_time >= self.train_freq_delta:
-                model = self.model(**self.model_hyperparameters)
+                del model
+                model = self.model(self.model_hyperparameters)
                 elapsed_time = timedelta(hours=0)
                 fit = True
 

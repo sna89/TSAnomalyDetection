@@ -200,6 +200,11 @@ class DataHelper:
         else:
             raise ValueError('No such fill method')
 
+    @staticmethod
+    def is_constant_data(data):
+        unique_values = data.nunique().values[0]
+        return True if unique_values == 1 else False
+
 
 def timer(func):
     @functools.wraps(func)

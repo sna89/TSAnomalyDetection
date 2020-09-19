@@ -2,6 +2,8 @@ import pandas as pd
 from abc import ABC, abstractmethod
 import numpy as np
 import functools
+from Helpers.data_helper import DataHelper
+from Logger.logger import get_logger
 
 
 class AnomalyDetectionConst:
@@ -29,6 +31,7 @@ def validate_anomaly_df_schema(detect):
 
 class AnomalyDetectionModel(ABC):
     def __init__(self):
+        self.logger = get_logger(__class__.__name__)
         self.anomaly_df = None
 
     @staticmethod
@@ -55,4 +58,12 @@ class AnomalyDetectionModel(ABC):
     def detect(self, df):
         pass
 
+    @staticmethod
+    def get_train_set(df, forecast_period_hours):
+        train_df, _ = DataHelper.split_train_test(df, forecast_period_hours)
+        return train_df
 
+    @staticmethod
+    def get_test_set(df, forecast_period_hours):
+        _, test_df = DataHelper.split_train_test(df, forecast_period_hours)
+        return test_df

@@ -79,7 +79,7 @@ class DataCreator:
 
             for iter in range(1, DataCreatorConst.ITERATIONS + 1):
                 curr_idx = anomaly_idx + iter
-                if curr_idx <= T:
+                if curr_idx < T:
                     anomalies[curr_idx] = DataCreatorConst.ANOMALY_ADDITION - iter*DataCreatorConst.ANOMALY_DECREASE
                     indices = indices[indices != curr_idx]
 

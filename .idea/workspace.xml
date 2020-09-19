@@ -2,26 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="27da9a7e-1324-4c59-8a3a-c97de520e9de" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/tests/Models/test_seasonal_esd_model.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/Models/test_arima_model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AnomalyDetectors/ad.py" beforeDir="false" afterPath="$PROJECT_DIR$/AnomalyDetectors/ad.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AnomalyDetectors/ad_factory.py" beforeDir="false" afterPath="$PROJECT_DIR$/AnomalyDetectors/ad_factory.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AnomalyDetectors/arima_ad.py" beforeDir="false" afterPath="$PROJECT_DIR$/Obsolete/arima_ad.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AnomalyDetectors/esd_ad.py" beforeDir="false" afterPath="$PROJECT_DIR$/Obsolete/esd_ad.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Builders/data_builder.py" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/data_builder.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Builders/eval_builder.py" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/eval_builder.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnomalyDetectors/sign_ad.py" beforeDir="false" afterPath="$PROJECT_DIR$/Obsolete/sign_ad.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Helpers/data_creator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helpers/data_creator.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Helpers/data_helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helpers/data_helper.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Helpers/params_validator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helpers/params_validator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Helpers/data_plotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helpers/data_plotter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logger/logger.py" beforeDir="false" afterPath="$PROJECT_DIR$/Logger/logger.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Models/Arima/arima.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Arima/arima.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Models/SeasonalESD/seasonal_esd.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/SeasonalESD/seasonal_esd.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Models/anomaly_detection_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/anomaly_detection_model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/params.yml" beforeDir="false" afterPath="$PROJECT_DIR$/params.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/params/params_test.yml" beforeDir="false" afterPath="$PROJECT_DIR$/tests/params/params_test.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/params/params_test_type_1.yml" beforeDir="false" afterPath="$PROJECT_DIR$/tests/params/params_test_type_1.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/params/params_test_type_2.yml" beforeDir="false" afterPath="$PROJECT_DIR$/tests/params/params_test_type_2.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/params/params_test_type_3.yml" beforeDir="false" afterPath="$PROJECT_DIR$/tests/params/params_test_type_3.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Models/test_seasonal_esd_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Models/test_seasonal_esd_model.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,6 +59,12 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\tests\Models" />
+      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\tests\params" />
+      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\AnomalyDetectors" />
+      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\tests\Models\csv" />
       <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\Obsolete" />
@@ -72,14 +72,8 @@
       <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\tests" />
       <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\tests\csv" />
     </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\tests\Models" />
-      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\tests\params" />
-      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\AnomalyDetectors" />
-      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection" />
-    </key>
   </component>
-  <component name="RunManager" selected="Python tests.pytest for test_seasonal_esd_model.TestEsdModel">
+  <component name="RunManager" selected="Python tests.pytest for test_arima_model.TestArimaModel.test_arima_detect">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Code" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -101,7 +95,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for test_seasonal_esd_model.TestDataBuilder" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest for test_arima_model.TestArimaModel.test_arima_detect" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="Code" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -113,7 +107,7 @@
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_seasonal_esd_model.TestDataBuilder&quot;" />
+      <option name="_new_target" value="&quot;test_arima_model.TestArimaModel.test_arima_detect&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
@@ -149,36 +143,36 @@
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest in test_seasonal_esd_model.py" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest in tests" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="Code" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests/Models" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;$PROJECT_DIR$/tests/Models/test_seasonal_esd_model.py&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/tests&quot;" />
       <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python tests.pytest in test_seasonal_esd_model.py" />
-      <item itemvalue="Python tests.pytest for test_seasonal_esd_model.TestDataBuilder.test_s_esd_detect" />
       <item itemvalue="Python.main" />
-      <item itemvalue="Python tests.pytest for test_seasonal_esd_model.TestDataBuilder" />
+      <item itemvalue="Python tests.pytest for test_seasonal_esd_model.TestDataBuilder.test_s_esd_detect" />
       <item itemvalue="Python tests.pytest for test_seasonal_esd_model.TestEsdModel" />
+      <item itemvalue="Python tests.pytest in tests" />
+      <item itemvalue="Python tests.pytest for test_arima_model.TestArimaModel.test_arima_detect" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.pytest for test_arima_model.TestArimaModel.test_arima_detect" />
+        <item itemvalue="Python.main" />
+        <item itemvalue="Python tests.pytest in tests" />
         <item itemvalue="Python tests.pytest for test_seasonal_esd_model.TestEsdModel" />
         <item itemvalue="Python tests.pytest for test_seasonal_esd_model.TestDataBuilder.test_s_esd_detect" />
-        <item itemvalue="Python tests.pytest for test_seasonal_esd_model.TestDataBuilder" />
-        <item itemvalue="Python.main" />
-        <item itemvalue="Python tests.pytest in test_seasonal_esd_model.py" />
       </list>
     </recent_temporary>
   </component>
@@ -217,15 +211,6 @@
     </task>
     <option name="localTasksCounter" value="4" />
     <servers />
-  </component>
-  <component name="TodoView">
-    <todo-panel id="selected-file">
-      <is-autoscroll-to-source value="true" />
-    </todo-panel>
-    <todo-panel id="all">
-      <are-packages-shown value="true" />
-      <is-autoscroll-to-source value="true" />
-    </todo-panel>
   </component>
   <component name="UnknownFeatures">
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.csv" />
@@ -266,62 +251,66 @@
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
     <state x="-1297" y="70" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600240095042" />
-    <state x="-1205" y="102" width="854" height="594" key="#xdebugger.evaluate" timestamp="1600349800922">
+    <state x="-1297" y="256" width="854" height="594" key="#xdebugger.evaluate" timestamp="1600525875829">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
-    <state x="-1205" y="102" width="854" height="594" key="#xdebugger.evaluate/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600349800922" />
+    <state x="-1297" y="256" width="854" height="594" key="#xdebugger.evaluate/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600525875829" />
     <state width="877" height="466" key="DebuggerActiveHint" timestamp="1600326063575">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
     <state width="877" height="466" key="DebuggerActiveHint/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600326063575" />
-    <state width="1899" height="239" key="GridCell.Tab.0.bottom" timestamp="1600350314193">
+    <state width="1899" height="239" key="GridCell.Tab.0.bottom" timestamp="1600526200107">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
-    <state width="1899" height="239" key="GridCell.Tab.0.bottom/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600350314193" />
+    <state width="1899" height="239" key="GridCell.Tab.0.bottom/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600526200107" />
     <state width="1899" height="273" key="GridCell.Tab.0.bottom/3840.21.1680.1010/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600261224767" />
-    <state width="1899" height="239" key="GridCell.Tab.0.center" timestamp="1600350314193">
+    <state width="1899" height="239" key="GridCell.Tab.0.center" timestamp="1600526200107">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
-    <state width="1899" height="239" key="GridCell.Tab.0.center/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600350314193" />
+    <state width="1899" height="239" key="GridCell.Tab.0.center/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600526200107" />
     <state width="1899" height="273" key="GridCell.Tab.0.center/3840.21.1680.1010/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600261224766" />
-    <state width="1899" height="239" key="GridCell.Tab.0.left" timestamp="1600350314193">
+    <state width="1899" height="239" key="GridCell.Tab.0.left" timestamp="1600526200107">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
-    <state width="1899" height="239" key="GridCell.Tab.0.left/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600350314193" />
+    <state width="1899" height="239" key="GridCell.Tab.0.left/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600526200107" />
     <state width="1899" height="273" key="GridCell.Tab.0.left/3840.21.1680.1010/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600261224766" />
-    <state width="1899" height="239" key="GridCell.Tab.0.right" timestamp="1600350314193">
+    <state width="1899" height="239" key="GridCell.Tab.0.right" timestamp="1600526200107">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
-    <state width="1899" height="239" key="GridCell.Tab.0.right/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600350314193" />
+    <state width="1899" height="239" key="GridCell.Tab.0.right/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600526200107" />
     <state width="1899" height="273" key="GridCell.Tab.0.right/3840.21.1680.1010/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600261224766" />
-    <state width="1899" height="243" key="GridCell.Tab.1.bottom" timestamp="1600350029303">
+    <state width="1899" height="249" key="GridCell.Tab.1.bottom" timestamp="1600525982097">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
-    <state width="1899" height="243" key="GridCell.Tab.1.bottom/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600350029303" />
+    <state width="1899" height="249" key="GridCell.Tab.1.bottom/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600525982097" />
     <state width="1899" height="273" key="GridCell.Tab.1.bottom/3840.21.1680.1010/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600261225288" />
-    <state width="1899" height="243" key="GridCell.Tab.1.center" timestamp="1600350029303">
+    <state width="1899" height="249" key="GridCell.Tab.1.center" timestamp="1600525982097">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
-    <state width="1899" height="243" key="GridCell.Tab.1.center/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600350029303" />
+    <state width="1899" height="249" key="GridCell.Tab.1.center/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600525982097" />
     <state width="1899" height="273" key="GridCell.Tab.1.center/3840.21.1680.1010/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600261225288" />
-    <state width="1899" height="243" key="GridCell.Tab.1.left" timestamp="1600350029303">
+    <state width="1899" height="249" key="GridCell.Tab.1.left" timestamp="1600525982097">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
-    <state width="1899" height="243" key="GridCell.Tab.1.left/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600350029303" />
+    <state width="1899" height="249" key="GridCell.Tab.1.left/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600525982097" />
     <state width="1899" height="273" key="GridCell.Tab.1.left/3840.21.1680.1010/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600261225287" />
-    <state width="1899" height="243" key="GridCell.Tab.1.right" timestamp="1600350029303">
+    <state width="1899" height="249" key="GridCell.Tab.1.right" timestamp="1600525982097">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
-    <state width="1899" height="243" key="GridCell.Tab.1.right/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600350029303" />
+    <state width="1899" height="249" key="GridCell.Tab.1.right/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600525982097" />
     <state width="1899" height="273" key="GridCell.Tab.1.right/3840.21.1680.1010/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600261225288" />
     <state x="-1459" y="44" key="SettingsEditor" timestamp="1600241803430">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
     <state x="-1459" y="44" key="SettingsEditor/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600241803430" />
-    <state width="968" height="528" key="XDebugger.FullValuePopup" timestamp="1600270007780">
+    <state width="968" height="528" key="XDebugger.FullValuePopup" timestamp="1600515001786">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
-    <state width="968" height="528" key="XDebugger.FullValuePopup/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600270007780" />
+    <state width="968" height="528" key="XDebugger.FullValuePopup/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600515001786" />
+    <state x="-1412" y="128" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1600525239981">
+      <screen x="-1920" y="-121" width="1920" height="1040" />
+    </state>
+    <state x="-1412" y="128" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600525239981" />
     <state x="0" y="0" width="1661" height="789" maximized="true" key="dock-window-1" timestamp="1600339853289">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
@@ -344,7 +333,7 @@
           <option name="timeStamp" value="165" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/AnomalyDetectors/sign_ad.py</url>
+          <url>file://$PROJECT_DIR$/Obsolete/sign_ad.py</url>
           <option name="timeStamp" value="314" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -358,29 +347,14 @@
           <option name="timeStamp" value="401" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Models/Arima/arima.py</url>
-          <line>33</line>
-          <option name="timeStamp" value="446" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Models/Arima/arima.py</url>
-          <line>42</line>
-          <option name="timeStamp" value="447" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Builders/eval_builder.py</url>
           <line>18</line>
           <option name="timeStamp" value="543" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/main.py</url>
-          <line>68</line>
+          <line>69</line>
           <option name="timeStamp" value="553" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/AnomalyDetectors/ad.py</url>
-          <line>46</line>
-          <option name="timeStamp" value="584" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Helpers/data_helper.py</url>
@@ -398,24 +372,34 @@
           <option name="timeStamp" value="592" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/main.py</url>
-          <line>94</line>
-          <option name="timeStamp" value="597" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/tests/Models/test_seasonal_esd_model.py</url>
-          <line>29</line>
+          <line>33</line>
           <option name="timeStamp" value="601" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/tests/Models/test_seasonal_esd_model.py</url>
-          <line>41</line>
+          <line>46</line>
           <option name="timeStamp" value="602" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/tests/Models/test_seasonal_esd_model.py</url>
-          <line>22</line>
+          <line>25</line>
           <option name="timeStamp" value="603" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Models/Arima/arima.py</url>
+          <line>42</line>
+          <option name="timeStamp" value="621" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>96</line>
+          <option name="timeStamp" value="622" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/tests/Models/test_arima_model.py</url>
+          <line>32</line>
+          <option name="timeStamp" value="625" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>

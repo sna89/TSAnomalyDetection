@@ -1,5 +1,5 @@
 ---
-detector_name: esd
+detector_name: arima
 
 create_synthetic_data:
   to_create: True
@@ -16,12 +16,12 @@ preprocess_data_params:
     days: 0
     weeks: 2
   fill: ignore
-  skiprows: 0
+  skiprows: 6
 
 experiment_hyperparameters:
   train_period:
     hours: 0
-    days: 7
+    days: 8
     weeks: 0
   train_freq:
     hours: 0
@@ -37,7 +37,7 @@ model_hyperparameters:
     alpha: 0.05
 
   arima:
-    seasonality: 2
+    seasonality: 6
 
   lstm_ae:
     hidden_layer: 128

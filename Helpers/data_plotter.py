@@ -78,13 +78,13 @@ class DataPlotter:
             y = df_plot.loc[df_scatter_1.index].values.reshape(1, -1)
             axs[0].scatter(x=x, y=y, c='r')
 
-            if title_1:
-                axs[0].set_title(title_1)
+        if title_1:
+            axs[0].set_title(title_1)
 
-        if df_scatter_1.shape[0]:
+        if df_scatter_2.shape[0]:
             x = df_scatter_2.index.values
-            y = df_plot.loc[df_scatter_2.index].values.reshape(1, -1)
+            y = df_plot.reindex(df_scatter_2.index).values.reshape(1, -1)
             axs[1].scatter(x=x, y=y, c='g')
 
-            if title_2:
-                axs[1].set_title(title_2)
+        if title_2:
+            axs[1].set_title(title_2)

@@ -5,18 +5,35 @@ from functools import partial
 import os
 from Helpers.file_helper import FileHelper
 
-LOGGER_NAME = 'TSAnomalyDetectionLogger'
-
 
 def get_logger(name):
-    now = datetime.now()
-    dt_string = now.strftime("%d%m%Y%H%M")
-
+    existing_loggers = [log_name for log_name in logging.Logger.manager.loggerDict.keys()]
     logger = logging.getLogger(name)
 
+    if name not in existing_loggers:
+        add_handlers(logger)
+        logger.setLevel(logging.DEBUG)
+
+    return logger
+
+
+def add_handlers(logger):
+    add_file_handler(logger)
+    add_stream_handler(logger)
+
+
+def get_logs_path():
     logs_path = FileHelper.get_logs_path()
     if not FileHelper.path_exists(logs_path):
         os.mkdir(logs_path)
+    return logs_path
+
+
+def add_file_handler(logger):
+    now = datetime.now()
+
+    dt_string = now.strftime("%d%m%Y%H")
+    logs_path = get_logs_path()
 
     f_handler = logging.FileHandler(logs_path + '\log_{}.log'.format(dt_string))
     f_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -24,22 +41,20 @@ def get_logger(name):
     f_handler.setLevel(logging.DEBUG)
     logger.addHandler(f_handler)
 
+
+def add_stream_handler(logger):
     c_handler = logging.StreamHandler()
     c_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     c_handler.setFormatter(c_format)
     c_handler.setLevel(logging.DEBUG)
     logger.addHandler(c_handler)
 
-    logger.setLevel(logging.DEBUG)
-
-    return logger
-
 
 class MethodLogger:
     def __init__(self, func):
         functools.update_wrapper(self, func)
         self.func = func
-        self.logger = logging.getLogger(LOGGER_NAME)
+        self.logger = logging.getLogger(func.__name__)
 
     def __call__(self, instance, *args, **kwargs):
         try:

@@ -9,6 +9,7 @@ from Builders.data_builder import DataConstructor
 from Builders.eval_builder import EvalBuilder
 from Helpers.data_plotter import DataPlotter
 from Helpers.data_creator import DataCreator, DataCreatorConst
+import warnings
 pd.set_option('display.max_rows', None)
 np.set_printoptions(threshold=sys.maxsize)
 
@@ -81,9 +82,10 @@ def evaluate_experiment(data, anomalies_pred_df, anomalies_true_df=pd.DataFrame(
 
 
 if __name__ == "__main__":
+    warnings.filterwarnings("ignore")
+
     logger = get_logger('Main')
     logger.info('Starting')
-
     try:
         params_helper = get_and_validate_parameters()
         synthetic_data_params = params_helper.get_synthetic_data_params()
