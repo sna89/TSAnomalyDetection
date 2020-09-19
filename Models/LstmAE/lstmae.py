@@ -1,4 +1,4 @@
-from Models.anomaly_detection_model import AnomalyDetectionModel
+from Models.anomaly_detection_model import AnomalyDetectionModel, validate_anomaly_df_schema
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, LSTM, Dropout, RepeatVector, TimeDistributed
 from tensorflow import keras
@@ -10,13 +10,13 @@ pd.options.mode.chained_assignment = None
 
 
 class LstmAE(AnomalyDetectionModel):
-    def __init__(self, data, hidden_layer, dropout, batch_size, threshold, forecast_period_hours):
-        super(LstmAE, self).__init__(data)
-        self.hidden_layer = hidden_layer
-        self.dropout = dropout
-        self.batch_size = batch_size
-        self.threshold = threshold
-        self.forecast_period_hours = forecast_period_hours
+    def __init__(self, model_hyperparameters):
+        super(LstmAE, self).__init__()
+        self.hidden_layer = model_hyperparameters['hidden_layer']
+        self.dropout = model_hyperparameters['dropout']
+        self.batch_size = model_hyperparameters['batch_size']
+        self.threshold = model_hyperparameters['threshold']
+        self.forecast_period_hours = model_hyperparameters['forecast_period_hours']
 
         self.model = None
 
@@ -28,28 +28,38 @@ class LstmAE(AnomalyDetectionModel):
             Xs.append(data.iloc[i:(i + forecast_samples)].values)
         return np.array(Xs)
 
-    def run(self):
-        train_df_raw, test_df_raw = DataHelper.split_train_test(self.data, self.forecast_period_hours * 2)
+    def init_data(self, data):
+        data = AnomalyDetectionModel.init_data(data)
+        train_df_raw, test_df_raw = DataHelper.split_train_test(data, self.forecast_period_hours * 2)
 
         train_data = LstmAE.prepare_data_lstm(train_df_raw, self.forecast_period_hours)
         test_data = LstmAE.prepare_data_lstm(test_df_raw, self.forecast_period_hours)
+
+        return train_df_raw, test_df_raw, train_data, test_data
+
+    def fit(self, data):
+        _, _, train_data, test_data = self.init_data(data)
 
         timesteps = train_data.shape[1]
         num_features = train_data.shape[2]
         self.model = self.build_lstm_ae_model(timesteps, num_features)
         self.train(train_data)
+        return self
+
+    @validate_anomaly_df_schema
+    def detect(self, data):
+        _, test_df_raw, train_data, test_data = self.init_data(data)
 
         train_pred = self.predict(train_data)
         test_pred = self.predict(test_data)
 
         train_mse_loss = self.calc_mse(train_data, train_pred)
-        test_mse_loss = self.calc_mse(test_data, test_pred)
-
         thresold_precentile = np.percentile(train_mse_loss, self.threshold)
+
+        test_mse_loss = self.calc_mse(test_data, test_pred)
         test_score_df = pd.DataFrame(test_df_raw[self.forecast_period_hours * DataConst.SAMPLES_PER_HOUR:])
         test_score_df['loss'] = test_mse_loss.values
         test_score_df['threshold'] = thresold_precentile
-
         test_score_df['anomaly'] = test_score_df.loss > test_score_df.threshold
         anomalies = test_score_df[test_score_df.anomaly == True]
         anomalies = anomalies.drop(columns=['loss', 'threshold', 'anomaly'])

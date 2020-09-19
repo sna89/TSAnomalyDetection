@@ -3,7 +3,6 @@ from Models.Arima.arima import Arima
 from Models.LstmAE.lstmae import LstmAE
 from Models.FBProphet.fbprophet import FBProphet
 from AnomalyDetectors.ad import AnomalyDetector
-from AnomalyDetectors.lstm_ae_ad import LSTMAEAnomalyDetector
 from AnomalyDetectors.prophet_ad import ProphetAnomalyDetector
 
 
@@ -21,7 +20,7 @@ class AnomalyDetectionFactory:
             return AnomalyDetector(Arima, self.experiment_hyperparameters, self.model_hyperparameters)
 
         elif self.detector_name == 'lstm_ae':
-            return LSTMAEAnomalyDetector(LstmAE, self.experiment_hyperparameters, self.model_hyperparameters)
+            return AnomalyDetector(LstmAE, self.experiment_hyperparameters, self.model_hyperparameters)
 
         elif self.detector_name == 'prophet':
             return ProphetAnomalyDetector(FBProphet, self.experiment_hyperparameters, self.model_hyperparameters)

@@ -1,5 +1,5 @@
 ---
-detector_name: arima
+detector_name: lstm_ae
 
 create_synthetic_data:
   to_create: True
@@ -16,7 +16,7 @@ preprocess_data_params:
     days: 0
     weeks: 2
   fill: ignore
-  skiprows: 6
+  skiprows: 0
 
 experiment_hyperparameters:
   train_period:
@@ -27,8 +27,8 @@ experiment_hyperparameters:
     hours: 0
     days: 1
     weeks: 0
-  forecast_period_hours: 3
-  scale: False
+  forecast_period_hours: 24
+  scale: True
 
 model_hyperparameters:
   esd:

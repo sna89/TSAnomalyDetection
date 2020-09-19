@@ -25,6 +25,7 @@ class AnomalyDetector():
         self.model = model
 
         self.experiment_hyperparameters = ExperimentHyperParameters(**experiment_hyperparameters)
+        self.scaler = None
         self.train_period = Period(**self.experiment_hyperparameters.train_period)
 
         train_freq = Period(**self.experiment_hyperparameters.train_freq)
@@ -56,6 +57,9 @@ class AnomalyDetector():
                                     epoch_end_time - relativedelta(hours=self.experiment_hyperparameters.forecast_period_hours),
                                     epoch_end_time))
 
+            if self.experiment_hyperparameters.scale:
+                df_, self.scaler = DataHelper.scale(df_, self.experiment_hyperparameters.forecast_period_hours)
+
             if elapsed_time >= self.train_freq_delta:
                 del model
                 model = self.model(self.model_hyperparameters)
@@ -67,6 +71,9 @@ class AnomalyDetector():
                 fit = False
 
             detected_anomalies = model.detect(df_)
+
+            if self.scaler:
+                detected_anomalies[detected_anomalies.columns] = self.scaler.inverse_transform(detected_anomalies)
 
             if not detected_anomalies.empty:
                 filtered_anomalies = self.filter_anomalies_in_forecast(detected_anomalies, epoch_end_time)
