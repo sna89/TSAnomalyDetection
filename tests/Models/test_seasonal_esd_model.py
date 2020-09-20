@@ -23,7 +23,7 @@ class TestEsdModel(unittest.TestCase):
 
     def test_s_esd_detect(self):
         s_esd = SeasonalESD(self.s_esd_params)
-        s_esd.fit(self.df)
+        s_esd = s_esd.fit(self.df)
         predicted_anomalies = s_esd.detect(self.df)
 
         expected_anomalies_df_path = FileHelper.get_file_path('s_esd_predicted_anomalies.csv')
@@ -36,7 +36,7 @@ class TestEsdModel(unittest.TestCase):
 
     def test_s_h_esd_detect(self):
         s_h_esd = SeasonalESD(self.s_h_esd_params)
-        s_h_esd.fit(self.df)
+        s_h_esd = s_h_esd.fit(self.df)
         predicted_anomalies = s_h_esd.detect(self.df)
 
         expected_anomalies_df_path = FileHelper.get_file_path('s_h_esd_predicted_anomalies.csv')

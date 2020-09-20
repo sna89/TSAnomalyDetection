@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="27da9a7e-1324-4c59-8a3a-c97de520e9de" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/tests/Models/test_lstm_ae_model.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/Models/test_prophet_model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AnomalyDetectors/ad_factory.py" beforeDir="false" afterPath="$PROJECT_DIR$/AnomalyDetectors/ad_factory.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AnomalyDetectors/prophet_ad.py" beforeDir="false" afterPath="$PROJECT_DIR$/Obsolete/prophet_ad.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Arima/arima.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Arima/arima.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/FBProphet/fbprophet.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/FBProphet/fbprophet.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/LstmAE/lstmae.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/LstmAE/lstmae.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/SeasonalESD/seasonal_esd.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/SeasonalESD/seasonal_esd.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/anomaly_detection_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/anomaly_detection_model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Helpers/params_validator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helpers/params_validator.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/params.yml" beforeDir="false" afterPath="$PROJECT_DIR$/params.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Models/test_arima_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Models/test_arima_model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/Models/test_seasonal_esd_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/Models/test_seasonal_esd_model.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,14 +62,14 @@
       <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\tests\Models\csv\lstm_ae" />
+      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\tests\Models\csv\arima" />
       <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\Obsolete" />
       <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\tests\Models\csv" />
       <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\tests\Models" />
-      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\tests" />
-      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\tests\csv" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.main">
+  <component name="RunManager" selected="Python tests.pytest for test_prophet_model.TestProphetModel.test_prophet_detect">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Code" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -90,7 +91,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for test_arima_model.TestArimaModel.test_arima_detect" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest for test_lstm_ae_model.TestLstmAEModel" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="Code" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -102,11 +103,11 @@
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_arima_model.TestArimaModel.test_arima_detect&quot;" />
+      <option name="_new_target" value="&quot;test_lstm_ae_model.TestLstmAEModel&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for test_seasonal_esd_model.TestDataBuilder.test_s_esd_detect" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest for test_lstm_ae_model.TestLstmAEModel.test_lstm_ae_detect" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="Code" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -118,11 +119,11 @@
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_seasonal_esd_model.TestDataBuilder.test_s_esd_detect&quot;" />
+      <option name="_new_target" value="&quot;test_lstm_ae_model.TestLstmAEModel.test_lstm_ae_detect&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for test_seasonal_esd_model.TestEsdModel" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest for test_prophet_model.TestProphetModel" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="Code" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -134,40 +135,40 @@
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_seasonal_esd_model.TestEsdModel&quot;" />
+      <option name="_new_target" value="&quot;test_prophet_model.TestProphetModel&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest in tests" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest for test_prophet_model.TestProphetModel.test_prophet_detect" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="Code" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests/Models" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;$PROJECT_DIR$/tests&quot;" />
-      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <option name="_new_target" value="&quot;test_prophet_model.TestProphetModel.test_prophet_detect&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
     <list>
       <item itemvalue="Python.main" />
-      <item itemvalue="Python tests.pytest for test_seasonal_esd_model.TestDataBuilder.test_s_esd_detect" />
-      <item itemvalue="Python tests.pytest for test_seasonal_esd_model.TestEsdModel" />
-      <item itemvalue="Python tests.pytest in tests" />
-      <item itemvalue="Python tests.pytest for test_arima_model.TestArimaModel.test_arima_detect" />
+      <item itemvalue="Python tests.pytest for test_lstm_ae_model.TestLstmAEModel.test_lstm_ae_detect" />
+      <item itemvalue="Python tests.pytest for test_lstm_ae_model.TestLstmAEModel" />
+      <item itemvalue="Python tests.pytest for test_prophet_model.TestProphetModel" />
+      <item itemvalue="Python tests.pytest for test_prophet_model.TestProphetModel.test_prophet_detect" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.pytest for test_prophet_model.TestProphetModel.test_prophet_detect" />
+        <item itemvalue="Python tests.pytest for test_prophet_model.TestProphetModel" />
+        <item itemvalue="Python tests.pytest for test_lstm_ae_model.TestLstmAEModel" />
+        <item itemvalue="Python tests.pytest for test_lstm_ae_model.TestLstmAEModel.test_lstm_ae_detect" />
         <item itemvalue="Python.main" />
-        <item itemvalue="Python tests.pytest for test_arima_model.TestArimaModel.test_arima_detect" />
-        <item itemvalue="Python tests.pytest in tests" />
-        <item itemvalue="Python tests.pytest for test_seasonal_esd_model.TestEsdModel" />
-        <item itemvalue="Python tests.pytest for test_seasonal_esd_model.TestDataBuilder.test_s_esd_detect" />
       </list>
     </recent_temporary>
   </component>
@@ -246,53 +247,53 @@
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
     <state x="-1297" y="70" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600240095042" />
-    <state x="-1297" y="256" width="1017" height="594" key="#xdebugger.evaluate" timestamp="1600596072554">
+    <state x="-1297" y="256" width="1017" height="594" key="#xdebugger.evaluate" timestamp="1600611909814">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
-    <state x="-1297" y="256" width="1017" height="594" key="#xdebugger.evaluate/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600596072554" />
+    <state x="-1297" y="256" width="1017" height="594" key="#xdebugger.evaluate/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600611909814" />
     <state width="877" height="466" key="DebuggerActiveHint" timestamp="1600326063575">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
     <state width="877" height="466" key="DebuggerActiveHint/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600326063575" />
-    <state width="1899" height="249" key="GridCell.Tab.0.bottom" timestamp="1600596111831">
+    <state width="1899" height="198" key="GridCell.Tab.0.bottom" timestamp="1600611932307">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
-    <state width="1899" height="249" key="GridCell.Tab.0.bottom/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600596111831" />
+    <state width="1899" height="198" key="GridCell.Tab.0.bottom/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600611932307" />
     <state width="1899" height="273" key="GridCell.Tab.0.bottom/3840.21.1680.1010/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600261224767" />
-    <state width="1899" height="249" key="GridCell.Tab.0.center" timestamp="1600596111831">
+    <state width="1899" height="198" key="GridCell.Tab.0.center" timestamp="1600611932307">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
-    <state width="1899" height="249" key="GridCell.Tab.0.center/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600596111831" />
+    <state width="1899" height="198" key="GridCell.Tab.0.center/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600611932307" />
     <state width="1899" height="273" key="GridCell.Tab.0.center/3840.21.1680.1010/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600261224766" />
-    <state width="1899" height="249" key="GridCell.Tab.0.left" timestamp="1600596111831">
+    <state width="1899" height="198" key="GridCell.Tab.0.left" timestamp="1600611932307">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
-    <state width="1899" height="249" key="GridCell.Tab.0.left/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600596111831" />
+    <state width="1899" height="198" key="GridCell.Tab.0.left/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600611932307" />
     <state width="1899" height="273" key="GridCell.Tab.0.left/3840.21.1680.1010/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600261224766" />
-    <state width="1899" height="249" key="GridCell.Tab.0.right" timestamp="1600596111831">
+    <state width="1899" height="198" key="GridCell.Tab.0.right" timestamp="1600611932307">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
-    <state width="1899" height="249" key="GridCell.Tab.0.right/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600596111831" />
+    <state width="1899" height="198" key="GridCell.Tab.0.right/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600611932307" />
     <state width="1899" height="273" key="GridCell.Tab.0.right/3840.21.1680.1010/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600261224766" />
-    <state width="1899" height="249" key="GridCell.Tab.1.bottom" timestamp="1600596111831">
+    <state width="1899" height="198" key="GridCell.Tab.1.bottom" timestamp="1600611932307">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
-    <state width="1899" height="249" key="GridCell.Tab.1.bottom/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600596111831" />
+    <state width="1899" height="198" key="GridCell.Tab.1.bottom/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600611932307" />
     <state width="1899" height="273" key="GridCell.Tab.1.bottom/3840.21.1680.1010/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600261225288" />
-    <state width="1899" height="249" key="GridCell.Tab.1.center" timestamp="1600596111831">
+    <state width="1899" height="198" key="GridCell.Tab.1.center" timestamp="1600611932307">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
-    <state width="1899" height="249" key="GridCell.Tab.1.center/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600596111831" />
+    <state width="1899" height="198" key="GridCell.Tab.1.center/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600611932307" />
     <state width="1899" height="273" key="GridCell.Tab.1.center/3840.21.1680.1010/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600261225288" />
-    <state width="1899" height="249" key="GridCell.Tab.1.left" timestamp="1600596111831">
+    <state width="1899" height="198" key="GridCell.Tab.1.left" timestamp="1600611932307">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
-    <state width="1899" height="249" key="GridCell.Tab.1.left/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600596111831" />
+    <state width="1899" height="198" key="GridCell.Tab.1.left/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600611932307" />
     <state width="1899" height="273" key="GridCell.Tab.1.left/3840.21.1680.1010/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600261225287" />
-    <state width="1899" height="249" key="GridCell.Tab.1.right" timestamp="1600596111831">
+    <state width="1899" height="198" key="GridCell.Tab.1.right" timestamp="1600611932307">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
-    <state width="1899" height="249" key="GridCell.Tab.1.right/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600596111831" />
+    <state width="1899" height="198" key="GridCell.Tab.1.right/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600611932307" />
     <state width="1899" height="273" key="GridCell.Tab.1.right/3840.21.1680.1010/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1600261225288" />
     <state x="-1459" y="44" key="SettingsEditor" timestamp="1600241803430">
       <screen x="-1920" y="-121" width="1920" height="1040" />
@@ -306,14 +307,18 @@
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
     <state x="-1412" y="128" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600525239981" />
-    <state x="0" y="0" width="1661" height="789" maximized="true" key="dock-window-1" timestamp="1600339853289">
+    <state x="0" y="0" width="1696" height="1027" key="dock-window-1" timestamp="1600609407526">
       <screen x="0" y="0" width="1680" height="1010" />
     </state>
-    <state x="0" y="0" width="1661" height="789" maximized="true" key="dock-window-1/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600339853289" />
+    <state x="0" y="0" width="1696" height="1027" key="dock-window-1/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600609407526" />
     <state x="-1253" y="132" width="800" height="534" key="find.popup" timestamp="1600529299838">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
     <state x="-1253" y="132" width="800" height="534" key="find.popup/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600529299838" />
+    <state x="-1297" y="104" width="672" height="678" key="search.everywhere.popup" timestamp="1600609332540">
+      <screen x="-1920" y="-121" width="1920" height="1040" />
+    </state>
+    <state x="-1297" y="104" width="672" height="678" key="search.everywhere.popup/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600609332540" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -358,18 +363,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/tests/Models/test_seasonal_esd_model.py</url>
-          <line>33</line>
-          <option name="timeStamp" value="601" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/tests/Models/test_seasonal_esd_model.py</url>
-          <line>46</line>
+          <line>47</line>
           <option name="timeStamp" value="602" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/tests/Models/test_seasonal_esd_model.py</url>
-          <line>25</line>
-          <option name="timeStamp" value="603" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Models/Arima/arima.py</url>
@@ -407,19 +402,14 @@
           <option name="timeStamp" value="634" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Models/FBProphet/fbprophet.py</url>
-          <line>52</line>
-          <option name="timeStamp" value="637" />
+          <url>file://$PROJECT_DIR$/tests/Models/test_lstm_ae_model.py</url>
+          <line>19</line>
+          <option name="timeStamp" value="644" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Models/FBProphet/fbprophet.py</url>
-          <line>47</line>
-          <option name="timeStamp" value="639" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Models/FBProphet/fbprophet.py</url>
-          <line>26</line>
-          <option name="timeStamp" value="640" />
+          <url>file://$PROJECT_DIR$/tests/Models/test_lstm_ae_model.py</url>
+          <line>27</line>
+          <option name="timeStamp" value="646" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>

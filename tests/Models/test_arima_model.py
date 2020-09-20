@@ -19,7 +19,7 @@ class TestArimaModel(unittest.TestCase):
 
     def test_arima_detect(self):
         arima_model = Arima(self.arima_params)
-        arima_model.fit(self.df)
+        arima_model = arima_model.fit(self.df)
         predicted_anomalies = arima_model.detect(self.df)
 
         expected_anomalies_df_path = FileHelper.get_file_path('arima_predicted_anomalies.csv')

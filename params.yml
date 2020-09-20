@@ -28,7 +28,7 @@ experiment_hyperparameters:
     days: 2
     weeks: 0
   forecast_period_hours: 3
-  scale: False
+  scale: True
 
 model_hyperparameters:
   esd:
