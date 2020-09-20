@@ -1,9 +1,11 @@
 ---
-detector_name: prophet
+detector_name: esd
+
+anomalies: Synthetic_anomalies_1.csv
 
 create_synthetic_data:
-  to_create: True
-  filename: Synthetic.csv
+  to_create: False
+  filename: Synthetic_1.csv
 
 output:
   csv: False
@@ -27,8 +29,8 @@ experiment_hyperparameters:
     hours: 0
     days: 2
     weeks: 0
-  forecast_period_hours: 3
-  scale: True
+  forecast_period_hours: 2
+  scale: False
 
 model_hyperparameters:
   esd:
@@ -63,6 +65,6 @@ metadata:
 #    attribute_name: internaltemp
 #    time_column: Time
   - source: csv
-    filename: Synthetic.csv
+    filename: Synthetic_1.csv
     attribute_name: Value
     time_column: index

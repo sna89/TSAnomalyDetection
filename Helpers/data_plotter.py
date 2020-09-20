@@ -48,10 +48,10 @@ class DataPlotter:
             DataPlotter.plot_scatter_double_fig(data, df_anomalies, anomalies_true_df,
                                                 'Predicted Anomalies', 'True Anomalies')
 
+        plt.show()
+
         if plot_name:
             plt.savefig(plot_name + '.jpg')
-
-        plt.show()
 
     @staticmethod
     def plot_scatter_single_fig(df_plot, df_scatter=pd.DataFrame(), title=None):

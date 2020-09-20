@@ -90,8 +90,15 @@ if __name__ == "__main__":
         params_helper = get_and_validate_parameters()
         synthetic_data_params = params_helper.get_synthetic_data_params()
         anomalies_true_df = pd.DataFrame()
+
         if synthetic_data_params.to_create:
             _, anomalies_true_df = create_synthetic_data(synthetic_data_params)
+
+        anomalies = params_helper.get_anomalies()
+        if anomalies:
+            anomalies_true_df = pd.read_csv(anomalies,
+                                            index_col=['Unnamed: 0'])
+            anomalies_true_df.index = pd.to_datetime(anomalies_true_df.index)
 
         data = contruct_data(params_helper)
         anomalies_pred_df = run_experiment(params_helper, data)
