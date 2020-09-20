@@ -1,5 +1,5 @@
 ---
-detector_name: lstm_ae
+detector_name: prophet
 
 create_synthetic_data:
   to_create: True
@@ -15,20 +15,20 @@ preprocess_data_params:
     hours: 0
     days: 0
     weeks: 2
-  fill: ignore
+  fill: bfill
   skiprows: 0
 
 experiment_hyperparameters:
   train_period:
-    hours: 0
-    days: 8
+    hours: 3
+    days: 7
     weeks: 0
   train_freq:
     hours: 0
-    days: 1
+    days: 2
     weeks: 0
-  forecast_period_hours: 24
-  scale: True
+  forecast_period_hours: 3
+  scale: False
 
 model_hyperparameters:
   esd:
@@ -46,7 +46,8 @@ model_hyperparameters:
     threshold: 99
 
   prophet:
-    interval_width: 0.9
+    interval_width: 0.999
+    changepoint_prior_scale: 0.2
 
 metadata:
 #  - source: csv

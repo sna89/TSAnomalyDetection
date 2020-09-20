@@ -3,7 +3,6 @@ from Models.Arima.arima import Arima
 from Models.LstmAE.lstmae import LstmAE
 from Models.FBProphet.fbprophet import FBProphet
 from AnomalyDetectors.ad import AnomalyDetector
-from AnomalyDetectors.prophet_ad import ProphetAnomalyDetector
 
 
 class AnomalyDetectionFactory:
@@ -23,7 +22,7 @@ class AnomalyDetectionFactory:
             return AnomalyDetector(LstmAE, self.experiment_hyperparameters, self.model_hyperparameters)
 
         elif self.detector_name == 'prophet':
-            return ProphetAnomalyDetector(FBProphet, self.experiment_hyperparameters, self.model_hyperparameters)
+            return AnomalyDetector(FBProphet, self.experiment_hyperparameters, self.model_hyperparameters)
 
         else:
             msg = 'No such detector: {}'.format(self.detector_name)

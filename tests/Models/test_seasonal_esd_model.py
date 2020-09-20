@@ -4,6 +4,7 @@ import pandas as pd
 from pandas.util.testing import assert_series_equal
 from Helpers.file_helper import FileHelper
 
+
 class TestEsdModel(unittest.TestCase):
     def setUp(self):
         self.s_esd_params = {'anomaly_ratio': 0.01,

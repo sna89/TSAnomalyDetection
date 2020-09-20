@@ -35,6 +35,12 @@ class AnomalyDetectionModel(ABC):
         self.anomaly_df = None
 
     @staticmethod
+    def validate_model_hyperpameters(expected_model_hyperparmeters, model_hyperparameters):
+        for key in expected_model_hyperparmeters:
+            if key not in model_hyperparameters:
+                raise "Missing model hyperparameters: {}".format(key)
+
+    @staticmethod
     def _validate_data(data):
         assert isinstance(data, pd.DataFrame), "Data must be a pandas dataframe"
         return

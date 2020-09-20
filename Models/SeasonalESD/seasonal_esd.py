@@ -8,19 +8,19 @@ from Models.anomaly_detection_model import AnomalyDetectionModel, validate_anoma
 from Logger.logger import get_logger
 
 
+ESD_HYPERPARAMETERS = ['anomaly_ratio', 'hybrid', 'alpha']
+
+
 class SeasonalESD(AnomalyDetectionModel):
     def __init__(self, model_hyperparameters):
         super(SeasonalESD, self).__init__()
 
         self.logger = get_logger(__class__.__name__)
-        try:
-            self.anomaly_ratio = model_hyperparameters['anomaly_ratio']
-            self.hybrid = model_hyperparameters['hybrid']
-            self.alpha = model_hyperparameters['alpha']
-        except Exception as e:
-            msg = "Missing model parameter: {}".format(e)
-            self.logger.error(msg)
-            raise Exception(msg)
+
+        AnomalyDetectionModel.validate_model_hyperpameters(ESD_HYPERPARAMETERS, model_hyperparameters)
+        self.anomaly_ratio = model_hyperparameters['anomaly_ratio']
+        self.hybrid = model_hyperparameters['hybrid']
+        self.alpha = model_hyperparameters['alpha']
 
         assert self.anomaly_ratio <= 0.49, "anomaly ratio is too high"
 

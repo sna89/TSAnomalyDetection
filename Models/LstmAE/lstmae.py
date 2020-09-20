@@ -9,9 +9,14 @@ from Helpers.data_helper import DataHelper, DataConst
 pd.options.mode.chained_assignment = None
 
 
+LSTMAE_HYPERPARAMETERS = ['hidden_layer', 'dropout', 'threshold', 'forecast_period_hours']
+
+
 class LstmAE(AnomalyDetectionModel):
     def __init__(self, model_hyperparameters):
         super(LstmAE, self).__init__()
+
+        AnomalyDetectionModel.validate_model_hyperpameters(LSTMAE_HYPERPARAMETERS, model_hyperparameters)
         self.hidden_layer = model_hyperparameters['hidden_layer']
         self.dropout = model_hyperparameters['dropout']
         self.batch_size = model_hyperparameters['batch_size']

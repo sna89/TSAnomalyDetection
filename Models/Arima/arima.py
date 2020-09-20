@@ -10,17 +10,17 @@ from statsmodels.tsa.statespace.sarimax import SARIMAX
 sys.modules['sklearn.externals.six'] = six
 
 
+ARIMA_HYPERPARAMETERS = ['seasonality', 'forecast_period_hours']
+
+
 class Arima(AnomalyDetectionModel):
     def __init__(self, model_hyperparameters):
         super(Arima, self).__init__()
 
-        try:
-            self.seasonality = model_hyperparameters['seasonality']
-            self.forecast_period_hours = model_hyperparameters['forecast_period_hours']
-        except Exception as e:
-            msg = "Missing model parameter: {}".format(e)
-            self.logger.error(msg)
-            raise Exception(msg)
+        AnomalyDetectionModel.validate_model_hyperpameters(ARIMA_HYPERPARAMETERS, model_hyperparameters)
+        self.seasonality = model_hyperparameters['seasonality']
+        self.forecast_period_hours = model_hyperparameters['forecast_period_hours']
+
 
         self.fitted = False
         self.fitted_model = None
