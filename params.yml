@@ -1,5 +1,5 @@
 ---
-detector_name: esd
+detector_name: arima
 
 anomalies: Synthetic_anomalies_1.csv
 
@@ -9,7 +9,7 @@ create_synthetic_data:
 
 output:
   csv: False
-  plot: False
+  plot: True
 
 preprocess_data_params:
   test: False
@@ -18,7 +18,7 @@ preprocess_data_params:
     days: 0
     weeks: 2
   fill: bfill
-  skiprows: 0
+  skiprows: 6
 
 experiment_hyperparameters:
   train_period:
@@ -29,12 +29,12 @@ experiment_hyperparameters:
     hours: 0
     days: 2
     weeks: 0
-  forecast_period_hours: 2
+  forecast_period_hours: 6
   scale: False
 
 model_hyperparameters:
   esd:
-    anomaly_ratio: 0.01
+    anomaly_ratio: 0.025
     hybrid: True
     alpha: 0.05
 

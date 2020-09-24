@@ -58,10 +58,13 @@ class Arima(AnomalyDetectionModel):
             test_periods = test_df.shape[0]
             forecasts, conf_int = self._get_forecast(model, test_periods)
 
+            # self._plot_forecast(model, test_periods, train_df, test_df)
+
             summary_df = pd.DataFrame(data={'actual': test_df.values.reshape(forecasts.shape),
-                                            'forecasts': forecasts,
-                                            'lower_limit_conf_int': conf_int.iloc[:, 0],
-                                            'upper_limit_conf_int': conf_int.iloc[:, 1]},
+                                            'forecasts': forecasts.values,
+                                            'lower_limit_conf_int': conf_int.iloc[:, 0].values,
+                                            'upper_limit_conf_int': conf_int.iloc[:, 1].values
+                                            },
                                       index=data[train_df.shape[0]:].index)
 
             summary_df['is_anomaly'] = np.where((summary_df.actual < summary_df.lower_limit_conf_int) |
@@ -112,21 +115,20 @@ class Arima(AnomalyDetectionModel):
             msg = "Need to fit arima model in order to plot diagnostics"
             self.logger.debug(msg)
 
-    # def plot_forecast(self):
-    #     if self.fitted:
-    #         self.show_model_summary()
-    #         forecasts, conf_int = self.get_forecast()
-    #
-    #         plt.plot(self.train_df.index, self.train_df.values, alpha=0.75)
-    #         plt.plot(self.test_df.index, forecasts, alpha=0.75)  # Forecasts
-    #         plt.scatter(self.test_df.index, self.test_df.values,
-    #                     alpha=0.4, marker='x')  # Test data
-    #         plt.fill_between(self.test_df.index,
-    #                          conf_int[:, 0], conf_int[:, 1],
-    #                          alpha=0.1, color='b')
-    #
-    #         plt.show()
-    #     else:
-    #         msg = "Need to fit arima model in order to plot forecast"
-    #         self.logger.debug(msg)
+    def _plot_forecast(self, model, periods, train_df, test_df):
+        if self.fitted:
+            forecasts, conf_int = self._get_forecast(model, periods)
+
+            # plt.plot(train_df.index, train_df.values, alpha=0.75)
+            plt.plot(test_df.index, forecasts, alpha=0.75)  # Forecasts
+            plt.scatter(test_df.index, test_df.values,
+                        alpha=0.4, marker='x')  # Test data
+            plt.fill_between(test_df.index,
+                             conf_int.iloc[:, 0], conf_int.iloc[:, 1],
+                             alpha=0.1, color='b')
+
+
+        else:
+            msg = "Need to fit arima model in order to plot forecast"
+            self.logger.debug(msg)
 

@@ -4,9 +4,9 @@ from Logger.logger import get_logger
 
 
 class DataCreatorConst:
-    ANOMALY_ADDITION = 4
+    ANOMALY_ADDITION = 3
     ANOMALY_DECREASE = 0.5
-    ITERATIONS = 5
+    ITERATIONS = 2
     NUN_OF_ANOMALIES = 5
     A = 1
     W = 1
@@ -15,6 +15,7 @@ class DataCreatorConst:
     START_DATE = '2020-01-01 00:00'
     END_DATE = '2020-01-15 00:00'
     FREQ = '10min'
+
 
 class DataCreator:
     logger = get_logger("DataCreator")
@@ -39,7 +40,7 @@ class DataCreator:
         y1 = DataCreator.multiply_arr(y1, DataCreatorConst.DAYS)
         y2 = DataCreator.multiply_arr(y2, DataCreatorConst.DAYS * DataCreatorConst.CYCLE_PER_DAY)
 
-        noise = np.random.normal(loc=0, scale=float(DataCreatorConst.A) / 10, size=T)
+        noise = np.random.normal(loc=0, scale=float(DataCreatorConst.A) / 2, size=T)
         anomalies = DataCreator.create_anomaly_data(T)
 
         y = y1 + y2 + noise + anomalies
