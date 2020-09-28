@@ -1,14 +1,14 @@
 ---
-detector_name: arima
+detector_name: prophet
 
-anomalies: Synthetic_anomalies_1.csv
+anomalies:
 
 create_synthetic_data:
   to_create: False
   filename: Synthetic_1.csv
 
 output:
-  csv: False
+  csv: True
   plot: True
 
 preprocess_data_params:
@@ -18,18 +18,20 @@ preprocess_data_params:
     days: 0
     weeks: 2
   fill: bfill
-  skiprows: 6
+  skiprows: 0
 
 experiment_hyperparameters:
   train_period:
     hours: 3
-    days: 7
+    days: 2
     weeks: 0
   train_freq:
     hours: 0
-    days: 2
+    days: 1
     weeks: 0
-  forecast_period_hours: 6
+  forecast_period_hours: 3
+  include_train_time: True
+  remove_outliers: False
   scale: False
 
 model_hyperparameters:
@@ -64,7 +66,11 @@ metadata:
 #    filename: Sensor U106755.csv
 #    attribute_name: internaltemp
 #    time_column: Time
+#  - source: csv
+#    filename: Synthetic_1.csv
+#    attribute_name: Value
+#    time_column: index
   - source: csv
-    filename: Synthetic_1.csv
-    attribute_name: Value
-    time_column: index
+    filename: 100330.csv
+    attribute_name: temperature
+    time_column: TSMeasurement

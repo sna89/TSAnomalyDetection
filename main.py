@@ -55,7 +55,7 @@ def output_results(params_helper, data, anomalies_pred_df, anomalies_true_df=pd.
     experiment_name = params_helper.create_experiment_name()
 
     if is_output.csv:
-        anomalies_pred_df.to_csv(experiment_name + '.csv')
+        anomalies_pred_df.to_csv('2 day train.csv')
 
     if is_output.plot:
         DataPlotter.plot_anomalies(data=data,
@@ -101,8 +101,12 @@ if __name__ == "__main__":
             anomalies_true_df.index = pd.to_datetime(anomalies_true_df.index)
 
         data = contruct_data(params_helper)
-        anomalies_pred_df = run_experiment(params_helper, data)
-        output_results(params_helper, data, anomalies_pred_df, anomalies_true_df)
+        # DataPlotter.plot_ts_data(data)
+        data_1 = data.loc[:'11/11/2019']
+        data_2 = data.loc['18/11/2019':]
+        for data in [data_1, data_2]:
+            anomalies_pred_df = run_experiment(params_helper, data)
+            output_results(params_helper, data, anomalies_pred_df, anomalies_true_df)
 
     except Exception as e:
         logger.error(e)

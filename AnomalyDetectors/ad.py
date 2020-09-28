@@ -13,6 +13,8 @@ class ExperimentHyperParameters:
     train_period: Dict
     train_freq: Dict
     forecast_period_hours: int
+    include_train_time: bool
+    remove_outliers: bool
     scale: bool
 
 
@@ -51,11 +53,18 @@ class AnomalyDetector():
         fit = True
 
         while epoch_end_time <= last_obs_time:
-            self.logger.info('Epoch: {}, '
-                             'Detecting anomalies between {} to {}'.
-                             format(epoch,
-                                    epoch_end_time - relativedelta(hours=self.experiment_hyperparameters.forecast_period_hours),
-                                    epoch_end_time))
+            if not self.experiment_hyperparameters.include_train_time or epoch > 1:
+                self.logger.info('Epoch: {}, '
+                                 'Detecting anomalies between {} to {}'.
+                                 format(epoch,
+                                        epoch_end_time - relativedelta(hours=self.experiment_hyperparameters.forecast_period_hours),
+                                        epoch_end_time))
+            else:
+                self.logger.info('Epoch: {}, '
+                                 'Detecting anomalies between {} to {}'.
+                                 format(epoch,
+                                        epoch_start_time,
+                                        epoch_end_time))
 
             if self.experiment_hyperparameters.scale:
                 df_, self.scaler = DataHelper.scale(df_, self.experiment_hyperparameters.forecast_period_hours)
@@ -77,7 +86,10 @@ class AnomalyDetector():
                     detected_anomalies = pd.Series(data=self.scaler.inverse_transform(detected_anomalies),
                                                    index=detected_anomalies.index)
 
-                filtered_anomalies = self.filter_anomalies_in_forecast(detected_anomalies, epoch_end_time)
+                filtered_anomalies = detected_anomalies
+
+                if not self.experiment_hyperparameters.include_train_time or epoch > 1:
+                    filtered_anomalies = self.filter_anomalies_in_forecast(detected_anomalies, epoch_end_time)
 
                 if not filtered_anomalies.empty:
                     self.logger.info("Filtered anomalies: {}".format(filtered_anomalies))
@@ -85,21 +97,38 @@ class AnomalyDetector():
                 else:
                     self.logger.info("No anomalies detected in current iteration")
 
-                df_no_anomalies.drop(labels=detected_anomalies.index, axis=0, inplace=True)
+                if self.experiment_hyperparameters.remove_outliers:
+                    df_no_anomalies.drop(labels=detected_anomalies.index, axis=0, inplace=True)
 
             else:
                 self.logger.info("No anomalies detected in current iteration")
 
+            epoch_start_time, epoch_end_time, df_ , elapsed_time, epoch = self.update_epoch_variables(df_no_anomalies,
+                                                                                                      epoch_start_time,
+                                                                                                      epoch_end_time,
+                                                                                                      last_obs_time,
+                                                                                                      elapsed_time,
+                                                                                                      epoch)
+
+        return self.df_anomalies
+
+    def update_epoch_variables(self,
+                               df_no_anomalies,
+                               epoch_start_time,
+                               epoch_end_time,
+                               last_obs_time,
+                               elapsed_time,
+                               epoch):
+        df = pd.DataFrame()
+        while df.empty or df.shape[0] <= (self.experiment_hyperparameters.forecast_period_hours * 3 * 6):
             epoch_start_time, epoch_end_time = self._update_train_period(df_no_anomalies,
                                                                          epoch_start_time,
                                                                          epoch_end_time,
                                                                          last_obs_time)
-            del df_
-            df_ = pd.DataFrame(data=copy.deepcopy(df_no_anomalies.loc[epoch_start_time:epoch_end_time]))
+            df = pd.DataFrame(data=copy.deepcopy(df_no_anomalies.loc[epoch_start_time:epoch_end_time]))
             elapsed_time += timedelta(hours=self.experiment_hyperparameters.forecast_period_hours)
             epoch += 1
-
-        return self.df_anomalies
+        return epoch_start_time, epoch_end_time, df , elapsed_time, epoch
 
     def _update_train_period(self, df, start_time, end_time, last_obs_time):
         updated_start_time = DataHelper.get_min_idx(df,

@@ -33,12 +33,13 @@ class Arima(AnomalyDetectionModel):
         train_df = AnomalyDetectionModel.get_train_set(data, self.forecast_period_hours)
         if not DataHelper.is_constant_data(train_df):
             self.fitted_model = auto_arima(train_df, start_p=1, start_q=1,
-                                         max_p=4, max_q=4, m=self.seasonality,
-                                         seasonal=True,
-                                         trace=True,
-                                         error_action='ignore',
-                                         suppress_warnings=True,
-                                         stepwise=True)
+                                           m=self.seasonality,
+                                           seasonal=True,
+                                           trace=True,
+                                           error_action='ignore',
+                                           suppress_warnings=True,
+                                           stepwise=True,
+                                           alpha=0.1)
 
             self.fitted = True
             self.logger.info("Chosen Arima model: {}*{}".
@@ -58,7 +59,7 @@ class Arima(AnomalyDetectionModel):
             test_periods = test_df.shape[0]
             forecasts, conf_int = self._get_forecast(model, test_periods)
 
-            # self._plot_forecast(model, test_periods, train_df, test_df)
+            self._plot_forecast(model, test_periods, train_df, test_df)
 
             summary_df = pd.DataFrame(data={'actual': test_df.values.reshape(forecasts.shape),
                                             'forecasts': forecasts.values,

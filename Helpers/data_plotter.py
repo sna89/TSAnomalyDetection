@@ -49,7 +49,7 @@ class DataPlotter:
                                                 'Predicted Anomalies', 'True Anomalies')
 
         if plot_name:
-            plt.savefig(plot_name + '.jpg')
+            plt.savefig('2 day train.jpg')
 
         plt.show()
 

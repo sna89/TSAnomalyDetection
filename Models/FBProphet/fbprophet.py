@@ -2,6 +2,8 @@ from Models.anomaly_detection_model import AnomalyDetectionModel, validate_anoma
 from fbprophet import Prophet
 from Helpers.data_helper import DataHelper
 import numpy as np
+import matplotlib.pyplot as plt
+from fbprophet.plot import add_changepoints_to_plot
 
 
 PROPHET_HYPERPARAMETERS = ['interval_width', 'changepoint_prior_scale', 'forecast_period_hours']
@@ -16,7 +18,10 @@ class FBProphet(AnomalyDetectionModel):
         self.changepoint_prior_scale = model_hyperparameters['changepoint_prior_scale']
         self.forecast_period_hours = model_hyperparameters['forecast_period_hours']
 
-        self.model = Prophet(interval_width=self.interval_width, changepoint_prior_scale=self.changepoint_prior_scale)
+        self.model = Prophet(interval_width=self.interval_width,
+                             changepoint_prior_scale=0.5,
+                             daily_seasonality=15,
+                             seasonality_prior_scale=100)
 
     @staticmethod
     def _adjust_prophet_schema(data):
@@ -43,9 +48,15 @@ class FBProphet(AnomalyDetectionModel):
     @validate_anomaly_df_schema
     def detect(self, df):
         df = self.init_data(df)
+
         # train_df_raw, test_df_raw = DataHelper.split_train_test(df, self.forecast_period_hours)
         # future = self.model.make_future_dataframe(periods=test_df_raw.shape[0], freq='10min')
+
         forecast = self.model.predict(df)
+
+        # self._plot_forecast(forecast)
+        # self._plot_components(forecast)
+
         forecast.index = df.index
         forecast['actual'] = df['y']
         forecast['anomaly'] = np.where(
@@ -53,5 +64,12 @@ class FBProphet(AnomalyDetectionModel):
         anomalies = forecast[forecast['anomaly'] == 1]['actual']
         return anomalies
 
+    def _plot_forecast(self, forecast):
+        self.model.plot(forecast)
+        plt.show()
+
+    def _plot_components(self, forecast):
+        self.model.plot_components(forecast)
+        plt.show()
 
 

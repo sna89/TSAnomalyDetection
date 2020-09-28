@@ -31,9 +31,8 @@ class DataHelper:
         assert isinstance(data, pd.DataFrame), "Data must be a data frame"
 
     @staticmethod
-    def filter(df, index, type_column, value_column, attribute_name):
+    def filter(df, type_column, value_column, attribute_name):
         df_ = copy.deepcopy(df[df[type_column] == attribute_name])
-        df_.index = pd.to_datetime(df_[index], format="%d-%m-%y %H:%M", infer_datetime_format=True, dayfirst=True)
         df_ = df_[[value_column]]
         df_.rename({value_column: attribute_name}, axis=1, inplace=True)
         return df_
@@ -160,7 +159,7 @@ class DataHelper:
             for loc_idx, (idx, row) in enumerate(data.iterrows()):
                 if row['date_diff'] > timedelta(minutes=20):
                     days = row['date_diff'].days % 7
-                    weeks = row['date_diff'].days / 7
+                    weeks = int(row['date_diff'].days / 7)
                     hours = row['date_diff'].seconds // 3600
                     minutes = (row['date_diff'].seconds // 60) % 60
 

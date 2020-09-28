@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 from Helpers.params_helper import Metadata, PreprocessDataParams
 from Logger.logger import get_logger
 from Helpers.data_reader import DataReaderFactory
-
+from Helpers.data_plotter import DataPlotter
 
 class DataConstructor:
     def __init__(self, metadata: List, preprocess_data_params: Dict):
@@ -62,12 +62,12 @@ class SingleFileDataBuilder(AbstractDataBuilder):
         self.logger.info("Start processing data")
 
         data = raw_data
+        data = self.preprocess_index(data)
 
         if self.metadata_object.attribute_name in data.columns:
-            data.set_index(self.metadata_object.time_column, inplace=True)
             data = pd.DataFrame(data[self.metadata_object.attribute_name])
         else:
-            data = DataHelper.filter(data, index=self.metadata_object.time_column,
+            data = DataHelper.filter(data,
                                      type_column='Type',
                                      value_column='Value',
                                      attribute_name=self.metadata_object.attribute_name)
@@ -88,7 +88,14 @@ class SingleFileDataBuilder(AbstractDataBuilder):
                     axis=1,
                     inplace=True)
         data.rename_axis(self.new_time_column, inplace=True)
-        data.index = pd.to_datetime(data.index)
+        return data
+
+    def preprocess_index(self, data):
+        data.index = pd.to_datetime(data[self.metadata_object.time_column],
+                                    format="%d-%m-%y %H:%M",
+                                    infer_datetime_format=True,
+                                    dayfirst=True)
+        data.sort_index(axis=1, ascending=True, inplace=True)
         return data
 
     def preprocess_data(self, data):
