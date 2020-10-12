@@ -4,8 +4,8 @@ detector_name: prophet
 anomalies:
 
 create_synthetic_data:
-  to_create: False
-  filename: Synthetic_1.csv
+  to_create: True
+  filename: Synthetic_12.csv
 
 output:
   csv: True
@@ -17,21 +17,21 @@ preprocess_data_params:
     hours: 0
     days: 0
     weeks: 2
-  fill: bfill
+  fill: ignore
   skiprows: 0
 
 experiment_hyperparameters:
   train_period:
     hours: 3
-    days: 2
-    weeks: 0
+    days: 0
+    weeks: 156
   train_freq:
     hours: 0
-    days: 1
-    weeks: 0
+    days: 0
+    weeks: 2
   forecast_period_hours: 3
   include_train_time: True
-  remove_outliers: False
+  remove_outliers: True
   scale: False
 
 model_hyperparameters:
@@ -51,7 +51,7 @@ model_hyperparameters:
 
   prophet:
     interval_width: 0.999
-    changepoint_prior_scale: 0.2
+    changepoint_prior_scale: 0.5
 
 metadata:
 #  - source: csv
@@ -66,11 +66,11 @@ metadata:
 #    filename: Sensor U106755.csv
 #    attribute_name: internaltemp
 #    time_column: Time
-#  - source: csv
-#    filename: Synthetic_1.csv
-#    attribute_name: Value
-#    time_column: index
   - source: csv
-    filename: 100330.csv
-    attribute_name: temperature
-    time_column: TSMeasurement
+    filename: Synthetic_12.csv
+    attribute_name: Value
+    time_column: index
+#  - source: csv
+#    filename: 100330.csv
+#    attribute_name: temperature
+#    time_column: TSMeasurement

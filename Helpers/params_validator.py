@@ -64,13 +64,13 @@ class ParamsValidator:
             allowed_fill_methods = DataConst.FILL_METHODS.copy()
             allowed_fill_methods.remove('ignore')
 
-            if self.preprocess_data_params.fill == 'ignore':
-                msg = base_msg.format(model=self.detector_name,
-                                      recommendation="no missing data points. "
-                                                     "preprocess_data_params::fill must get one of the "
-                                                     "following options: {}"
-                                                     .format(allowed_fill_methods))
-                raise ValueError(msg)
+            # if self.preprocess_data_params.fill == 'ignore':
+            #     msg = base_msg.format(model=self.detector_name,
+            #                           recommendation="no missing data points. "
+            #                                          "preprocess_data_params::fill must get one of the "
+            #                                          "following options: {}"
+            #                                          .format(allowed_fill_methods))
+            #     raise ValueError(msg)
 
     def validate_uni_variate(self):
         num_files = len(self.metadata)

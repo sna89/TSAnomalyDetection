@@ -19,9 +19,9 @@ class FBProphet(AnomalyDetectionModel):
         self.forecast_period_hours = model_hyperparameters['forecast_period_hours']
 
         self.model = Prophet(interval_width=self.interval_width,
-                             changepoint_prior_scale=0.5,
-                             daily_seasonality=15,
-                             seasonality_prior_scale=100)
+                             changepoint_prior_scale=self.changepoint_prior_scale,
+                             daily_seasonality=10,
+                             seasonality_prior_scale=50)
 
     @staticmethod
     def _adjust_prophet_schema(data):
@@ -54,8 +54,8 @@ class FBProphet(AnomalyDetectionModel):
 
         forecast = self.model.predict(df)
 
-        # self._plot_forecast(forecast)
-        # self._plot_components(forecast)
+        self._plot_forecast(forecast)
+        self._plot_components(forecast)
 
         forecast.index = df.index
         forecast['actual'] = df['y']

@@ -25,7 +25,7 @@ def create_synthetic_data(synthetic_data_params):
     data_creator = DataCreator()
     df, anomalies_df = data_creator.create_data(DataCreatorConst.START_DATE,
                                                 DataCreatorConst.END_DATE,
-                                                DataCreatorConst.FREQ)
+                                                DataCreatorConst.GRANULARITY)
     data_creator.save_to_csv(df, filename)
     return df, anomalies_df
 
@@ -102,11 +102,9 @@ if __name__ == "__main__":
 
         data = contruct_data(params_helper)
         # DataPlotter.plot_ts_data(data)
-        data_1 = data.loc[:'11/11/2019']
-        data_2 = data.loc['18/11/2019':]
-        for data in [data_1, data_2]:
-            anomalies_pred_df = run_experiment(params_helper, data)
-            output_results(params_helper, data, anomalies_pred_df, anomalies_true_df)
+
+        anomalies_pred_df = run_experiment(params_helper, data)
+        output_results(params_helper, data, anomalies_pred_df, anomalies_true_df)
 
     except Exception as e:
         logger.error(e)
