@@ -11,7 +11,7 @@ class EvalBuilder:
 
         self.data = data
         self.y_true_df = y_true_df
-        self.y_pred_df = y_pred_df
+        self.y_pred_df = y_pred_df.iloc[:, 0]
 
     def build(self):
         self.anomalies_res = pd.DataFrame(index=self.data.index)

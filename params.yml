@@ -1,11 +1,11 @@
 ---
 detector_name: prophet
 
-anomalies:
+anomalies: Anomalies_Synthetic_17.csv
 
 create_synthetic_data:
-  to_create: True
-  filename: Synthetic_12.csv
+  to_create: False
+  filename: Synthetic_17.csv
 
 output:
   csv: True
@@ -24,11 +24,11 @@ experiment_hyperparameters:
   train_period:
     hours: 3
     days: 0
-    weeks: 156
+    weeks: 3
   train_freq:
-    hours: 0
+    hours: 12
     days: 0
-    weeks: 2
+    weeks: 0
   forecast_period_hours: 3
   include_train_time: True
   remove_outliers: True
@@ -36,7 +36,7 @@ experiment_hyperparameters:
 
 model_hyperparameters:
   esd:
-    anomaly_ratio: 0.025
+    anomaly_ratio: 0.01
     hybrid: True
     alpha: 0.05
 
@@ -52,6 +52,9 @@ model_hyperparameters:
   prophet:
     interval_width: 0.999
     changepoint_prior_scale: 0.5
+    daily_seasonality: 10
+    weekly_seasonality: 10
+    holidays_country_name:
 
 metadata:
 #  - source: csv
@@ -67,10 +70,10 @@ metadata:
 #    attribute_name: internaltemp
 #    time_column: Time
   - source: csv
-    filename: Synthetic_12.csv
+    filename: Synthetic_17.csv
     attribute_name: Value
     time_column: index
 #  - source: csv
-#    filename: 100330.csv
+#    filename: 100330_orig.csv
 #    attribute_name: temperature
 #    time_column: TSMeasurement

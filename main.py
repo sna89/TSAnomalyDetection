@@ -55,7 +55,7 @@ def output_results(params_helper, data, anomalies_pred_df, anomalies_true_df=pd.
     experiment_name = params_helper.create_experiment_name()
 
     if is_output.csv:
-        anomalies_pred_df.to_csv('2 day train.csv')
+        anomalies_pred_df.to_csv('anomalies_pred.csv')
 
     if is_output.plot:
         DataPlotter.plot_anomalies(data=data,
@@ -93,6 +93,7 @@ if __name__ == "__main__":
 
         if synthetic_data_params.to_create:
             _, anomalies_true_df = create_synthetic_data(synthetic_data_params)
+            anomalies_true_df.to_csv('Anomalies_Synthetic_17.csv')
 
         anomalies = params_helper.get_anomalies()
         if anomalies:

@@ -135,8 +135,9 @@ class DataHelper:
                                                         hours=-forecast_periods_hours,
                                                         days=0,
                                                         weeks=0)
-        train_df = pd.DataFrame(data=data.loc[:train_end_time],
-                                index=data.loc[:train_end_time].index)
+        train_end_time_idx = DataHelper.get_max_idx(data, train_end_time)
+        train_df = pd.DataFrame(data=data.loc[:train_end_time_idx],
+                                index=data.loc[:train_end_time_idx].index)
 
         train_samples = train_df.shape[0]
         test_df = pd.DataFrame(data=data.iloc[train_samples:],
