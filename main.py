@@ -8,7 +8,7 @@ from Helpers.params_validator import ParamsValidator
 from Builders.data_builder import DataConstructor
 from Builders.eval_builder import EvalBuilder
 from Helpers.data_plotter import DataPlotter
-from Helpers.data_creator import DataCreator, DataCreatorConst
+from Helpers.data_creator import DataCreator, DataCreatorMetadata
 import warnings
 pd.set_option('display.max_rows', None)
 np.set_printoptions(threshold=sys.maxsize)
@@ -22,10 +22,19 @@ def get_and_validate_parameters(filename='params.yml'):
 
 def create_synthetic_data(synthetic_data_params):
     filename = synthetic_data_params.filename
+    num_of_series = synthetic_data_params.num_of_series
+    higher_freq = synthetic_data_params.higher_freq
+    weekend = synthetic_data_params.weekend
+    holiday = synthetic_data_params.holiday
+
     data_creator = DataCreator()
-    df, anomalies_df = data_creator.create_data(DataCreatorConst.START_DATE,
-                                                DataCreatorConst.END_DATE,
-                                                DataCreatorConst.GRANULARITY)
+    df, anomalies_df = data_creator.create_dataset(DataCreatorMetadata.START_DATE,
+                                                   DataCreatorMetadata.END_DATE,
+                                                   DataCreatorMetadata.GRANULARITY,
+                                                   higher_freq,
+                                                   weekend,
+                                                   holiday,
+                                                   num_of_series)
     data_creator.save_to_csv(df, filename)
     return df, anomalies_df
 
@@ -60,7 +69,6 @@ def output_results(params_helper, data, anomalies_pred_df, anomalies_true_df=pd.
     if is_output.plot:
         DataPlotter.plot_anomalies(data=data,
                                    df_anomalies=anomalies_pred_df,
-                                   plot_name=experiment_name,
                                    anomalies_true_df=anomalies_true_df)
     else:
         DataPlotter.plot_anomalies(data=data,
@@ -93,7 +101,7 @@ if __name__ == "__main__":
 
         if synthetic_data_params.to_create:
             _, anomalies_true_df = create_synthetic_data(synthetic_data_params)
-            anomalies_true_df.to_csv('Anomalies_Synthetic_17.csv')
+            # anomalies_true_df.to_csv('Anomalies_Synthetic_t.csv')
 
         anomalies = params_helper.get_anomalies()
         if anomalies:
@@ -102,7 +110,7 @@ if __name__ == "__main__":
             anomalies_true_df.index = pd.to_datetime(anomalies_true_df.index)
 
         data = contruct_data(params_helper)
-        # DataPlotter.plot_ts_data(data)
+        DataPlotter.plot_ts_data(data)
 
         anomalies_pred_df = run_experiment(params_helper, data)
         output_results(params_helper, data, anomalies_pred_df, anomalies_true_df)

@@ -3,8 +3,7 @@ from fbprophet import Prophet
 from Helpers.data_helper import DataHelper
 import numpy as np
 import matplotlib.pyplot as plt
-from fbprophet.plot import add_changepoints_to_plot, plot_cross_validation_metric
-# from dask.distributed import Client
+from fbprophet.plot import add_changepoints_to_plot, plot_cross_validation_metric, plot_plotly, plot_components_plotly
 from fbprophet.diagnostics import cross_validation, performance_metrics
 
 
@@ -94,8 +93,8 @@ class FBProphet(AnomalyDetectionModel):
 
         forecast = self.model.predict(df)
 
-        # self._plot_forecast(forecast)
-        # self._plot_components(forecast)
+        self._plot_forecast(forecast)
+        self._plot_components(forecast)
 
         forecast.index = df.index
         forecast['actual'] = df['y']
@@ -106,12 +105,11 @@ class FBProphet(AnomalyDetectionModel):
         return anomalies
 
     def _plot_forecast(self, forecast):
-        fig = self.model.plot(forecast)
-        a = add_changepoints_to_plot(fig.gca(), self.model, forecast)
-        plt.show()
+        fig = plot_plotly(self.model, forecast)
+        fig.write_html("prophet_forecast.html")
 
     def _plot_components(self, forecast):
-        self.model.plot_components(forecast)
-        plt.show()
+        fig = plot_components_plotly(self.model, forecast)
+        fig.write_html("prophet_components.html")
 
 

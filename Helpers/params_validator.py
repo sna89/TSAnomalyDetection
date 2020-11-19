@@ -78,17 +78,22 @@ class ParamsValidator:
             msg = '{} is uni-variate model. Got {} files in metadata'.format(self.detector_name, num_files)
             raise Exception(msg)
 
+        num_attributes = len(self.metadata[0]['attribute_names'])
+        if num_attributes > 1:
+            msg = '{} is uni-variate model. Got {} attributes in metadata'.format(self.detector_name, num_attributes)
+            raise Exception(msg)
+
     def validate_experiment_hyperparameters(self):
         experiment_hyperparameters_keys = list(self.experiment_hyperparameters.__annotations__.keys())
 
         if 'forecast_period_hours' not in experiment_hyperparameters_keys \
-                or 'train_period' not in experiment_hyperparameters_keys\
-                    or 'train_freq' not in experiment_hyperparameters_keys:
-                msg = 'experiment hyperparamaters need to include: ' \
-                                'retrain_schedule_hours, ' \
-                                'forecast_period_hours, ' \
-                                'train_period'
-                raise Exception(msg)
+                or 'train_period' not in experiment_hyperparameters_keys \
+                or 'train_freq' not in experiment_hyperparameters_keys:
+            msg = 'experiment hyperparamaters need to include: ' \
+                  'retrain_schedule_hours, ' \
+                  'forecast_period_hours, ' \
+                  'train_period'
+            raise Exception(msg)
 
         return
 
@@ -100,11 +105,11 @@ class ParamsValidator:
 
             file_metadata_keys = list(file_metadata.keys())
 
-            if 'time_column' not in  file_metadata_keys\
-                or 'attribute_name' not in file_metadata_keys \
-                    or'filename' not in file_metadata_keys:
-                        msg = 'Missing metadata fields for model {}'.format(self.detector_name)
-                        raise Exception(msg)
+            if 'time_column' not in file_metadata_keys \
+                    or 'attribute_names' not in file_metadata_keys \
+                    or 'filename' not in file_metadata_keys:
+                msg = 'Missing metadata fields for model {}'.format(self.detector_name)
+                raise Exception(msg)
         return
 
     def get_filenames(self):
@@ -129,7 +134,7 @@ class ParamsValidator:
                 raise ValueError(msg)
 
     def validate_preprocess_data_params(self):
-        if self.preprocess_data_params.fill not in DataConst.FILL_METHODS\
+        if self.preprocess_data_params.fill not in DataConst.FILL_METHODS \
                 and self.preprocess_data_params.fill is not None:
             msg = 'pre-process fill method is not supported or missing.'
             raise ValueError(msg)
@@ -143,4 +148,14 @@ class ParamsValidator:
             filenames = self.get_filenames()
             if self.synthetic_data_params.filename not in filenames:
                 msg = 'new created data not in metadata'
+                raise ValueError(msg)
+
+            num_of_series = self.synthetic_data_params.num_of_series
+            if num_of_series <= 0:
+                msg = 'Number of time series in synthetic dataset must be greater than 0'
+                raise ValueError(msg)
+
+            higher_freq = self.synthetic_data_params.higher_freq
+            if num_of_series > 1 and higher_freq:
+                msg = 'higher freq is implemented only for single time series in synthetic dataset'
                 raise ValueError(msg)

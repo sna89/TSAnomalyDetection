@@ -2,7 +2,7 @@ import yaml
 from Helpers.file_helper import FileHelper
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Dict
+from typing import Dict, List, Union
 
 
 @dataclass
@@ -15,7 +15,7 @@ class Output:
 class Metadata:
     source: str
     filename: str
-    attribute_name: str
+    attribute_names : List[str]
     time_column: str
 
 
@@ -30,7 +30,11 @@ class PreprocessDataParams:
 @dataclass
 class CreateSyntheticData:
     to_create: bool
+    num_of_series: int
     filename: str
+    higher_freq: bool
+    holiday: bool
+    weekend: bool
 
 
 class ParamsHelper:

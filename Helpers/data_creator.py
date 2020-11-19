@@ -5,60 +5,133 @@ import holidays
 from sklearn.preprocessing import StandardScaler
 
 
-class DataCreatorConst:
+class DataCreatorGeneratorConst:
+    A = 1
+    W = 1
+
+
+class DataCreatorMetadata:
+    START_DATE = '2016-01-01 08:00'
+    END_DATE = '2016-03-01 08:00'
+    GRANULARITY = '10min'
+
+
+class DataCreatorAnomalyMetadata:
     ANOMALY_ADDITION = 1
     ANOMALY_DECREASE = 0.3
     ANOMALY_RATIO = 0.01
     ITERATIONS = 1
-    A = 1
-    W = 1
-    CYCLE_PER_DAY = 1
-    START_DATE = '2016-01-01 08:00'
-    END_DATE = '2016-03-01 08:00'
-    GRANULARITY = '10min'
-    WEEKEND_DECREASE = 0.5
+
+
+class DataCreatorHighFreqMetadata:
+    HIGH_FREQ_FACTOR = 5
+    NUM_HIGH_FREQ_PERIODS = 3
+    HIGH_FREQ_PERIOD_DAYS = 3
+
+
+class DataCreatorHolidayMetadata:
+    DECREASE = 0.5
 
 
 class DataCreator:
     logger = get_logger("DataCreator")
 
     @classmethod
-    def create_data(cls, start, end, granularity):
-        cls.logger.info("Start creating synthetic dataset:"
+    def create_dataset(cls,
+                       start,
+                       end,
+                       granularity,
+                       higher_freq=False,
+                       weekend=False,
+                       holiday=False,
+                       number_of_series=1):
+
+        cls.logger.info("Start creating synthetic dataset for {} series:"
                         "start date: {},"
                         "end date: {},"
-                        "freq: {}".format(start, end, granularity))
+                        "freq: {}".format(number_of_series, start, end, granularity))
 
         dt_index = DataCreator.create_index(start, end, granularity)
         T = len(dt_index)
-        days = DataCreator._calc_days(dt_index)
-        # years = DataCreator._calc_years(dt_index)
-        num_anomalies = int(T * DataCreatorConst.ANOMALY_RATIO)
 
-        y1, y1_higher_freq = DataCreator._create_daily_seasonality(int(T / days), True)
-        y1 = DataCreator.multiply_arr(y1, days, y1_higher_freq)
+        anoamlies_dfs = []
+        dfs = []
 
-        weekend_holyday_decrement = cls._decrease_value_during_weekends_and_holydays(dt_index)
-        cls.output_holidays(weekend_holyday_decrement, dt_index)
+        shared_anomalies = np.zeros(T)
+        if number_of_series > 1:
+            num_anomalies = DataCreator._get_num_of_anomalies(T)
+            shared_anomalies = DataCreator.create_anomaly_data(T, num_anomalies)
+            shared_anomalies_df = DataCreator.create_anomaly_df(shared_anomalies, dt_index, 'shared')
+            anoamlies_dfs.append(shared_anomalies_df)
 
-        # y2 = DataCreator._create_yearly_seasonality(periods=int(T / years))
-        # y2 = DataCreator.multiply_arr(y2, years)
+        for series_num in range(number_of_series):
+            df, anomalies_df = DataCreator.create_series(dt_index,
+                                                         series_num,
+                                                         shared_anomalies,
+                                                         higher_freq,
+                                                         weekend,
+                                                         holiday)
+            dfs.append(df)
+            anoamlies_dfs.append(anomalies_df)
 
-        noise = np.random.normal(loc=0, scale=float(1) / 5, size=T)
-        anomalies = DataCreator.create_anomaly_data(T, num_anomalies, int(T/days))
-
-        # y = 0.5 * y1 + 0.5 * y2 + weekend_holyday_decrement + noise + anomalies
-        y = y1 + weekend_holyday_decrement + noise + anomalies
-
-        df = pd.DataFrame(data={'Value': y, 'index': dt_index})
-
-        # df['Value'] = df['Value'].diff(1)
-        # df = df.dropna()
-
-        anomalies_df = DataCreator.create_anomaly_df(anomalies, dt_index)
+        df = pd.concat(dfs, axis=1)
+        df.reset_index(inplace=True)
+        anoamlies_df = pd.concat(anoamlies_dfs, axis=1)
 
         cls.logger.info("Synthetic data was created successfully")
+        return df, anoamlies_df
+
+    @classmethod
+    def create_series(cls,
+                      dt_index,
+                      series_num,
+                      shared_anomalies,
+                      higher_freq=False,
+                      weekend=False,
+                      holiday=False
+                      ):
+        T = len(dt_index)
+        days = DataCreator._calc_days(dt_index)
+        periods_in_day = int(T / days)
+
+        daily = DataCreator._create_daily_seasonality(periods_in_day,
+                                                      DataCreatorGeneratorConst.A,
+                                                      DataCreatorGeneratorConst.W,
+                                                      0,
+                                                      2 * np.pi)
+
+        daily_high_freq = np.array([])
+        if higher_freq:
+            daily_high_freq = DataCreator._create_daily_seasonality(periods_in_day,
+                                                                    DataCreatorGeneratorConst.A,
+                                                                    DataCreatorHighFreqMetadata.HIGH_FREQ_FACTOR *
+                                                                    DataCreatorGeneratorConst.W,
+                                                                    0,
+                                                                    2 * np.pi)
+
+        weekend_holyday_decrement = np.zeros(T)
+        if weekend or holiday:
+            weekend_holyday_decrement = cls._decrease_value(dt_index, weekend, holiday)
+            cls.output_holidays(weekend_holyday_decrement, dt_index)
+
+        trend = DataCreator._create_trend(daily, days, daily_high_freq)
+        noise = np.random.normal(loc=0, scale=float(1) / 5, size=T)
+
+        num_anomalies = cls._get_num_of_anomalies(T)
+        anomalies = DataCreator.create_anomaly_data(T, num_anomalies)
+        anomalies_df = DataCreator.create_anomaly_df(anomalies, dt_index, series_num)
+
+        anomalies = np.where(np.logical_or(anomalies, shared_anomalies), 1, 0)
+
+        y = trend + weekend_holyday_decrement + noise + anomalies
+        df = pd.DataFrame(data={'Value_{}'.format(series_num): y}, index=dt_index)
+
         return df, anomalies_df
+
+    @staticmethod
+    def _get_num_of_anomalies(T):
+        num_anomalies = int(T * DataCreatorAnomalyMetadata.ANOMALY_RATIO / 2)
+        return num_anomalies
 
     @staticmethod
     def scale(y):
@@ -91,42 +164,54 @@ class DataCreator:
 
     @staticmethod
     def _create_yearly_seasonality(periods):
-        jan_march_series = pd.Series(DataCreator.create_sin_wave(amplitude=DataCreatorConst.A,
-                                                                 freq=DataCreatorConst.W,
+        jan_march_series = pd.Series(DataCreator.create_sin_wave(amplitude=DataCreatorGeneratorConst.A,
+                                                                 freq=DataCreatorGeneratorConst.W,
                                                                  start=float(3)/2*np.pi,
                                                                  end=2*np.pi,
                                                                  periods=int(periods/4)))
 
-        april_dec_series = pd.Series(DataCreator.create_sin_wave(amplitude=DataCreatorConst.A,
-                                                                 freq=DataCreatorConst.W,
+        april_dec_series = pd.Series(DataCreator.create_sin_wave(amplitude=DataCreatorGeneratorConst.A,
+                                                                 freq=DataCreatorGeneratorConst.W,
                                                                  start=0,
                                                                  end=float(3)/2*np.pi,
                                                                  periods=int(3 * periods / 4)))
         return pd.concat([jan_march_series, april_dec_series], axis=0)
 
     @staticmethod
-    def _create_daily_seasonality(periods, with_faster_freq=False):
-        daily_seasonality_series = DataCreator.create_sin_wave(amplitude=DataCreatorConst.A,
-                                                               freq=DataCreatorConst.W,
-                                                               start=0,
-                                                               end=2*np.pi,
-                                                               periods=periods)
-        daily_seasonality_faster_freq_series = None
-        if with_faster_freq:
-            daily_seasonality_faster_freq_series = DataCreator.create_sin_wave(amplitude=DataCreatorConst.A,
-                                                                               freq=5 * DataCreatorConst.W,
-                                                                               start=0,
-                                                                               end=2 * np.pi,
-                                                                               periods=periods)
-        return daily_seasonality_series, daily_seasonality_faster_freq_series
+    def _create_daily_seasonality(periods, amplitude, freq, start_cycle, end_cycle):
+        daily_seasonality = DataCreator.create_sin_wave(amplitude=amplitude,
+                                                        freq=freq,
+                                                        start=start_cycle,
+                                                        end=end_cycle,
+                                                        periods=periods)
+
+        return daily_seasonality
 
     @classmethod
-    def _decrease_value_during_weekends_and_holydays(cls, index):
-        us_holidays = holidays.UnitedStates()
-        decrement_series = np.where([date in us_holidays or ((date.weekday() >= 4) & (date.weekday() <= 5))
-                                     for date in index.date],
-                                    -DataCreatorConst.WEEKEND_DECREASE,
+    def _decrease_value(cls, index, weekend=False, holiday=False):
+        decrement_dt_index = pd.DatetimeIndex([])
+        weekend_dt_index = pd.DatetimeIndex([])
+        holidays_dt_index = pd.DatetimeIndex([])
+
+        if weekend:
+            weekend_dt_index = pd.DatetimeIndex(date for date in index if (date.weekday() >= 4) & (date.weekday() <= 5))
+
+        if holiday:
+            us_holidays_dt_index = holidays.UnitedStates()
+            holidays_dt_index = pd.DatetimeIndex(date for date in index if date in us_holidays_dt_index)
+
+        if weekend and holiday:
+            decrement_dt_index = weekend_dt_index.union(holidays_dt_index)
+        elif weekend and not holiday:
+            decrement_dt_index = weekend_dt_index
+        elif not weekend and holiday:
+            decrement_dt_index = holidays_dt_index
+
+        decrement_series = np.where([date in decrement_dt_index
+                                     for date in index],
+                                    -DataCreatorHolidayMetadata.DECREASE,
                                     0)
+
         return decrement_series
 
     @classmethod
@@ -158,44 +243,81 @@ class DataCreator:
         return amplitude * np.sin(freq * np.linspace(start, end, periods))  # cycle in 1 day
 
     @staticmethod
-    def multiply_arr(arr, mulitplier, arr2):
-        days_high_freq = sorted(np.random.randint(1, mulitplier, 3))
-        y = list(arr) * (days_high_freq[0] - 3) + \
-            list(arr2) * 3 + \
-            list(arr) * (days_high_freq[1] - days_high_freq[0] - 3) + \
-            list(arr2) * 3 + \
-            list(arr) * (days_high_freq[2] - days_high_freq[1] - 3) + \
-            list(arr2) * 3 + \
-            list(arr) * (mulitplier - days_high_freq[2])
+    def _create_trend(arr, mulitplier, arr_high_freq=np.array([])):
+        if arr_high_freq.size == 0:
+            return DataCreator._multiply_arr(arr, mulitplier)
+        else:
+            return DataCreator._multiply_arr_and_combine(arr, mulitplier, arr_high_freq)
+
+    @staticmethod
+    def _multiply_arr(daily, mulitplier):
+        y = list(daily) * mulitplier
         return np.asarray(y)
 
     @staticmethod
-    def create_anomaly_data(T, num_anomalies, periods_in_day):
+    def _multiply_arr_and_combine(daily, mulitplier, daily_high_freq):
+        days_with_high_freq = sorted(np.random.randint(1, mulitplier, DataCreatorHighFreqMetadata.NUM_HIGH_FREQ_PERIODS))
+        intersection_days = 0
+
+        trend = np.array([])
+        for i in range(DataCreatorHighFreqMetadata.NUM_HIGH_FREQ_PERIODS):
+            daily_periods = 0
+            if i > 0:
+                daily_periods_calc = days_with_high_freq[i] - \
+                                     days_with_high_freq[i - 1] - \
+                                     DataCreatorHighFreqMetadata.HIGH_FREQ_PERIOD_DAYS
+                if daily_periods_calc >= 0:
+                    daily_periods = daily_periods_calc
+                else:
+                    intersection_days += daily_periods_calc
+            else:
+                daily_periods = days_with_high_freq[i]
+
+            c_daily = DataCreator._multiply_arr(daily,
+                                                daily_periods)
+            c_daily_high_freq = DataCreator._multiply_arr(daily_high_freq,
+                                                          DataCreatorHighFreqMetadata.HIGH_FREQ_PERIOD_DAYS)
+
+            c_trend = np.concatenate([c_daily, c_daily_high_freq], axis=None)
+            trend = np.concatenate([trend, c_trend], axis=None)
+
+        c_daily = DataCreator._multiply_arr(daily, mulitplier -
+                                            DataCreatorHighFreqMetadata.HIGH_FREQ_PERIOD_DAYS - \
+                                            days_with_high_freq[-1] - \
+                                            intersection_days)
+        trend = np.concatenate([trend, c_daily], axis=None)
+
+        return np.asarray(trend)
+
+    @staticmethod
+    def create_anomaly_data(T, num_anomalies):
         anomalies = np.zeros(T)
-        indices = np.arange(start=periods_in_day, stop=T-1, step=1)
+        indices = np.arange(start=DataCreatorAnomalyMetadata.ITERATIONS, stop=T-1, step=1)
         for _ in range(num_anomalies):
             anomaly_idx = np.random.choice(indices, 1, replace=False)
+            anomaly_idx = anomaly_idx[0]
 
-            for iter in range(1, DataCreatorConst.ITERATIONS + 1):
+            for iter in range(1, DataCreatorAnomalyMetadata.ITERATIONS + 1):
                 curr_idx = anomaly_idx + iter - 1
                 if curr_idx < T:
-                    anomalies[curr_idx] = DataCreatorConst.ANOMALY_ADDITION - (iter - 1) * DataCreatorConst.ANOMALY_DECREASE
+                    anomalies[curr_idx] = DataCreatorAnomalyMetadata.ANOMALY_ADDITION - \
+                                          (iter - 1) * DataCreatorAnomalyMetadata.ANOMALY_DECREASE
                     idx_to_remove = np.where(indices == curr_idx)
                     indices = np.delete(indices, idx_to_remove)
 
-            if DataCreatorConst.ITERATIONS > 1:
-                for iter in range(1, DataCreatorConst.ITERATIONS + 1):
+            if DataCreatorAnomalyMetadata.ITERATIONS > 1:
+                for iter in range(1, DataCreatorAnomalyMetadata.ITERATIONS + 1):
                     curr_idx = anomaly_idx - iter
-                    anomalies[curr_idx] = DataCreatorConst.ANOMALY_ADDITION - \
-                                          ((DataCreatorConst.ITERATIONS - iter) * DataCreatorConst.ANOMALY_DECREASE)
+                    anomalies[curr_idx] = DataCreatorAnomalyMetadata.ANOMALY_ADDITION - \
+                                          ((DataCreatorAnomalyMetadata.ITERATIONS - iter) *
+                                           DataCreatorAnomalyMetadata.ANOMALY_DECREASE)
                     idx_to_remove = np.where(indices == curr_idx)
                     indices = np.delete(indices, idx_to_remove)
 
         return anomalies
 
     @staticmethod
-    def create_anomaly_df(anomalies, index):
-        anomalies_dt_indices = [index[idx] for idx, anomaly in enumerate(anomalies) if anomaly != 0]
-        anomalies_df = pd.DataFrame(data={'Anomaly': [anomaly for anomaly in anomalies if anomaly != 0]},
-                                    index=anomalies_dt_indices)
+    def create_anomaly_df(anomalies, index, label):
+        anomalies_df = pd.DataFrame(data={'anomaly_{}'.format(label): anomalies},
+                                    index=index)
         return anomalies_df

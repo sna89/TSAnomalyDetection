@@ -7,6 +7,7 @@ from Logger.logger import get_logger
 from Helpers.data_reader import DataReaderFactory
 from Helpers.data_plotter import DataPlotter
 
+
 class DataConstructor:
     def __init__(self, metadata: List, preprocess_data_params: Dict):
         self.metadata = metadata
@@ -61,30 +62,36 @@ class SingleFileDataBuilder(AbstractDataBuilder):
     def build(self, raw_data: pd.DataFrame):
         self.logger.info("Start processing data")
 
-        data = raw_data
-        data = self.preprocess_index(data)
+        dfs = []
+        data = self.preprocess_index(raw_data.copy())
 
-        if self.metadata_object.attribute_name in data.columns:
-            data = pd.DataFrame(data[self.metadata_object.attribute_name])
-        else:
-            data = DataHelper.filter(data,
-                                     type_column='Type',
-                                     value_column='Value',
-                                     attribute_name=self.metadata_object.attribute_name)
+        for attribute_name in self.metadata_object.attribute_names:
+            try:
+                if attribute_name in data.columns:
+                    attribute_df = pd.DataFrame(data[attribute_name])
+                else:
+                    attribute_df = DataHelper.filter(data,
+                                                     type_column='Type',
+                                                     value_column='Value',
+                                                     attribute_name=attribute_name)
+            except Exception as e:
+                raise e
 
-        data = DataHelper.drop_duplicated_rows(data)
-        data = self.update_schema(data)
-        data = self.preprocess_data(data)
+            attribute_df = DataHelper.drop_duplicated_rows(attribute_df)
+            attribute_df = self.update_schema(attribute_df, attribute_name)
+            attribute_df = self.preprocess_data(attribute_df)
+            dfs.append(attribute_df)
 
+        data = pd.concat(dfs, axis=1)
         self.logger.info("Finished processing data successfully")
         return data
 
-    def update_schema(self, data):
+    def update_schema(self, data, attribute_name):
         filename = self.metadata_object.filename. \
             replace('.csv', ''). \
             replace(' ', '_'). \
             lower()
-        data.rename({self.metadata_object.attribute_name: self.metadata_object.attribute_name + '_' + filename},
+        data.rename({attribute_name: attribute_name + '_' + filename},
                     axis=1,
                     inplace=True)
         data.rename_axis(self.new_time_column, inplace=True)
@@ -93,8 +100,7 @@ class SingleFileDataBuilder(AbstractDataBuilder):
     def preprocess_index(self, data):
         data.index = pd.to_datetime(data[self.metadata_object.time_column],
                                     format="%d-%m-%y %H:%M",
-                                    infer_datetime_format=True,
-                                    dayfirst=True)
+                                    infer_datetime_format=True)
         data.sort_index(axis=1, ascending=True, inplace=True)
         return data
 
