@@ -101,7 +101,7 @@ if __name__ == "__main__":
 
         if synthetic_data_params.to_create:
             _, anomalies_true_df = create_synthetic_data(synthetic_data_params)
-            # anomalies_true_df.to_csv('Anomalies_Synthetic_t.csv')
+            anomalies_true_df.to_csv('Anomalies_Synthetic_t.csv')
 
         anomalies = params_helper.get_anomalies()
         if anomalies:

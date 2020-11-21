@@ -1,7 +1,7 @@
 ---
-detector_name: prophet
+detector_name: lstm_ae
 
-anomalies:
+anomalies: Anomalies_Synthetic_t.csv
 
 create_synthetic_data:
   to_create: False
@@ -36,7 +36,7 @@ experiment_hyperparameters:
   forecast_period_hours: 3
   include_train_time: True
   remove_outliers: True
-  scale: False
+  scale: True
 
 model_hyperparameters:
   esd:
@@ -76,15 +76,15 @@ metadata:
 #    attribute_names:
 #      - internaltemp
 #    time_column: Time
-  - source: csv
-    filename: Sensor U116378.csv
-    attribute_names:
-      - internalrh
-      - internaltemp
-    time_column: Time
 #  - source: csv
-#    filename: Synthetic_t.csv
+#    filename: Sensor U116378.csv
 #    attribute_names:
-#      - Value_0
-#      - Value_1
-#    time_column: index
+#      - internalrh
+#      - internaltemp
+#    time_column: Time
+  - source: csv
+    filename: Synthetic_t.csv
+    attribute_names:
+      - Value_0
+      - Value_1
+    time_column: index

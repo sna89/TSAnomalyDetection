@@ -61,7 +61,7 @@ class AnomalyDetectionModel(ABC):
     @staticmethod
     def init_data(data):
         AnomalyDetectionModel._validate_data(data)
-        data = AnomalyDetectionModel._clean_data(data)
+        # data = AnomalyDetectionModel._clean_data(data)
         return data
 
     @abstractmethod

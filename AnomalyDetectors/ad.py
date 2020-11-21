@@ -50,7 +50,7 @@ class AnomalyDetector():
         model = self.model(self.model_hyperparameters)
         epoch = 1
         elapsed_time = timedelta(hours=0)
-        fit = True
+        to_fit = True
 
         while epoch_end_time <= last_obs_time:
             if not self.experiment_hyperparameters.include_train_time or epoch > 1:
@@ -73,11 +73,11 @@ class AnomalyDetector():
                 del model
                 model = self.model(self.model_hyperparameters)
                 elapsed_time = timedelta(hours=0)
-                fit = True
+                to_fit = True
 
-            if fit:
+            if to_fit:
                 model = model.fit(df_)
-                fit = False
+                to_fit = False
 
             detected_anomalies = model.detect(df_)
 

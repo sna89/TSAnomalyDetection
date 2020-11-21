@@ -6,6 +6,10 @@ from AnomalyDetectors.ad import ExperimentHyperParameters
 from Logger.logger import get_logger
 
 
+UNIVARIATE_DETECTORS = ['esd', 'arima', 'prophet']
+MULTIVARIATE_DETECTORS = ['lstm_ae']
+
+
 class ParamsValidator:
     def __init__(self, params_helper: ParamsHelper):
         self.params_helper = params_helper
@@ -31,8 +35,10 @@ class ParamsValidator:
 
         self.validate_metadata()
 
-        if self.detector_name in self.detectors:
+        if self.detector_name in UNIVARIATE_DETECTORS:
             self.validate_uni_variate()
+        elif self.detector_name in MULTIVARIATE_DETECTORS:
+            pass
         else:
             msg = '{} detector in not implemented'.format(self.detector_name)
             raise ValueError(msg)

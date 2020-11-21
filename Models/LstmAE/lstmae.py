@@ -5,6 +5,7 @@ from tensorflow import keras
 import pandas as pd
 import numpy as np
 from Helpers.data_helper import DataHelper, DataConst
+from sklearn.metrics import mean_squared_error
 
 pd.options.mode.chained_assignment = None
 
@@ -62,7 +63,7 @@ class LstmAE(AnomalyDetectionModel):
         thresold_precentile = np.percentile(train_mse_loss, self.threshold)
 
         test_mse_loss = self.calc_mse(test_data, test_pred)
-        test_score_df = pd.DataFrame(test_df_raw[self.forecast_period_hours * DataConst.SAMPLES_PER_HOUR:])
+        test_score_df = pd.DataFrame(index=test_df_raw[self.forecast_period_hours * DataConst.SAMPLES_PER_HOUR:].index)
         test_score_df['loss'] = test_mse_loss.values
         test_score_df['threshold'] = thresold_precentile
         test_score_df['anomaly'] = test_score_df.loss > test_score_df.threshold
@@ -86,13 +87,13 @@ class LstmAE(AnomalyDetectionModel):
         return model
 
     def train(self, train_data):
-        es = keras.callbacks.EarlyStopping(monitor='val_loss', patience=3, mode='min')
+        es = keras.callbacks.EarlyStopping(monitor='val_loss', patience=5, mode='min')
 
         self.model.fit(
             train_data, train_data,
             epochs=100,
             batch_size=16,
-            validation_split=0.1,
+            validation_split=0.2,
             callbacks=[es],
             shuffle=False
         )
@@ -102,6 +103,6 @@ class LstmAE(AnomalyDetectionModel):
         return pred
 
     @staticmethod
-    def calc_mse(true, pred):
-        mse_loss = pd.DataFrame(np.mean((pred - true) ** 2, axis=1), columns=['Error'])
+    def calc_mse(true, prediction):
+        mse_loss = pd.DataFrame([mean_squared_error(true[i], prediction[i]) for i in range(len(prediction))], columns=['Error'])
         return mse_loss
