@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 from Helpers.data_helper import DataHelper, DataConst
 from sklearn.metrics import mean_squared_error
+from sklearn.covariance import EmpiricalCovariance
 
 pd.options.mode.chained_assignment = None
 
@@ -54,21 +55,22 @@ class LstmAE(AnomalyDetectionModel):
 
     @validate_anomaly_df_schema
     def detect(self, data):
+        num_features = data.shape[1]
         _, test_df_raw, train_data, test_data = self.init_data(data)
 
         train_pred = self.predict(train_data)
         test_pred = self.predict(test_data)
 
-        train_mse_loss = self.calc_mse(train_data, train_pred)
-        thresold_precentile = np.percentile(train_mse_loss, self.threshold)
+        train_distance = self.calc_distance(train_data, train_pred)
+        thresold_precentile = np.percentile(train_distance, self.threshold)
 
-        test_mse_loss = self.calc_mse(test_data, test_pred)
-        test_score_df = pd.DataFrame(index=test_df_raw[self.forecast_period_hours * DataConst.SAMPLES_PER_HOUR:].index)
-        test_score_df['loss'] = test_mse_loss.values
+        test_distance = self.calc_distance(test_data, test_pred)
+        test_score_df = pd.DataFrame(test_df_raw[self.forecast_period_hours * DataConst.SAMPLES_PER_HOUR:])
+        test_score_df['distance'] = test_distance.values
         test_score_df['threshold'] = thresold_precentile
-        test_score_df['anomaly'] = test_score_df.loss > test_score_df.threshold
+        test_score_df['anomaly'] = test_score_df.distance > test_score_df.threshold
         anomalies = test_score_df[test_score_df.anomaly == True]
-        anomalies = anomalies.iloc[:, 0]
+        anomalies = anomalies.iloc[:, :num_features]
 
         return anomalies
 
@@ -106,3 +108,14 @@ class LstmAE(AnomalyDetectionModel):
     def calc_mse(true, prediction):
         mse_loss = pd.DataFrame([mean_squared_error(true[i], prediction[i]) for i in range(len(prediction))], columns=['Error'])
         return mse_loss
+
+    @staticmethod
+    def calc_distance(true, prediction):
+        error = np.power(np.array([true[i][-1][:] - prediction[i][-1][:] for i in range(len(prediction))]), 2)
+        error_emp_covariance = EmpiricalCovariance().fit(error)
+        dist = np.array([error_emp_covariance.mahalanobis(error[i].reshape(1, -1)) for i in range(len(error))])
+        return dist
+
+
+
+

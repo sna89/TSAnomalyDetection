@@ -83,8 +83,8 @@ class AnomalyDetector():
 
             if not detected_anomalies.empty:
                 if self.scaler:
-                    detected_anomalies = pd.Series(data=self.scaler.inverse_transform(detected_anomalies),
-                                                   index=detected_anomalies.index)
+                    detected_anomalies = pd.DataFrame(data=self.scaler.inverse_transform(detected_anomalies),
+                                                      index=detected_anomalies.index)
 
                 filtered_anomalies = detected_anomalies
 

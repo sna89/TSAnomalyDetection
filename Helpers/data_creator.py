@@ -12,12 +12,12 @@ class DataCreatorGeneratorConst:
 
 class DataCreatorMetadata:
     START_DATE = '2016-01-01 08:00'
-    END_DATE = '2016-03-01 08:00'
+    END_DATE = '2016-01-18 08:00'
     GRANULARITY = '10min'
 
 
 class DataCreatorAnomalyMetadata:
-    ANOMALY_ADDITION = 1
+    ANOMALY_ADDITION = 2
     ANOMALY_DECREASE = 0.3
     ANOMALY_RATIO = 0.01
     ITERATIONS = 1

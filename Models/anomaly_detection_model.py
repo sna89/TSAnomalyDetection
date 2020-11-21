@@ -22,9 +22,9 @@ def validate_anomaly_df_schema(detect):
             assert anomalies.dtype == np.float64, err_msg.format("Anomaly data type should be np.float64")
 
         elif isinstance(anomalies, pd.DataFrame):
-            num_columns = anomalies.shape[1]
-            assert num_columns == 3, \
-                'Anomalies dataframe should consist actual value and low and high confidence interval'
+            # num_columns = anomalies.shape[1]
+            # assert num_columns == 3, \
+            #     'Anomalies dataframe should consist actual value and low and high confidence interval'
             for dtype in anomalies.dtypes:
                 assert dtype == np.float64, err_msg.format("Anomaly data type should be np.float64")
 
