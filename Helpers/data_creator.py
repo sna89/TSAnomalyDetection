@@ -12,7 +12,7 @@ class DataCreatorGeneratorConst:
 
 class DataCreatorMetadata:
     START_DATE = '2016-01-01 08:00'
-    END_DATE = '2016-01-18 08:00'
+    END_DATE = '2016-02-04 08:00'
     GRANULARITY = '10min'
 
 
@@ -54,15 +54,16 @@ class DataCreator:
         dt_index = DataCreator.create_index(start, end, granularity)
         T = len(dt_index)
 
-        anoamlies_dfs = []
+        anomalies_dfs = []
         dfs = []
 
         shared_anomalies = np.zeros(T)
+        shared_anomalies_df = pd.DataFrame()
+
         if number_of_series > 1:
             num_anomalies = DataCreator._get_num_of_anomalies(T)
             shared_anomalies = DataCreator.create_anomaly_data(T, num_anomalies)
             shared_anomalies_df = DataCreator.create_anomaly_df(shared_anomalies, dt_index, 'shared')
-            anoamlies_dfs.append(shared_anomalies_df)
 
         for series_num in range(number_of_series):
             df, anomalies_df = DataCreator.create_series(dt_index,
@@ -72,14 +73,17 @@ class DataCreator:
                                                          weekend,
                                                          holiday)
             dfs.append(df)
-            anoamlies_dfs.append(anomalies_df)
+            anomalies_dfs.append(anomalies_df)
 
         df = pd.concat(dfs, axis=1)
         df.reset_index(inplace=True)
-        anoamlies_df = pd.concat(anoamlies_dfs, axis=1)
+        anomalies_df = pd.concat(anomalies_dfs, axis=1)
+
+        # sanity check
+        # anomalies_df = pd.concat([anomalies_df, shared_anomalies_df], axis=1)
 
         cls.logger.info("Synthetic data was created successfully")
-        return df, anoamlies_df
+        return df, anomalies_df
 
     @classmethod
     def create_series(cls,
@@ -115,13 +119,14 @@ class DataCreator:
             cls.output_holidays(weekend_holyday_decrement, dt_index)
 
         trend = DataCreator._create_trend(daily, days, daily_high_freq)
-        noise = np.random.normal(loc=0, scale=float(1) / 5, size=T)
+        noise = np.random.normal(loc=0, scale=float(1) / 10, size=T)
 
         num_anomalies = cls._get_num_of_anomalies(T)
         anomalies = DataCreator.create_anomaly_data(T, num_anomalies)
-        anomalies_df = DataCreator.create_anomaly_df(anomalies, dt_index, series_num)
-
-        anomalies = np.where(np.logical_or(anomalies, shared_anomalies), 1, 0)
+        anomalies_with_shared = np.where(np.logical_or(anomalies, shared_anomalies),
+                                         DataCreatorAnomalyMetadata.ANOMALY_ADDITION,
+                                         0)
+        anomalies_df = DataCreator.create_anomaly_df(anomalies_with_shared, dt_index, series_num)
 
         y = trend + weekend_holyday_decrement + noise + anomalies
         df = pd.DataFrame(data={'Value_{}'.format(series_num): y}, index=dt_index)

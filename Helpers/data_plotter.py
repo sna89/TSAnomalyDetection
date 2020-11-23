@@ -46,14 +46,13 @@ class DataPlotter:
 
     @staticmethod
     def plot_anomalies(data, df_anomalies, anomalies_true_df=pd.DataFrame()):
-        plt.rcParams['date.epoch'] = '0000-12-31T00:00:00'  # workaround for date issue in plot
+        # plt.rcParams['date.epoch'] = '0000-12-31T00:00:00'  # workaround for date issue in plot
 
         if anomalies_true_df.empty:
             DataPlotter.plot_scatter_single_fig(data, df_anomalies, 'Predicted Anomalies')
         else:
             DataPlotter.plot_scatter_double_fig(data, df_anomalies, anomalies_true_df,
                                                 'Predicted Anomalies', 'True Anomalies')
-
 
     @staticmethod
     def plot_scatter_single_fig(df_plot, df_scatter=pd.DataFrame(), title=None):

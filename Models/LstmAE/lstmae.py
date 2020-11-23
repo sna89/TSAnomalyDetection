@@ -66,7 +66,7 @@ class LstmAE(AnomalyDetectionModel):
 
         test_distance = self.calc_distance(test_data, test_pred)
         test_score_df = pd.DataFrame(test_df_raw[self.forecast_period_hours * DataConst.SAMPLES_PER_HOUR:])
-        test_score_df['distance'] = test_distance.values
+        test_score_df['distance'] = test_distance
         test_score_df['threshold'] = thresold_precentile
         test_score_df['anomaly'] = test_score_df.distance > test_score_df.threshold
         anomalies = test_score_df[test_score_df.anomaly == True]

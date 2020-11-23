@@ -64,13 +64,9 @@ def output_results(params_helper, data, anomalies_pred_df, anomalies_true_df=pd.
     experiment_name = params_helper.create_experiment_name()
 
     if is_output.csv:
-        anomalies_pred_df.to_csv('anomalies_pred.csv')
+        anomalies_pred_df.to_csv('{}.csv'.format(experiment_name))
 
     if is_output.plot:
-        DataPlotter.plot_anomalies(data=data,
-                                   df_anomalies=anomalies_pred_df,
-                                   anomalies_true_df=anomalies_true_df)
-    else:
         DataPlotter.plot_anomalies(data=data,
                                    df_anomalies=anomalies_pred_df,
                                    anomalies_true_df=anomalies_true_df)
