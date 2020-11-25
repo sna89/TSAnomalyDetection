@@ -38,14 +38,25 @@ class LstmAE(AnomalyDetectionModel):
     def init_data(self, data):
         data = AnomalyDetectionModel.init_data(data)
         train_df_raw, test_df_raw = DataHelper.split_train_test(data, self.forecast_period_hours * 2)
+        val = int(0.1 * train_df_raw.shape[0] / 6)
+        train_df_raw, val_df_raw = DataHelper.split_train_test(train_df_raw, val * 2)
 
         train_data = LstmAE.prepare_data_lstm(train_df_raw, self.forecast_period_hours)
+        val_data = LstmAE.prepare_data_lstm(val_df_raw, self.forecast_period_hours)
         test_data = LstmAE.prepare_data_lstm(test_df_raw, self.forecast_period_hours)
 
-        return train_df_raw, test_df_raw, train_data, test_data
+        return train_df_raw, \
+               val_df_raw, \
+               test_df_raw, \
+               train_data, \
+               val_data, \
+               test_data
 
     def fit(self, data):
-        _, _, train_data, test_data = self.init_data(data)
+        _, _, _, \
+        train_data, \
+        val_data, \
+        test_data = self.init_data(data)
 
         timesteps = train_data.shape[1]
         num_features = train_data.shape[2]
@@ -56,16 +67,19 @@ class LstmAE(AnomalyDetectionModel):
     @validate_anomaly_df_schema
     def detect(self, data):
         num_features = data.shape[1]
-        _, test_df_raw, train_data, test_data = self.init_data(data)
+        _, val_df_raw, _, \
+        train_data, \
+        val_data, \
+        test_data = self.init_data(data)
 
-        train_pred = self.predict(train_data)
+        val_pred = self.predict(val_data)
         test_pred = self.predict(test_data)
 
-        train_distance = self.calc_distance(train_data, train_pred)
-        thresold_precentile = np.percentile(train_distance, self.threshold)
+        val_distance = self.calc_distance(val_data, val_pred)
+        thresold_precentile = np.percentile(val_distance, self.threshold)
 
         test_distance = self.calc_distance(test_data, test_pred)
-        test_score_df = pd.DataFrame(test_df_raw[self.forecast_period_hours * DataConst.SAMPLES_PER_HOUR:])
+        test_score_df = pd.DataFrame(test_distance[self.forecast_period_hours * DataConst.SAMPLES_PER_HOUR:])
         test_score_df['distance'] = test_distance
         test_score_df['threshold'] = thresold_precentile
         test_score_df['anomaly'] = test_score_df.distance > test_score_df.threshold
@@ -94,7 +108,7 @@ class LstmAE(AnomalyDetectionModel):
         self.model.fit(
             train_data, train_data,
             epochs=100,
-            batch_size=16,
+            batch_size=self.batch_size,
             validation_split=0.2,
             callbacks=[es],
             shuffle=False

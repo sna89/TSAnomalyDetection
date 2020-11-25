@@ -34,7 +34,7 @@ experiment_hyperparameters:
     days: 0
     weeks: 0
   forecast_period_hours: 3
-  include_train_time: True
+  include_train_time: False
   remove_outliers: True
   scale: True
 
@@ -48,9 +48,9 @@ model_hyperparameters:
     seasonality: 6
 
   lstm_ae:
-    hidden_layer: 128
-    dropout: 0.1
-    batch_size: 16
+    hidden_layer: 512
+    dropout: 0.2
+    batch_size: 64
     threshold: 99
 
   prophet:
