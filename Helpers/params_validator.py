@@ -1,12 +1,11 @@
-from Helpers.params_helper import ParamsHelper, Metadata
+from Helpers.params_helper import ParamsHelper, Metadata, ExperimentHyperParameters
 from Helpers.data_helper import DataHelper, Period, DataConst
 from datetime import datetime
 from Builders.data_builder import PreprocessDataParams
-from AnomalyDetectors.ad import ExperimentHyperParameters
 from Logger.logger import get_logger
 
 
-UNIVARIATE_DETECTORS = ['esd', 'arima', 'prophet']
+UNIVARIATE_DETECTORS = ['esd', 'arima', 'prophet', 'lstm_ae']
 MULTIVARIATE_DETECTORS = ['lstm_ae']
 
 
@@ -34,11 +33,11 @@ class ParamsValidator:
         self.logger.info("Validating experiment parameters")
 
         self.validate_metadata()
-
-        if self.detector_name in UNIVARIATE_DETECTORS:
-            self.validate_uni_variate()
-        elif self.detector_name in MULTIVARIATE_DETECTORS:
-            pass
+        if self.detector_name in self.detectors:
+            if self.detector_name in UNIVARIATE_DETECTORS and self.detector_name not in MULTIVARIATE_DETECTORS:
+                self.validate_uni_multi_variate(univariate=True)
+            elif self.detector_name in MULTIVARIATE_DETECTORS and self.detector_name not in UNIVARIATE_DETECTORS:
+                self.validate_uni_multi_variate(univariate=False)
         else:
             msg = '{} detector in not implemented'.format(self.detector_name)
             raise ValueError(msg)
@@ -47,11 +46,11 @@ class ParamsValidator:
         self.validate_train_time()
         self.validate_preprocess_data_params()
         self.validate_data_creator()
-        self.validate_datectors()
+        self.validate_detectors()
 
         self.logger.info("Experiment parameters validated successfully")
 
-    def validate_datectors(self):
+    def validate_detectors(self):
         base_msg = '{model} model must run with {recommendation}'
 
         if self.detector_name == 'arima':
@@ -66,27 +65,20 @@ class ParamsValidator:
                                       recommendation="scale applied to data.")
                 raise ValueError(msg)
 
-        if self.detector_name == 'prophet':
-            allowed_fill_methods = DataConst.FILL_METHODS.copy()
-            allowed_fill_methods.remove('ignore')
-
-            # if self.preprocess_data_params.fill == 'ignore':
-            #     msg = base_msg.format(model=self.detector_name,
-            #                           recommendation="no missing data points. "
-            #                                          "preprocess_data_params::fill must get one of the "
-            #                                          "following options: {}"
-            #                                          .format(allowed_fill_methods))
-            #     raise ValueError(msg)
-
-    def validate_uni_variate(self):
+    def validate_uni_multi_variate(self, univariate=True):
         num_files = len(self.metadata)
-        if num_files > 1:
-            msg = '{} is uni-variate model. Got {} files in metadata'.format(self.detector_name, num_files)
+        num_attributes = len(self.metadata[0]['attribute_names'])
+
+        if (num_files > 1 and univariate) or (num_files == 1 and not univariate):
+            msg = '{} is {} model. Got {} files in metadata'.format(self.detector_name,
+                                                                    'uni-variate' if univariate else 'multi-variate',
+                                                                    num_files)
             raise Exception(msg)
 
-        num_attributes = len(self.metadata[0]['attribute_names'])
-        if num_attributes > 1:
-            msg = '{} is uni-variate model. Got {} attributes in metadata'.format(self.detector_name, num_attributes)
+        if (num_attributes > 1 and univariate) or (num_attributes == 1 and not univariate):
+            msg = '{} is {} model. Got {} attributes in metadata'.format(self.detector_name,
+                                                                         'uni-variate' if univariate else 'multi-variate',
+                                                                          num_attributes)
             raise Exception(msg)
 
     def validate_experiment_hyperparameters(self):
@@ -94,11 +86,17 @@ class ParamsValidator:
 
         if 'forecast_period_hours' not in experiment_hyperparameters_keys \
                 or 'train_period' not in experiment_hyperparameters_keys \
+                or 'include_train_time' not in experiment_hyperparameters_keys \
+                or 'remove_outliers' not in experiment_hyperparameters_keys \
+                or 'scale' not in experiment_hyperparameters_keys \
                 or 'train_freq' not in experiment_hyperparameters_keys:
             msg = 'experiment hyperparamaters need to include: ' \
-                  'retrain_schedule_hours, ' \
                   'forecast_period_hours, ' \
-                  'train_period'
+                  'train_period, ' \
+                  'include_train_time,' \
+                  'remove_outliers,' \
+                  'scale, ' \
+                  'train_freq'
             raise Exception(msg)
 
         return
@@ -113,9 +111,15 @@ class ParamsValidator:
 
             if 'time_column' not in file_metadata_keys \
                     or 'attribute_names' not in file_metadata_keys \
-                    or 'filename' not in file_metadata_keys:
+                    or 'filename' not in file_metadata_keys \
+                    or 'source' not in file_metadata_keys:
                 msg = 'Missing metadata fields for model {}'.format(self.detector_name)
                 raise Exception(msg)
+
+            if not isinstance(file_metadata['attribute_names'], list):
+                msg = 'attributes names must be a of list data type'
+                raise Exception(msg)
+
         return
 
     def get_filenames(self):
@@ -140,8 +144,7 @@ class ParamsValidator:
                 raise ValueError(msg)
 
     def validate_preprocess_data_params(self):
-        if self.preprocess_data_params.fill not in DataConst.FILL_METHODS \
-                and self.preprocess_data_params.fill is not None:
+        if self.preprocess_data_params.fill not in DataConst.FILL_METHODS:
             msg = 'pre-process fill method is not supported or missing.'
             raise ValueError(msg)
 

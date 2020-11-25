@@ -89,7 +89,7 @@ class LstmAE(AnomalyDetectionModel):
         return model
 
     def train(self, train_data):
-        es = keras.callbacks.EarlyStopping(monitor='val_loss', patience=5, mode='min')
+        es = keras.callbacks.EarlyStopping(monitor='val_loss', patience=3, mode='min')
 
         self.model.fit(
             train_data, train_data,

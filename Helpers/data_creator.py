@@ -12,7 +12,7 @@ class DataCreatorGeneratorConst:
 
 class DataCreatorMetadata:
     START_DATE = '2016-01-01 08:00'
-    END_DATE = '2016-02-04 08:00'
+    END_DATE = '2016-01-19 08:00'
     GRANULARITY = '10min'
 
 
@@ -53,17 +53,16 @@ class DataCreator:
 
         dt_index = DataCreator.create_index(start, end, granularity)
         T = len(dt_index)
+        periods_in_day = DataCreator._get_periods_in_day(dt_index)
 
         anomalies_dfs = []
         dfs = []
 
-        shared_anomalies = np.zeros(T)
-        shared_anomalies_df = pd.DataFrame()
-
-        if number_of_series > 1:
+        if number_of_series == 1:
+            shared_anomalies = np.zeros(T)
+        else:
             num_anomalies = DataCreator._get_num_of_anomalies(T)
-            shared_anomalies = DataCreator.create_anomaly_data(T, num_anomalies)
-            shared_anomalies_df = DataCreator.create_anomaly_df(shared_anomalies, dt_index, 'shared')
+            shared_anomalies = DataCreator.create_anomaly_data(T, num_anomalies, periods_in_day)
 
         for series_num in range(number_of_series):
             df, anomalies_df = DataCreator.create_series(dt_index,
@@ -78,6 +77,7 @@ class DataCreator:
         df = pd.concat(dfs, axis=1)
         df.reset_index(inplace=True)
         anomalies_df = pd.concat(anomalies_dfs, axis=1)
+        anomalies_df = anomalies_df[anomalies_df.any(axis=1)]
 
         # sanity check
         # anomalies_df = pd.concat([anomalies_df, shared_anomalies_df], axis=1)
@@ -96,7 +96,7 @@ class DataCreator:
                       ):
         T = len(dt_index)
         days = DataCreator._calc_days(dt_index)
-        periods_in_day = int(T / days)
+        periods_in_day = DataCreator._get_periods_in_day(dt_index)
 
         daily = DataCreator._create_daily_seasonality(periods_in_day,
                                                       DataCreatorGeneratorConst.A,
@@ -122,7 +122,7 @@ class DataCreator:
         noise = np.random.normal(loc=0, scale=float(1) / 10, size=T)
 
         num_anomalies = cls._get_num_of_anomalies(T)
-        anomalies = DataCreator.create_anomaly_data(T, num_anomalies)
+        anomalies = DataCreator.create_anomaly_data(T, num_anomalies, periods_in_day)
         anomalies_with_shared = np.where(np.logical_or(anomalies, shared_anomalies),
                                          DataCreatorAnomalyMetadata.ANOMALY_ADDITION,
                                          0)
@@ -134,8 +134,14 @@ class DataCreator:
         return df, anomalies_df
 
     @staticmethod
+    def _get_periods_in_day(dt_index):
+        T = len(dt_index)
+        days = DataCreator._calc_days(dt_index)
+        return int(T / days)
+
+    @staticmethod
     def _get_num_of_anomalies(T):
-        num_anomalies = int(T * DataCreatorAnomalyMetadata.ANOMALY_RATIO / 2)
+        num_anomalies = int(T * DataCreatorAnomalyMetadata.ANOMALY_RATIO / 2) + 1
         return num_anomalies
 
     @staticmethod
@@ -295,9 +301,9 @@ class DataCreator:
         return np.asarray(trend)
 
     @staticmethod
-    def create_anomaly_data(T, num_anomalies):
+    def create_anomaly_data(T, num_anomalies, periods_in_day):
         anomalies = np.zeros(T)
-        indices = np.arange(start=DataCreatorAnomalyMetadata.ITERATIONS, stop=T-1, step=1)
+        indices = np.arange(start=periods_in_day * 7, stop=T-1, step=1)
         for _ in range(num_anomalies):
             anomaly_idx = np.random.choice(indices, 1, replace=False)
             anomaly_idx = anomaly_idx[0]

@@ -1,21 +1,10 @@
 import pandas as pd
 from Helpers.data_helper import DataHelper, Period, timer
 from Logger.logger import get_logger
-from dataclasses import dataclass
-from typing import Dict
+from Helpers.params_helper import ExperimentHyperParameters
 import copy
 from dateutil.relativedelta import relativedelta
 from datetime import timedelta
-
-
-@dataclass
-class ExperimentHyperParameters:
-    train_period: Dict
-    train_freq: Dict
-    forecast_period_hours: int
-    include_train_time: bool
-    remove_outliers: bool
-    scale: bool
 
 
 class AnomalyDetector():

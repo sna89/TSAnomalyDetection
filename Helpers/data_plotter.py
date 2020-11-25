@@ -79,38 +79,37 @@ class DataPlotter:
     @staticmethod
     def plot_scatter_double_fig(df_plot, df_scatter_1=pd.DataFrame(), df_scatter_2=pd.DataFrame(),
                                 trace_1=None, trace_2=None, title=None):
-        fig = make_subplots(rows=2, cols=1)
 
-        fig.append_trace(go.Scatter(x=df_plot.iloc[:, 0].index,
-                                    y=df_plot.iloc[:, 0].values,
-                                    mode='lines',
-                                    name='Temperature'),
-                         row=1, col=1)
+        num_features = df_plot.shape[1]
 
-        fig.append_trace(go.Scatter(x=df_plot.iloc[:, 0].index,
-                                    y=df_plot.iloc[:, 0].values,
-                                    mode='lines',
-                                    name='Temperature'),
-                         row=2, col=1)
+        fig = make_subplots(rows=num_features, cols=1)
+
+        for feature in range(num_features):
+            fig.append_trace(go.Scatter(x=df_plot.iloc[:, feature].index,
+                                        y=df_plot.iloc[:, feature].values,
+                                        mode='lines',
+                                        name='Temperature'),
+                             row=feature + 1, col=1)
 
         if df_scatter_1.shape[0]:
-            x = df_scatter_1.index
-            y = df_plot.loc[df_scatter_1.index].values.reshape(1, -1)[0]
-            fig.append_trace(go.Scatter(y=y,
-                                        x=x,
-                                        mode='markers',
-                                        name=trace_1),
-                             row=1, col=1)
+            for feature in range(num_features):
+                x = df_scatter_1.index
+                y = df_plot.loc[df_scatter_1.index].values[:, feature]
+                fig.append_trace(go.Scatter(y=y,
+                                            x=x,
+                                            mode='markers',
+                                            name=trace_1 + '_feature_{}'.format(feature + 1),
+                                            marker=dict(color=0)),
+                                 row=feature + 1, col=1)
 
-        if df_scatter_1.shape[0]:
-            x = df_scatter_2.index
-            y = df_plot.loc[df_scatter_2.index].values.reshape(1, -1)[0]
-            fig.append_trace(go.Scatter(y=y,
-                                        x=x,
-                                        mode='markers',
-                                        name=trace_2),
-                             row=2, col=1)
+                x = df_scatter_2.index
+                y = df_plot.loc[df_scatter_2.index].values[:, feature]
+                fig.append_trace(go.Scatter(y=y,
+                                            x=x,
+                                            mode='markers',
+                                            name=trace_2 + '_feature_{}'.format(feature + 1),
+                                            marker=dict(color=1)),
+                                 row=feature + 1, col=1)
 
         fig.update_layout(title_text=title)
-
         fig.write_html("anomalies.html")

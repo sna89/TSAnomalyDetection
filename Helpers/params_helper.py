@@ -37,6 +37,16 @@ class CreateSyntheticData:
     weekend: bool
 
 
+@dataclass
+class ExperimentHyperParameters:
+    train_period: Dict
+    train_freq: Dict
+    forecast_period_hours: int
+    include_train_time: bool
+    remove_outliers: bool
+    scale: bool
+
+
 class ParamsHelper:
     def __init__(self, filename='params.yml'):
         params_path = FileHelper.get_file_path(filename)
@@ -86,11 +96,11 @@ class ParamsHelper:
         model_hyperparameters = self.get_model_hyperparams()
         get_preprocess_data_params = self.get_preprocess_data_params()
 
-        experiment_name = detector_name + '_' +\
-                          '_'.join("{}={}".format(key,val) for (key,val) in model_hyperparameters.items()) + '_' + \
-                          '_'.join("{}={}".format(key,val) for (key,val) in get_preprocess_data_params.items() if
-                                   key != 'test_period') + '_' + \
-                          date_time
+        experiment_name = detector_name + '_' + date_time
+                          # '_'.join("{}={}".format(key,val) for (key,val) in model_hyperparameters.items()) + '_' + \
+                          # '_'.join("{}={}".format(key,val) for (key,val) in get_preprocess_data_params.items() if
+                          #          key != 'test_period') +
+
         return experiment_name
 
     def get_synthetic_data_params(self):

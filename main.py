@@ -6,10 +6,11 @@ from Logger.logger import get_logger
 from Helpers.params_helper import ParamsHelper
 from Helpers.params_validator import ParamsValidator
 from Builders.data_builder import DataConstructor
-from Builders.eval_builder import EvalBuilder
+from Helpers.eval_builder import EvalHelper
 from Helpers.data_plotter import DataPlotter
 from Helpers.data_creator import DataCreator, DataCreatorMetadata
 import warnings
+
 pd.set_option('display.max_rows', None)
 np.set_printoptions(threshold=sys.maxsize)
 
@@ -78,7 +79,7 @@ def evaluate_experiment(data, anomalies_pred_df, anomalies_true_df=pd.DataFrame(
     if anomalies_true_df.empty:
         return
     else:
-        evaluator = EvalBuilder(data, anomalies_true_df, anomalies_pred_df)
+        evaluator = EvalHelper(data, anomalies_true_df, anomalies_pred_df)
         evaluator.build()
         evaluator.output_confusion_matrix()
         evaluator.output_classification_report()
@@ -95,11 +96,12 @@ if __name__ == "__main__":
         synthetic_data_params = params_helper.get_synthetic_data_params()
         anomalies_true_df = pd.DataFrame()
 
+        anomalies = params_helper.get_anomalies()
         if synthetic_data_params.to_create:
             _, anomalies_true_df = create_synthetic_data(synthetic_data_params)
-            anomalies_true_df.to_csv('Anomalies_Synthetic_t.csv')
+            if anomalies:
+                anomalies_true_df.to_csv(anomalies)
 
-        anomalies = params_helper.get_anomalies()
         if anomalies:
             anomalies_true_df = pd.read_csv(anomalies,
                                             index_col=['Unnamed: 0'])

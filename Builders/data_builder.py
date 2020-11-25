@@ -100,7 +100,8 @@ class SingleFileDataBuilder(AbstractDataBuilder):
     def preprocess_index(self, data):
         data.index = pd.to_datetime(data[self.metadata_object.time_column],
                                     format="%d-%m-%y %H:%M",
-                                    infer_datetime_format=True)
+                                    infer_datetime_format=True,
+                                    dayfirst=True)
         data.sort_index(axis=1, ascending=True, inplace=True)
         return data
 

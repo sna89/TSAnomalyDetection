@@ -3,7 +3,11 @@ detector_name: test
 
 create_synthetic_data:
   to_create: False
-  filename: Synthetic.csv
+  num_of_series: 2
+  higher_freq: False
+  holiday: False
+  weekend: False
+  filename: Synthetic_t.csv
 
 output:
   csv: True
@@ -28,6 +32,8 @@ experiment_hyperparameters:
     days: 0
     weeks: 0
   forecast_period_hours: 3
+  include_train_time: True
+  remove_outliers: True
   scale: False
 
 model_hyperparameters:
@@ -38,5 +44,6 @@ model_hyperparameters:
 metadata:
   - source: csv
     filename: type_3_test.csv
-    attribute_name: internaltemp
+    attribute_names:
+      - internaltemp
     time_column: Time
