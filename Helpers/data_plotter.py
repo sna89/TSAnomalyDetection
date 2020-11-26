@@ -113,3 +113,24 @@ class DataPlotter:
 
         fig.update_layout(title_text=title)
         fig.write_html("anomalies.html")
+
+    @staticmethod
+    def plot_double_fig(df_1, df_2, title):
+        assert df_1.shape[1] == df_2.shape[1], "dataframes must have same number of features"
+        num_features = df_1.shape[1]
+
+        fig = make_subplots(rows=num_features, cols=1)
+        for feature in range(num_features):
+            fig.append_trace(go.Scatter(x=df_1.iloc[:, feature].index,
+                                        y=df_1.iloc[:, feature].values,
+                                        mode='lines',
+                                        name='Value'),
+                             row=1, col=1)
+            fig.append_trace(go.Scatter(x=df_2.iloc[:, feature].index,
+                                        y=df_2.iloc[:, feature].values,
+                                        mode='lines',
+                                        name='Value'),
+                             row=2, col=1)
+
+        fig.update_layout(title_text=title)
+        fig.write_html("{}.html".format(title))

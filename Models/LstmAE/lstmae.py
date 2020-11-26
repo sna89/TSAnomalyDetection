@@ -7,6 +7,7 @@ import numpy as np
 from Helpers.data_helper import DataHelper, DataConst
 from sklearn.metrics import mean_squared_error
 from sklearn.covariance import EmpiricalCovariance
+from Helpers.data_plotter import DataPlotter
 
 pd.options.mode.chained_assignment = None
 
@@ -29,7 +30,7 @@ class LstmAE(AnomalyDetectionModel):
 
     @staticmethod
     def prepare_data_lstm(data, forecast_period_hours):
-        forecast_samples = forecast_period_hours * DataConst.SAMPLES_PER_HOUR
+        forecast_samples = int(forecast_period_hours * 6)
         Xs = []
         for i in range(len(data) - forecast_samples):
             Xs.append(data.iloc[i:(i + forecast_samples)].values)
@@ -38,8 +39,8 @@ class LstmAE(AnomalyDetectionModel):
     def init_data(self, data):
         data = AnomalyDetectionModel.init_data(data)
         train_df_raw, test_df_raw = DataHelper.split_train_test(data, self.forecast_period_hours * 2)
-        val = int(0.1 * train_df_raw.shape[0] / 6)
-        train_df_raw, val_df_raw = DataHelper.split_train_test(train_df_raw, val * 2)
+        val_hours = int(train_df_raw.shape[0] * 0.3 / 6)
+        train_df_raw, val_df_raw = DataHelper.split_train_test(train_df_raw, val_hours)
 
         train_data = LstmAE.prepare_data_lstm(train_df_raw, self.forecast_period_hours)
         val_data = LstmAE.prepare_data_lstm(val_df_raw, self.forecast_period_hours)
@@ -67,7 +68,7 @@ class LstmAE(AnomalyDetectionModel):
     @validate_anomaly_df_schema
     def detect(self, data):
         num_features = data.shape[1]
-        _, val_df_raw, _, \
+        _, _, test_df_raw, \
         train_data, \
         val_data, \
         test_data = self.init_data(data)
@@ -75,11 +76,13 @@ class LstmAE(AnomalyDetectionModel):
         val_pred = self.predict(val_data)
         test_pred = self.predict(test_data)
 
-        val_distance = self.calc_distance(val_data, val_pred)
+        val_error_emp_covariance = self.fit_error_statistics(val_data, val_pred)
+
+        val_distance = self.get_mahalanobis_distance(val_error_emp_covariance, val_data, val_pred)
         thresold_precentile = np.percentile(val_distance, self.threshold)
 
-        test_distance = self.calc_distance(test_data, test_pred)
-        test_score_df = pd.DataFrame(test_distance[self.forecast_period_hours * DataConst.SAMPLES_PER_HOUR:])
+        test_distance = self.get_mahalanobis_distance(val_error_emp_covariance, test_data, test_pred)
+        test_score_df = pd.DataFrame(test_df_raw[int(self.forecast_period_hours * DataConst.SAMPLES_PER_HOUR):])
         test_score_df['distance'] = test_distance
         test_score_df['threshold'] = thresold_precentile
         test_score_df['anomaly'] = test_score_df.distance > test_score_df.threshold
@@ -90,9 +93,13 @@ class LstmAE(AnomalyDetectionModel):
 
     def build_lstm_ae_model(self, timesteps, num_features):
         model = Sequential([
-            LSTM(self.hidden_layer, input_shape=(timesteps, num_features), activation='tanh'),
+            LSTM(self.hidden_layer, return_sequences=True, input_shape=(timesteps, num_features), activation='tanh'),
+            Dropout(self.dropout),
+            LSTM(self.hidden_layer, activation='tanh'),
             Dropout(self.dropout),
             RepeatVector(timesteps),
+            LSTM(self.hidden_layer, return_sequences=True, activation='tanh'),
+            Dropout(self.dropout),
             LSTM(self.hidden_layer, return_sequences=True, activation='tanh'),
             Dropout(self.dropout),
             TimeDistributed(Dense(num_features))
@@ -124,10 +131,15 @@ class LstmAE(AnomalyDetectionModel):
         return mse_loss
 
     @staticmethod
-    def calc_distance(true, prediction):
-        error = np.power(np.array([true[i][-1][:] - prediction[i][-1][:] for i in range(len(prediction))]), 2)
-        error_emp_covariance = EmpiricalCovariance().fit(error)
-        dist = np.array([error_emp_covariance.mahalanobis(error[i].reshape(1, -1)) for i in range(len(error))])
+    def fit_error_statistics(true, prediction):
+        errors = np.mean(np.power(np.array([true[i] - prediction[i] for i in range(len(prediction))]), 2), axis=1)
+        error_emp_covariance = EmpiricalCovariance().fit(errors)
+        return error_emp_covariance
+
+    @staticmethod
+    def get_mahalanobis_distance(error_emp_covariance: EmpiricalCovariance(), data, pred):
+        mean_abs_errors = np.mean(np.abs(data - pred), axis=1)
+        dist = error_emp_covariance.mahalanobis(mean_abs_errors)
         return dist
 
 

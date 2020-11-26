@@ -5,7 +5,7 @@ anomalies: Anomalies_Synthetic_t.csv
 
 create_synthetic_data:
   to_create: True
-  num_of_series: 2
+  num_of_series: 3
   higher_freq: False
   holiday: False
   weekend: False
@@ -28,12 +28,12 @@ experiment_hyperparameters:
   train_period:
     hours: 3
     days: 0
-    weeks: 3
+    weeks: 1
   train_freq:
     hours: 12
     days: 0
     weeks: 0
-  forecast_period_hours: 3
+  forecast_period_hours: 0.5
   include_train_time: False
   remove_outliers: True
   scale: True
@@ -48,9 +48,9 @@ model_hyperparameters:
     seasonality: 6
 
   lstm_ae:
-    hidden_layer: 512
+    hidden_layer: 256
     dropout: 0.2
-    batch_size: 64
+    batch_size: 32
     threshold: 99
 
   prophet:
@@ -87,4 +87,5 @@ metadata:
     attribute_names:
       - Value_0
       - Value_1
+      - Value_2
     time_column: index
