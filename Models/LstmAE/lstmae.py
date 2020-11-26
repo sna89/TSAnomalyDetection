@@ -32,15 +32,16 @@ class LstmAE(AnomalyDetectionModel):
     def prepare_data_lstm(data, forecast_period_hours):
         forecast_samples = int(forecast_period_hours * 6)
         Xs = []
-        for i in range(len(data) - forecast_samples):
-            Xs.append(data.iloc[i:(i + forecast_samples)].values)
+        for i in range(data.shape[0] - forecast_samples):
+            Xs.append(data.iloc[i:i + forecast_samples].values)
         return np.array(Xs)
 
     def init_data(self, data):
         data = AnomalyDetectionModel.init_data(data)
-        train_df_raw, test_df_raw = DataHelper.split_train_test(data, self.forecast_period_hours * 2)
-        val_hours = int(train_df_raw.shape[0] * 0.3 / 6)
-        train_df_raw, val_df_raw = DataHelper.split_train_test(train_df_raw, val_hours)
+
+        val_hours = int(data.shape[0] * 0.3 / 6)
+        train_df_raw, val_df_raw = DataHelper.split_train_test(data, val_hours)
+        val_df_raw, test_df_raw = DataHelper.split_train_test(val_df_raw, int(self.forecast_period_hours * 2))
 
         train_data = LstmAE.prepare_data_lstm(train_df_raw, self.forecast_period_hours)
         val_data = LstmAE.prepare_data_lstm(val_df_raw, self.forecast_period_hours)
@@ -72,6 +73,9 @@ class LstmAE(AnomalyDetectionModel):
         train_data, \
         val_data, \
         test_data = self.init_data(data)
+
+        if test_data.shape[0] == 0:
+            return pd.DataFrame()
 
         val_pred = self.predict(val_data)
         test_pred = self.predict(test_data)

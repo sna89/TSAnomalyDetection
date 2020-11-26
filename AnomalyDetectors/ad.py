@@ -34,8 +34,8 @@ class AnomalyDetector():
         last_obs_time = AnomalyDetector._get_last_observations_time(data)
         epoch_start_time, epoch_end_time = self._init_train_period(data)
 
-        df_no_anomalies = copy.deepcopy(data)
-        df_ = pd.DataFrame(data=copy.deepcopy(df_no_anomalies.loc[epoch_start_time:epoch_end_time]))
+        df_no_anomalies = data.copy()
+        df_ = df_no_anomalies.loc[epoch_start_time:epoch_end_time].copy()
         model = self.model(self.model_hyperparameters)
         epoch = 1
         elapsed_time = timedelta(hours=0)
@@ -114,7 +114,7 @@ class AnomalyDetector():
                                                                          epoch_start_time,
                                                                          epoch_end_time,
                                                                          last_obs_time)
-            df = pd.DataFrame(data=copy.deepcopy(df_no_anomalies.loc[epoch_start_time:epoch_end_time]))
+            df = df_no_anomalies.loc[epoch_start_time:epoch_end_time].copy()
             elapsed_time += timedelta(hours=self.experiment_hyperparameters.forecast_period_hours)
             epoch += 1
         return epoch_start_time, epoch_end_time, df , elapsed_time, epoch

@@ -139,10 +139,8 @@ class DataHelper:
         train_df = pd.DataFrame(data=data.loc[:train_end_time_idx],
                                 index=data.loc[:train_end_time_idx].index)
 
-        train_samples = train_df.shape[0]
-        test_df = pd.DataFrame(data=data.iloc[train_samples:],
-                               index=data.iloc[train_samples:].index)
-
+        test_df = pd.DataFrame(data=data.loc[train_end_time_idx:],
+                               index=data.loc[train_end_time_idx:].index)
         return train_df, test_df
 
     @staticmethod
