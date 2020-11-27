@@ -28,7 +28,7 @@ experiment_hyperparameters:
   train_period:
     hours: 3
     days: 0
-    weeks: 1
+    weeks: 4
   train_freq:
     hours: 12
     days: 0

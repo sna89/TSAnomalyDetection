@@ -3,7 +3,7 @@ import pandas as pd
 from Logger.logger import get_logger
 import holidays
 from sklearn.preprocessing import StandardScaler
-
+from Helpers.data_helper import DataHelper
 
 class DataCreatorGeneratorConst:
     A = 1
@@ -12,15 +12,15 @@ class DataCreatorGeneratorConst:
 
 class DataCreatorMetadata:
     START_DATE = '2016-01-01 08:00'
-    END_DATE = '2016-01-19 08:00'
+    END_DATE = '2016-02-08 08:00'
     GRANULARITY = '10min'
 
 
 class DataCreatorAnomalyMetadata:
     ANOMALY_ADDITION = 2
-    ANOMALY_DECREASE = 0.3
+    ANOMALY_DECREASE = 0.2
     ANOMALY_RATIO = 0.01
-    ITERATIONS = 1
+    ITERATIONS = 4
 
 
 class DataCreatorHighFreqMetadata:
@@ -53,7 +53,6 @@ class DataCreator:
 
         dt_index = DataCreator.create_index(start, end, granularity)
         T = len(dt_index)
-        periods_in_day = DataCreator._get_periods_in_day(dt_index)
 
         anomalies_dfs = []
         dfs = []
@@ -61,8 +60,8 @@ class DataCreator:
         if number_of_series == 1:
             shared_anomalies = np.zeros(T)
         else:
-            num_anomalies = DataCreator._get_num_of_anomalies(T)
-            shared_anomalies = DataCreator.create_anomaly_data(T, num_anomalies, periods_in_day)
+            num_anomalies = DataCreator._get_num_of_anomalies(dt_index)
+            shared_anomalies = DataCreator.create_anomaly_data(T, dt_index, num_anomalies)
 
         for series_num in range(number_of_series):
             df, anomalies_df = DataCreator.create_series(dt_index,
@@ -121,8 +120,8 @@ class DataCreator:
         trend = DataCreator._create_trend(daily, days, daily_high_freq)
         noise = np.random.normal(loc=0, scale=float(1) / 10, size=T)
 
-        num_anomalies = cls._get_num_of_anomalies(T)
-        anomalies = DataCreator.create_anomaly_data(T, num_anomalies, periods_in_day)
+        num_anomalies = cls._get_num_of_anomalies(dt_index)
+        anomalies = DataCreator.create_anomaly_data(T, dt_index, num_anomalies)
         anomalies_with_shared = np.where(np.logical_or(anomalies, shared_anomalies),
                                          DataCreatorAnomalyMetadata.ANOMALY_ADDITION,
                                          0)
@@ -140,9 +139,21 @@ class DataCreator:
         return int(T / days)
 
     @staticmethod
-    def _get_num_of_anomalies(T):
-        num_anomalies = int(T * DataCreatorAnomalyMetadata.ANOMALY_RATIO / 2) + 1
+    def _get_num_of_anomalies(dt_index):
+        anomalies_start_idx = DataCreator._get_anomalies_start_idx(dt_index)
+        num_anomalies = int(((len(dt_index) - anomalies_start_idx) * DataCreatorAnomalyMetadata.ANOMALY_RATIO) / 2) + 1
         return num_anomalies
+
+    @staticmethod
+    def _get_anomalies_start_idx(dt_index):
+        max_idx = dt_index.max()
+        anomalies_start_time = DataHelper.relative_delta_time(max_idx,
+                                                              minutes=0,
+                                                              hours=0,
+                                                              days=-7,
+                                                              weeks=0)
+        anomalies_start_idx = dt_index.slice_indexer(start=dt_index.min(), end=anomalies_start_time, step=1).stop
+        return anomalies_start_idx
 
     @staticmethod
     def scale(y):
@@ -301,9 +312,10 @@ class DataCreator:
         return np.asarray(trend)
 
     @staticmethod
-    def create_anomaly_data(T, num_anomalies, periods_in_day):
+    def create_anomaly_data(T, dt_index, num_anomalies):
         anomalies = np.zeros(T)
-        indices = np.arange(start=periods_in_day * 7, stop=T-1, step=1)
+        anomalies_start_idx = DataCreator._get_anomalies_start_idx(dt_index)
+        indices = np.arange(start=anomalies_start_idx, stop=T-1, step=1)
         for _ in range(num_anomalies):
             anomaly_idx = np.random.choice(indices, 1, replace=False)
             anomaly_idx = anomaly_idx[0]
