@@ -122,12 +122,14 @@ class DataCreator:
 
         num_anomalies = cls._get_num_of_anomalies(dt_index)
         anomalies = DataCreator.create_anomaly_data(T, dt_index, num_anomalies)
-        anomalies_with_shared = np.where(np.logical_or(anomalies, shared_anomalies),
-                                         DataCreatorAnomalyMetadata.ANOMALY_ADDITION,
-                                         0)
+        anomalies_with_shared = \
+            np.array([shared_anomalies[i]
+                      if shared_anomalies[i] > 0
+                      else anomalies[i]
+                      for i in range(len(anomalies))])
         anomalies_df = DataCreator.create_anomaly_df(anomalies_with_shared, dt_index, series_num)
 
-        y = trend + weekend_holyday_decrement + noise + anomalies
+        y = trend + weekend_holyday_decrement + noise + anomalies_with_shared
         df = pd.DataFrame(data={'Value_{}'.format(series_num): y}, index=dt_index)
 
         return df, anomalies_df
@@ -329,11 +331,10 @@ class DataCreator:
                     indices = np.delete(indices, idx_to_remove)
 
             if DataCreatorAnomalyMetadata.ITERATIONS > 1:
-                for iter in range(1, DataCreatorAnomalyMetadata.ITERATIONS + 1):
+                for iter in range(1, DataCreatorAnomalyMetadata.ITERATIONS):
                     curr_idx = anomaly_idx - iter
                     anomalies[curr_idx] = DataCreatorAnomalyMetadata.ANOMALY_ADDITION - \
-                                          ((DataCreatorAnomalyMetadata.ITERATIONS - iter) *
-                                           DataCreatorAnomalyMetadata.ANOMALY_DECREASE)
+                                          (iter * DataCreatorAnomalyMetadata.ANOMALY_DECREASE)
                     idx_to_remove = np.where(indices == curr_idx)
                     indices = np.delete(indices, idx_to_remove)
 
