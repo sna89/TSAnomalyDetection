@@ -7,6 +7,7 @@ import numpy as np
 from Helpers.data_helper import DataHelper, DataConst
 from sklearn.metrics import mean_squared_error
 from sklearn.covariance import EmpiricalCovariance
+from sklearn.preprocessing import normalize
 from Helpers.data_plotter import DataPlotter
 
 pd.options.mode.chained_assignment = None
@@ -80,12 +81,22 @@ class LstmAE(AnomalyDetectionModel):
         val_pred = self.predict(val_data)
         test_pred = self.predict(test_data)
 
+        # print('test_data')
+        # print(test_data)
+        # print('test_pred')
+        # print(test_pred)
+        # print('abs_error_test')
+        # print([np.abs(test_data[i] - test_pred[i]) for i in range(len(test_pred))])
+
         val_error_emp_covariance = self.fit_error_statistics(val_data, val_pred)
 
         val_distance = self.get_mahalanobis_distance(val_error_emp_covariance, val_data, val_pred)
         thresold_precentile = np.percentile(val_distance, self.threshold)
+        print('thresold_precentile: {}'.format(thresold_precentile))
 
         test_distance = self.get_mahalanobis_distance(val_error_emp_covariance, test_data, test_pred)
+        print('test_distance: {}'.format(test_distance))
+
         test_score_df = pd.DataFrame(test_df_raw[int(self.forecast_period_hours * DataConst.SAMPLES_PER_HOUR):])
         test_score_df['distance'] = test_distance
         test_score_df['threshold'] = thresold_precentile
@@ -136,14 +147,14 @@ class LstmAE(AnomalyDetectionModel):
 
     @staticmethod
     def fit_error_statistics(true, prediction):
-        errors = np.mean(np.power(np.array([true[i] - prediction[i] for i in range(len(prediction))]), 2), axis=1)
+        errors = np.mean([np.abs(true[i] - prediction[i]) for i in range(len(prediction))], axis=1)
         error_emp_covariance = EmpiricalCovariance().fit(errors)
         return error_emp_covariance
 
     @staticmethod
-    def get_mahalanobis_distance(error_emp_covariance: EmpiricalCovariance(), data, pred):
-        mean_abs_errors = np.mean(np.abs(data - pred), axis=1)
-        dist = error_emp_covariance.mahalanobis(mean_abs_errors)
+    def get_mahalanobis_distance(error_emp_covariance: EmpiricalCovariance(), true, prediction):
+        errors = np.mean([np.abs(true[i] - prediction[i]) for i in range(len(prediction))], axis=1)
+        dist = error_emp_covariance.mahalanobis(errors)
         return dist
 
 
