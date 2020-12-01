@@ -139,13 +139,13 @@ class DataHelper:
         train_df = pd.DataFrame(data=data.loc[:train_end_time_idx],
                                 index=data.loc[:train_end_time_idx].index)
 
-        train_end_time_idx = DataHelper.relative_delta_time(train_end_time_idx,
+        test_start_time_idx = DataHelper.relative_delta_time(train_end_time_idx,
                                                             minutes=10,
                                                             hours=0,
                                                             days=0,
                                                             weeks=0)
-        test_df = pd.DataFrame(data=data.loc[train_end_time_idx:],
-                               index=data.loc[train_end_time_idx:].index)
+        test_df = pd.DataFrame(data=data.loc[test_start_time_idx:],
+                               index=data.loc[test_start_time_idx:].index)
         return train_df, test_df
 
     @staticmethod

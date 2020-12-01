@@ -6,7 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="27da9a7e-1324-4c59-8a3a-c97de520e9de" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Helpers/data_creator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helpers/data_creator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Helpers/data_helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helpers/data_helper.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Helpers/data_plotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helpers/data_plotter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/LstmAE/lstmae.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/LstmAE/lstmae.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/params.yml" beforeDir="false" afterPath="$PROJECT_DIR$/params.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -52,19 +54,19 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\Helpers" />
-      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\tests\Models\csv\lstm_ae" />
-      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\tests\Models\csv\arima" />
-      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\Obsolete" />
-      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\tests\Models\csv" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\tests" />
       <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\tests\Models" />
       <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\tests\params" />
       <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\AnomalyDetectors" />
       <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\Helpers" />
+      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\tests\Models\csv\lstm_ae" />
+      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\tests\Models\csv\arima" />
+      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\Obsolete" />
+      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\tests\Models\csv" />
     </key>
   </component>
   <component name="RunManager" selected="Python.main">
@@ -155,10 +157,10 @@
     </configuration>
     <list>
       <item itemvalue="Python.main" />
-      <item itemvalue="Python tests.pytest in test_data_builder.py" />
       <item itemvalue="Python tests.pytest for test_data_builder.TestDataBuilder.test_schema_type_1" />
       <item itemvalue="Python tests.pytest for test_data_builder.TestDataBuilder.test_schema_type_2" />
       <item itemvalue="Python tests.pytest for test_data_builder.TestDataBuilder.test_schema_type_3" />
+      <item itemvalue="Python tests.pytest in test_data_builder.py" />
     </list>
     <recent_temporary>
       <list>
@@ -245,10 +247,10 @@
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
     <state x="-1297" y="70" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1600240095042" />
-    <state x="-1402" y="348" width="1106" height="571" key="#xdebugger.evaluate" timestamp="1606490582762">
+    <state x="-1410" y="69" width="1106" height="571" key="#xdebugger.evaluate" timestamp="1606826602293">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
-    <state x="-1402" y="348" width="1106" height="571" key="#xdebugger.evaluate/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1606490582762" />
+    <state x="-1410" y="69" width="1106" height="571" key="#xdebugger.evaluate/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1606826602293" />
     <state x="545" y="366" key="#xdebugger.evaluate/0.0.1680.1010/-1920.-121.1920.1040@0.0.1680.1010" timestamp="1602955042361" />
     <state x="535" y="189" width="812" height="594" key="#xdebugger.evaluate/0.0.1920.1040@0.0.1920.1040" timestamp="1605950505118" />
     <state x="2332" y="446" key="#xdebugger.evaluate/3840.21.1680.1010/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1606312597302" />
@@ -256,63 +258,63 @@
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
     <state width="1552" height="466" key="DebuggerActiveHint/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1605788425044" />
-    <state width="1899" height="285" key="GridCell.Tab.0.bottom" timestamp="1606490610722">
+    <state width="1899" height="285" key="GridCell.Tab.0.bottom" timestamp="1606826039751">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
     <state width="1899" height="215" key="GridCell.Tab.0.bottom/-1920.-121.1920.1040/0.0.1680.1010@-1920.-121.1920.1040" timestamp="1602167922844" />
-    <state width="1899" height="285" key="GridCell.Tab.0.bottom/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1606490610722" />
+    <state width="1899" height="285" key="GridCell.Tab.0.bottom/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1606826039751" />
     <state width="1659" height="326" key="GridCell.Tab.0.bottom/0.0.1680.1010/-1920.-121.1920.1040@0.0.1680.1010" timestamp="1602956192374" />
     <state width="1899" height="289" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1605955904745" />
     <state width="1899" height="282" key="GridCell.Tab.0.bottom/3840.21.1680.1010/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1606312721834" />
-    <state width="1899" height="285" key="GridCell.Tab.0.center" timestamp="1606490610722">
+    <state width="1899" height="285" key="GridCell.Tab.0.center" timestamp="1606826039751">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
     <state width="1899" height="215" key="GridCell.Tab.0.center/-1920.-121.1920.1040/0.0.1680.1010@-1920.-121.1920.1040" timestamp="1602167922843" />
-    <state width="1899" height="285" key="GridCell.Tab.0.center/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1606490610722" />
+    <state width="1899" height="285" key="GridCell.Tab.0.center/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1606826039751" />
     <state width="1659" height="326" key="GridCell.Tab.0.center/0.0.1680.1010/-1920.-121.1920.1040@0.0.1680.1010" timestamp="1602956192374" />
     <state width="1899" height="289" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1605955904745" />
     <state width="1899" height="282" key="GridCell.Tab.0.center/3840.21.1680.1010/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1606312721834" />
-    <state width="1899" height="285" key="GridCell.Tab.0.left" timestamp="1606490610722">
+    <state width="1899" height="285" key="GridCell.Tab.0.left" timestamp="1606826039751">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
     <state width="1899" height="215" key="GridCell.Tab.0.left/-1920.-121.1920.1040/0.0.1680.1010@-1920.-121.1920.1040" timestamp="1602167922843" />
-    <state width="1899" height="285" key="GridCell.Tab.0.left/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1606490610722" />
+    <state width="1899" height="285" key="GridCell.Tab.0.left/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1606826039751" />
     <state width="1659" height="326" key="GridCell.Tab.0.left/0.0.1680.1010/-1920.-121.1920.1040@0.0.1680.1010" timestamp="1602956192374" />
     <state width="1899" height="289" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1605955904745" />
     <state width="1899" height="282" key="GridCell.Tab.0.left/3840.21.1680.1010/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1606312721834" />
-    <state width="1899" height="285" key="GridCell.Tab.0.right" timestamp="1606490610722">
+    <state width="1899" height="285" key="GridCell.Tab.0.right" timestamp="1606826039751">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
     <state width="1899" height="215" key="GridCell.Tab.0.right/-1920.-121.1920.1040/0.0.1680.1010@-1920.-121.1920.1040" timestamp="1602167922844" />
-    <state width="1899" height="285" key="GridCell.Tab.0.right/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1606490610722" />
+    <state width="1899" height="285" key="GridCell.Tab.0.right/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1606826039751" />
     <state width="1659" height="326" key="GridCell.Tab.0.right/0.0.1680.1010/-1920.-121.1920.1040@0.0.1680.1010" timestamp="1602956192374" />
     <state width="1899" height="289" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1605955904745" />
     <state width="1899" height="282" key="GridCell.Tab.0.right/3840.21.1680.1010/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1606312721834" />
-    <state width="1899" height="285" key="GridCell.Tab.1.bottom" timestamp="1606490610472">
+    <state width="1899" height="285" key="GridCell.Tab.1.bottom" timestamp="1606826039751">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
-    <state width="1899" height="285" key="GridCell.Tab.1.bottom/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1606490610472" />
+    <state width="1899" height="285" key="GridCell.Tab.1.bottom/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1606826039751" />
     <state width="1659" height="326" key="GridCell.Tab.1.bottom/0.0.1680.1010/-1920.-121.1920.1040@0.0.1680.1010" timestamp="1602956192189" />
     <state width="1899" height="289" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1605955930742" />
     <state width="1899" height="285" key="GridCell.Tab.1.bottom/3840.21.1680.1010/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1606312721825" />
-    <state width="1899" height="285" key="GridCell.Tab.1.center" timestamp="1606490610472">
+    <state width="1899" height="285" key="GridCell.Tab.1.center" timestamp="1606826039751">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
-    <state width="1899" height="285" key="GridCell.Tab.1.center/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1606490610472" />
+    <state width="1899" height="285" key="GridCell.Tab.1.center/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1606826039751" />
     <state width="1659" height="326" key="GridCell.Tab.1.center/0.0.1680.1010/-1920.-121.1920.1040@0.0.1680.1010" timestamp="1602956192189" />
     <state width="1899" height="289" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1605955930742" />
     <state width="1899" height="285" key="GridCell.Tab.1.center/3840.21.1680.1010/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1606312721824" />
-    <state width="1899" height="285" key="GridCell.Tab.1.left" timestamp="1606490610472">
+    <state width="1899" height="285" key="GridCell.Tab.1.left" timestamp="1606826039751">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
-    <state width="1899" height="285" key="GridCell.Tab.1.left/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1606490610472" />
+    <state width="1899" height="285" key="GridCell.Tab.1.left/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1606826039751" />
     <state width="1659" height="326" key="GridCell.Tab.1.left/0.0.1680.1010/-1920.-121.1920.1040@0.0.1680.1010" timestamp="1602956192189" />
     <state width="1899" height="289" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1605955930742" />
     <state width="1899" height="285" key="GridCell.Tab.1.left/3840.21.1680.1010/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1606312721824" />
-    <state width="1899" height="285" key="GridCell.Tab.1.right" timestamp="1606490610472">
+    <state width="1899" height="285" key="GridCell.Tab.1.right" timestamp="1606826039751">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
-    <state width="1899" height="285" key="GridCell.Tab.1.right/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1606490610472" />
+    <state width="1899" height="285" key="GridCell.Tab.1.right/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1606826039751" />
     <state width="1659" height="326" key="GridCell.Tab.1.right/0.0.1680.1010/-1920.-121.1920.1040@0.0.1680.1010" timestamp="1602956192189" />
     <state width="1899" height="289" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1605955930742" />
     <state width="1899" height="285" key="GridCell.Tab.1.right/3840.21.1680.1010/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1606312721824" />
@@ -321,10 +323,10 @@
     </state>
     <state x="-1459" y="44" key="SettingsEditor/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1604567675345" />
     <state x="461" y="165" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1605945282192" />
-    <state width="968" height="528" key="XDebugger.FullValuePopup" timestamp="1606489685278">
+    <state width="968" height="528" key="XDebugger.FullValuePopup" timestamp="1606506830455">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
-    <state width="968" height="528" key="XDebugger.FullValuePopup/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1606489685278" />
+    <state width="968" height="528" key="XDebugger.FullValuePopup/0.0.1680.1010/-1920.-121.1920.1040@-1920.-121.1920.1040" timestamp="1606506830455" />
     <state x="-1412" y="128" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1602445618982">
       <screen x="-1920" y="-121" width="1920" height="1040" />
     </state>
@@ -451,24 +453,24 @@
           <option name="timeStamp" value="935" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Models/LstmAE/lstmae.py</url>
-          <line>106</line>
-          <option name="timeStamp" value="946" />
+          <url>file://$PROJECT_DIR$/AnomalyDetectors/ad.py</url>
+          <line>89</line>
+          <option name="timeStamp" value="965" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/AnomalyDetectors/ad.py</url>
+          <line>119</line>
+          <option name="timeStamp" value="966" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Models/LstmAE/lstmae.py</url>
-          <line>149</line>
-          <option name="timeStamp" value="951" />
+          <line>78</line>
+          <option name="timeStamp" value="974" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Models/LstmAE/lstmae.py</url>
-          <line>90</line>
-          <option name="timeStamp" value="961" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/main.py</url>
-          <line>112</line>
-          <option name="timeStamp" value="963" />
+          <line>49</line>
+          <option name="timeStamp" value="979" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>

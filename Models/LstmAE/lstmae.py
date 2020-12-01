@@ -13,7 +13,7 @@ from Helpers.data_plotter import DataPlotter
 pd.options.mode.chained_assignment = None
 
 
-LSTMAE_HYPERPARAMETERS = ['hidden_layer', 'dropout', 'threshold', 'forecast_period_hours']
+LSTMAE_HYPERPARAMETERS = ['hidden_layer', 'dropout', 'threshold', 'forecast_period_hours', 'val_ratio']
 
 
 class LstmAE(AnomalyDetectionModel):
@@ -26,6 +26,7 @@ class LstmAE(AnomalyDetectionModel):
         self.batch_size = model_hyperparameters['batch_size']
         self.threshold = model_hyperparameters['threshold']
         self.forecast_period_hours = model_hyperparameters['forecast_period_hours']
+        self.val_ratio = model_hyperparameters['val_ratio']
 
         self.model = None
 
@@ -40,7 +41,7 @@ class LstmAE(AnomalyDetectionModel):
     def init_data(self, data):
         data = AnomalyDetectionModel.init_data(data)
 
-        val_hours = int(data.shape[0] * 0.3 / 6)
+        val_hours = int(data.shape[0] * self.val_ratio / 6)
         train_df_raw, val_df_raw = DataHelper.split_train_test(data, val_hours)
         val_df_raw, test_df_raw = DataHelper.split_train_test(val_df_raw, int(self.forecast_period_hours * 2))
 
@@ -131,7 +132,7 @@ class LstmAE(AnomalyDetectionModel):
             train_data, train_data,
             epochs=100,
             batch_size=self.batch_size,
-            validation_split=0.2,
+            validation_split=self.val_ratio,
             callbacks=[es],
             shuffle=False
         )
