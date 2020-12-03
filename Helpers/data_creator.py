@@ -5,6 +5,7 @@ import holidays
 from sklearn.preprocessing import StandardScaler
 from Helpers.data_helper import DataHelper
 
+
 class DataCreatorGeneratorConst:
     A = 1
     W = 1
@@ -17,8 +18,9 @@ class DataCreatorMetadata:
 
 
 class DataCreatorAnomalyMetadata:
-    ANOMALY_ADDITION = 2
-    ANOMALY_DECREASE = 0.2
+    MAX_ANOMALY_ADDITION = 0.6
+    MIN_ANOMALY_ADDITION = 0.2
+    ANOMALY_DECREASE = 0.05
     ANOMALY_RATIO = 0.01
     ITERATIONS = 4
 
@@ -52,21 +54,16 @@ class DataCreator:
                         "freq: {}".format(number_of_series, start, end, granularity))
 
         dt_index = DataCreator.create_index(start, end, granularity)
-        T = len(dt_index)
 
         anomalies_dfs = []
         dfs = []
 
-        if number_of_series == 1:
-            shared_anomalies = np.zeros(T)
-        else:
-            num_anomalies = DataCreator._get_num_of_anomalies(dt_index)
-            shared_anomalies = DataCreator.create_anomaly_data(T, dt_index, num_anomalies)
+        anomaly_indices = DataCreator._get_anomaly_indices(dt_index)
 
         for series_num in range(number_of_series):
             df, anomalies_df = DataCreator.create_series(dt_index,
                                                          series_num,
-                                                         shared_anomalies,
+                                                         anomaly_indices,
                                                          higher_freq,
                                                          weekend,
                                                          holiday)
@@ -78,9 +75,6 @@ class DataCreator:
         anomalies_df = pd.concat(anomalies_dfs, axis=1)
         anomalies_df = anomalies_df[anomalies_df.any(axis=1)]
 
-        # sanity check
-        # anomalies_df = pd.concat([anomalies_df, shared_anomalies_df], axis=1)
-
         cls.logger.info("Synthetic data was created successfully")
         return df, anomalies_df
 
@@ -88,7 +82,7 @@ class DataCreator:
     def create_series(cls,
                       dt_index,
                       series_num,
-                      shared_anomalies,
+                      anomalies_indices,
                       higher_freq=False,
                       weekend=False,
                       holiday=False
@@ -120,16 +114,10 @@ class DataCreator:
         trend = DataCreator._create_trend(daily, days, daily_high_freq)
         noise = np.random.normal(loc=0, scale=float(1) / 10, size=T)
 
-        num_anomalies = cls._get_num_of_anomalies(dt_index)
-        anomalies = DataCreator.create_anomaly_data(T, dt_index, num_anomalies)
-        anomalies_with_shared = \
-            np.array([shared_anomalies[i]
-                      if shared_anomalies[i] > 0
-                      else anomalies[i]
-                      for i in range(len(anomalies))])
-        anomalies_df = DataCreator.create_anomaly_df(anomalies_with_shared, dt_index, series_num)
+        anomalies = DataCreator.create_anomaly_data(T, anomalies_indices)
+        anomalies_df = DataCreator.create_anomaly_df(anomalies, dt_index, series_num)
 
-        y = trend + weekend_holyday_decrement + noise + anomalies_with_shared
+        y = trend + weekend_holyday_decrement + noise + anomalies
         df = pd.DataFrame(data={'Value_{}'.format(series_num): y}, index=dt_index)
 
         return df, anomalies_df
@@ -314,29 +302,24 @@ class DataCreator:
         return np.asarray(trend)
 
     @staticmethod
-    def create_anomaly_data(T, dt_index, num_anomalies):
+    def create_anomaly_data(T, anomalies_indices):
         anomalies = np.zeros(T)
-        anomalies_start_idx = DataCreator._get_anomalies_start_idx(dt_index)
-        indices = np.arange(start=anomalies_start_idx, stop=T-1, step=1)
-        for _ in range(num_anomalies):
-            anomaly_idx = np.random.choice(indices, 1, replace=False)
-            anomaly_idx = anomaly_idx[0]
+
+        for anomaly_idx in anomalies_indices:
+            anomaly_addition = np.random.uniform(DataCreatorAnomalyMetadata.MIN_ANOMALY_ADDITION,
+                                                 DataCreatorAnomalyMetadata.MAX_ANOMALY_ADDITION)
 
             for iter in range(1, DataCreatorAnomalyMetadata.ITERATIONS + 1):
                 curr_idx = anomaly_idx + iter - 1
                 if curr_idx < T:
-                    anomalies[curr_idx] = DataCreatorAnomalyMetadata.ANOMALY_ADDITION - \
+                    anomalies[curr_idx] = anomaly_addition - \
                                           (iter - 1) * DataCreatorAnomalyMetadata.ANOMALY_DECREASE
-                    idx_to_remove = np.where(indices == curr_idx)
-                    indices = np.delete(indices, idx_to_remove)
 
             if DataCreatorAnomalyMetadata.ITERATIONS > 1:
                 for iter in range(1, DataCreatorAnomalyMetadata.ITERATIONS):
                     curr_idx = anomaly_idx - iter
-                    anomalies[curr_idx] = DataCreatorAnomalyMetadata.ANOMALY_ADDITION - \
+                    anomalies[curr_idx] = anomaly_addition - \
                                           (iter * DataCreatorAnomalyMetadata.ANOMALY_DECREASE)
-                    idx_to_remove = np.where(indices == curr_idx)
-                    indices = np.delete(indices, idx_to_remove)
 
         return anomalies
 
@@ -345,3 +328,12 @@ class DataCreator:
         anomalies_df = pd.DataFrame(data={'anomaly_{}'.format(label): anomalies},
                                     index=index)
         return anomalies_df
+
+    @staticmethod
+    def _get_anomaly_indices(dt_index):
+        num_anomalies = DataCreator._get_num_of_anomalies(dt_index)
+        anoamly_start_idx = DataCreator._get_anomalies_start_idx(dt_index)
+        anomalies_indices = np.random.randint(low=anoamly_start_idx,
+                                              high=len(dt_index) - 1,
+                                              size=num_anomalies)
+        return anomalies_indices
