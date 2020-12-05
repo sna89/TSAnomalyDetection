@@ -65,26 +65,36 @@ class SingleFileDataBuilder(AbstractDataBuilder):
         dfs = []
         data = self.preprocess_index(raw_data.copy())
 
-        for attribute_name in self.metadata_object.attribute_names:
-            try:
-                if attribute_name in data.columns:
-                    attribute_df = pd.DataFrame(data[attribute_name])
-                else:
-                    attribute_df = DataHelper.filter(data,
-                                                     type_column='Type',
-                                                     value_column='Value',
-                                                     attribute_name=attribute_name)
-            except Exception as e:
-                raise e
-
-            attribute_df = DataHelper.drop_duplicated_rows(attribute_df)
-            attribute_df = self.update_schema(attribute_df, attribute_name)
-            attribute_df = self.preprocess_data(attribute_df)
-            dfs.append(attribute_df)
+        if len(self.metadata_object.attribute_names) == 1 and self.metadata_object.attribute_names[0] == 'all':
+            data_col_names = [col_name for col_name in data.columns
+                              if col_name != self.metadata_object.time_column
+                              and 'Unnamed:' not in col_name]
+            for col_name in data_col_names:
+                self.add_column_to_df_list(col_name, data, dfs)
+        else:
+            for attribute_name in self.metadata_object.attribute_names:
+                self.add_column_to_df_list(attribute_name, data, dfs)
 
         data = pd.concat(dfs, axis=1)
         self.logger.info("Finished processing data successfully")
         return data
+
+    def add_column_to_df_list(self, column_name, data, dfs):
+        try:
+            if column_name in data.columns:
+                attribute_df = pd.DataFrame(data[column_name])
+            else:
+                attribute_df = DataHelper.filter(data,
+                                                 type_column='Type',
+                                                 value_column='Value',
+                                                 attribute_name=column_name)
+        except Exception as e:
+            raise e
+
+        attribute_df = DataHelper.drop_duplicated_rows(attribute_df)
+        attribute_df = self.update_schema(attribute_df, column_name)
+        attribute_df = self.preprocess_data(attribute_df)
+        dfs.append(attribute_df)
 
     def update_schema(self, data, attribute_name):
         filename = self.metadata_object.filename. \

@@ -113,6 +113,7 @@ class DataCreator:
 
         trend = DataCreator._create_trend(daily, days, daily_high_freq)
         noise = np.random.normal(loc=0, scale=float(1) / 10, size=T)
+        # bias = np.random.uniform(low=-0.2, high=0.2)
 
         anomalies = DataCreator.create_anomaly_data(T, anomalies_indices)
         anomalies_df = DataCreator.create_anomaly_df(anomalies, dt_index, series_num)
@@ -140,7 +141,7 @@ class DataCreator:
         anomalies_start_time = DataHelper.relative_delta_time(max_idx,
                                                               minutes=0,
                                                               hours=0,
-                                                              days=-7,
+                                                              days=-21,
                                                               weeks=0)
         anomalies_start_idx = dt_index.slice_indexer(start=dt_index.min(), end=anomalies_start_time, step=1).stop
         return anomalies_start_idx

@@ -5,7 +5,7 @@ anomalies: Anomalies_Synthetic_t.csv
 
 create_synthetic_data:
   to_create: True
-  num_of_series: 3
+  num_of_series: 10
   higher_freq: False
   holiday: False
   weekend: False
@@ -87,7 +87,5 @@ metadata:
   - source: csv
     filename: Synthetic_t.csv
     attribute_names:
-      - Value_0
-      - Value_1
-      - Value_2
+      - all
     time_column: index
