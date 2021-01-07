@@ -26,16 +26,16 @@ preprocess_data_params:
 
 experiment_hyperparameters:
   train_period:
-    hours: 3
+    hours: 0.5
     days: 0
-    weeks: 4
+    weeks: 2
   train_freq:
-    hours: 12
+    hours: 3
     days: 0
     weeks: 0
   forecast_period_hours: 0.5
   include_train_time: False
-  remove_outliers: True
+  remove_outliers: False
   scale: True
 
 
@@ -49,6 +49,13 @@ model_hyperparameters:
     seasonality: 6
 
   lstm_ae:
+    hidden_layer: 64
+    dropout: 0.2
+    batch_size: 32
+    threshold: 99
+    val_ratio: 0.2
+
+  lstm_uncertainty:
     hidden_layer: 64
     dropout: 0.2
     batch_size: 32

@@ -1,5 +1,5 @@
 import unittest
-from Models.LstmAE.lstmae import LstmAE
+from Models.Lstm.LstmAE.lstmae import LstmAE
 import pandas as pd
 from pandas.util.testing import assert_series_equal
 from Helpers.file_helper import FileHelper

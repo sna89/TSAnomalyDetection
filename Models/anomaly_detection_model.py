@@ -54,14 +54,8 @@ class AnomalyDetectionModel(ABC):
         return
 
     @staticmethod
-    def _clean_data(data):
-        data = data.iloc[:, 0]
-        return data
-
-    @staticmethod
     def init_data(data):
         AnomalyDetectionModel._validate_data(data)
-        # data = AnomalyDetectionModel._clean_data(data)
         return data
 
     @abstractmethod
@@ -72,12 +66,4 @@ class AnomalyDetectionModel(ABC):
     def detect(self, df):
         pass
 
-    @staticmethod
-    def get_train_set(df, forecast_period_hours):
-        train_df, _ = DataHelper.split_train_test(df, forecast_period_hours)
-        return train_df
 
-    @staticmethod
-    def get_test_set(df, forecast_period_hours):
-        _, test_df = DataHelper.split_train_test(df, forecast_period_hours)
-        return test_df

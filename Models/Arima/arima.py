@@ -30,7 +30,7 @@ class Arima(AnomalyDetectionModel):
 
     def fit(self, data):
         self._init_data(data)
-        train_df = AnomalyDetectionModel.get_train_set(data, self.forecast_period_hours)
+        train_df, _ = DataHelper.split_train_test(data, self.forecast_period_hours)
         if not DataHelper.is_constant_data(train_df):
             self.fitted_model = auto_arima(train_df, start_p=1, start_q=1,
                                            m=self.seasonality,

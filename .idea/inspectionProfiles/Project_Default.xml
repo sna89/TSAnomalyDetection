@@ -14,7 +14,7 @@
     <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignoredPackages">
         <value>
-          <list size="171">
+          <list size="173">
             <item index="0" class="java.lang.String" itemvalue="numba" />
             <item index="1" class="java.lang.String" itemvalue="tensorflow-estimator" />
             <item index="2" class="java.lang.String" itemvalue="greenlet" />
@@ -186,6 +186,8 @@
             <item index="168" class="java.lang.String" itemvalue="ply" />
             <item index="169" class="java.lang.String" itemvalue="argh" />
             <item index="170" class="java.lang.String" itemvalue="google-auth" />
+            <item index="171" class="java.lang.String" itemvalue="scipy" />
+            <item index="172" class="java.lang.String" itemvalue="numpy" />
           </list>
         </value>
       </option>

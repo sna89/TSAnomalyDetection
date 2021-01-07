@@ -2,7 +2,6 @@ import pandas as pd
 from Helpers.data_helper import DataHelper, Period, timer
 from Logger.logger import get_logger
 from Helpers.params_helper import ExperimentHyperParameters
-import copy
 from dateutil.relativedelta import relativedelta
 from datetime import timedelta
 

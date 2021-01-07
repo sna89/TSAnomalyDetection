@@ -1,4 +1,5 @@
 from Models.anomaly_detection_model import AnomalyDetectionModel, validate_anomaly_df_schema
+from Models.Lstm.lstm import Lstm
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, LSTM, Dropout, RepeatVector, TimeDistributed
 from tensorflow import keras
@@ -7,8 +8,7 @@ import numpy as np
 from Helpers.data_helper import DataHelper, DataConst
 from sklearn.metrics import mean_squared_error
 from sklearn.covariance import EmpiricalCovariance
-from sklearn.preprocessing import normalize
-from Helpers.data_plotter import DataPlotter
+
 
 pd.options.mode.chained_assignment = None
 
@@ -16,7 +16,7 @@ pd.options.mode.chained_assignment = None
 LSTMAE_HYPERPARAMETERS = ['hidden_layer', 'dropout', 'threshold', 'forecast_period_hours', 'val_ratio']
 
 
-class LstmAE(AnomalyDetectionModel):
+class LstmAE(Lstm):
     def __init__(self, model_hyperparameters):
         super(LstmAE, self).__init__()
 
@@ -30,14 +30,6 @@ class LstmAE(AnomalyDetectionModel):
 
         self.model = None
 
-    @staticmethod
-    def prepare_data_lstm(data, forecast_period_hours):
-        forecast_samples = int(forecast_period_hours * 6)
-        Xs = []
-        for i in range(data.shape[0] - forecast_samples):
-            Xs.append(data.iloc[i:i + forecast_samples].values)
-        return np.array(Xs)
-
     def init_data(self, data):
         data = AnomalyDetectionModel.init_data(data)
 
@@ -45,9 +37,9 @@ class LstmAE(AnomalyDetectionModel):
         train_df_raw, val_df_raw = DataHelper.split_train_test(data, val_hours)
         val_df_raw, test_df_raw = DataHelper.split_train_test(val_df_raw, int(self.forecast_period_hours * 2))
 
-        train_data = LstmAE.prepare_data_lstm(train_df_raw, self.forecast_period_hours)
-        val_data = LstmAE.prepare_data_lstm(val_df_raw, self.forecast_period_hours)
-        test_data = LstmAE.prepare_data_lstm(test_df_raw, self.forecast_period_hours)
+        train_data, _ = Lstm.prepare_data(train_df_raw, self.forecast_period_hours)
+        val_data, _ = Lstm.prepare_data(val_df_raw, self.forecast_period_hours)
+        test_data, _ = Lstm.prepare_data(test_df_raw, self.forecast_period_hours)
 
         return train_df_raw, \
                val_df_raw, \
@@ -81,13 +73,6 @@ class LstmAE(AnomalyDetectionModel):
 
         val_pred = self.predict(val_data)
         test_pred = self.predict(test_data)
-
-        # print('test_data')
-        # print(test_data)
-        # print('test_pred')
-        # print(test_pred)
-        # print('abs_error_test')
-        # print([np.abs(test_data[i] - test_pred[i]) for i in range(len(test_pred))])
 
         val_error_emp_covariance = self.fit_error_statistics(val_data, val_pred)
 
