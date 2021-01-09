@@ -154,12 +154,4 @@ class AnomalyDetector():
         filtered.drop(columns=['is_filtered'], axis=1, inplace=True)
         return filtered
 
-    # @abstractmethod
-    # def fit_model(self, df_):
-    #     pass
-    #
-    # @abstractmethod
-    # def detect_anomalies(self):
-    #     pass
-
 

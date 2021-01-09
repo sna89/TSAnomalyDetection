@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 from pylab import rcParams
 import pandas as pd
-import statsmodels.api as sm
-import pylab as py
+# import statsmodels.api as sm
+# import pylab as py
 import seaborn as sns
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
@@ -36,13 +36,13 @@ class DataPlotter:
     def _update_figure_size(width, height):
         rcParams['figure.figsize'] = width, height
 
-    @staticmethod
-    def qqplot(data, show=True):
-        if isinstance(data, pd.DataFrame):
-            data = data.iloc[:, 0]
-        sm.qqplot(data, line='45')
-        if show:
-            py.show()
+    # @staticmethod
+    # def qqplot(data, show=True):
+    #     if isinstance(data, pd.DataFrame):
+    #         data = data.iloc[:, 0]
+    #     sm.qqplot(data, line='45')
+    #     if show:
+    #         py.show()
 
     @staticmethod
     def plot_anomalies(data, df_anomalies, anomalies_true_df=pd.DataFrame()):

@@ -1,7 +1,7 @@
 import unittest
-from Models.Lstm.LstmAE.lstmae import LstmAE
+from Models.Lstm.LstmAE.lstmae import LstmDetectorAE
 import pandas as pd
-from pandas.util.testing import assert_series_equal
+from pandas.testing import assert_frame_equal
 from Helpers.file_helper import FileHelper
 from Helpers.data_helper import DataHelper
 
@@ -23,7 +23,7 @@ class TestLstmAEModel(unittest.TestCase):
         self.true_anomalies = pd.read_csv(true_anomalies_df_path, index_col=['Unnamed: 0'], parse_dates=['Unnamed: 0'])
 
     def test_lstm_ae_detect(self):
-        lstm_ae_model = LstmAE(self.lstm_ae_params)
+        lstm_ae_model = LstmDetectorAE(self.lstm_ae_params)
         lstm_ae_model = lstm_ae_model.fit(self.df)
         predicted_anomalies = self.scaler.inverse_transform(lstm_ae_model.detect(self.df))
 
@@ -34,7 +34,8 @@ class TestLstmAEModel(unittest.TestCase):
                                                               parse_dates=['sampletime'],
                                                               squeeze=True)
 
-        assert_series_equal(expected_lstm_ae_anomalies, predicted_anomalies)
+        assert_frame_equal(expected_lstm_ae_anomalies, predicted_anomalies)
+
 
 if __name__ == '__main__':
     unittest.main()

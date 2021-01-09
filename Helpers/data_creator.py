@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from Logger.logger import get_logger
-import holidays
+# import holidays
 from sklearn.preprocessing import StandardScaler
 from Helpers.data_helper import DataHelper
 
@@ -109,7 +109,7 @@ class DataCreator:
         weekend_holyday_decrement = np.zeros(T)
         if weekend or holiday:
             weekend_holyday_decrement = cls._decrease_value(dt_index, weekend, holiday)
-            cls.output_holidays(weekend_holyday_decrement, dt_index)
+            # cls.output_holidays(weekend_holyday_decrement, dt_index)
 
         trend = DataCreator._create_trend(daily, days, daily_high_freq)
         noise = np.random.normal(loc=0, scale=float(1) / 10, size=T)
@@ -209,9 +209,9 @@ class DataCreator:
         if weekend:
             weekend_dt_index = pd.DatetimeIndex(date for date in index if (date.weekday() >= 4) & (date.weekday() <= 5))
 
-        if holiday:
-            us_holidays_dt_index = holidays.UnitedStates()
-            holidays_dt_index = pd.DatetimeIndex(date for date in index if date in us_holidays_dt_index)
+        # if holiday:
+            # us_holidays_dt_index = holidays.UnitedStates()
+            # holidays_dt_index = pd.DatetimeIndex(date for date in index if date in us_holidays_dt_index)
 
         if weekend and holiday:
             decrement_dt_index = weekend_dt_index.union(holidays_dt_index)
@@ -227,25 +227,25 @@ class DataCreator:
 
         return decrement_series
 
-    @classmethod
-    def output_holidays(cls, decrement_series, index):
-        us_holidays = holidays.UnitedStates()
-
-        df = pd.DataFrame(data={'Value': decrement_series,
-                                'day': index.weekday,
-                                'holiday': [1 if date in us_holidays else 0 for date in index.date]
-                                },
-                          index=index)
-        holidays_df = df[df['holiday'] == 1]
-
-        if not holidays_df.empty:
-            holidays_dates = sorted(set(holidays_df.index.date))
-            if holidays_dates:
-                cls.logger.info("Holidays in synthetic data:")
-                for holiday in holidays_dates:
-                    cls.logger.info("date: {}, weekday:{}".format(holiday.strftime('%Y-%m-%d'), holiday.weekday()))
-        else:
-            cls.logger.info("No holidays in synthetic data.")
+    # @classmethod
+    # def output_holidays(cls, decrement_series, index):
+    #     us_holidays = holidays.UnitedStates()
+    #
+    #     df = pd.DataFrame(data={'Value': decrement_series,
+    #                             'day': index.weekday,
+    #                             'holiday': [1 if date in us_holidays else 0 for date in index.date]
+    #                             },
+    #                       index=index)
+    #     holidays_df = df[df['holiday'] == 1]
+    #
+    #     if not holidays_df.empty:
+    #         holidays_dates = sorted(set(holidays_df.index.date))
+    #         if holidays_dates:
+    #             cls.logger.info("Holidays in synthetic data:")
+    #             for holiday in holidays_dates:
+    #                 cls.logger.info("date: {}, weekday:{}".format(holiday.strftime('%Y-%m-%d'), holiday.weekday()))
+    #     else:
+    #         cls.logger.info("No holidays in synthetic data.")
 
     @staticmethod
     def create_index(start, end, freq):

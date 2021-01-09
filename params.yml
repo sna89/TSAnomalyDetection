@@ -1,11 +1,11 @@
 ---
-detector_name: lstm_ae
+detector_name: lstm_uncertainty
 
 anomalies: Anomalies_Synthetic_t.csv
 
 create_synthetic_data:
   to_create: True
-  num_of_series: 10
+  num_of_series: 2
   higher_freq: False
   holiday: False
   weekend: False
@@ -61,6 +61,7 @@ model_hyperparameters:
     batch_size: 32
     threshold: 99
     val_ratio: 0.2
+    lr: 0.00005
 
   prophet:
     interval_width: 0.999

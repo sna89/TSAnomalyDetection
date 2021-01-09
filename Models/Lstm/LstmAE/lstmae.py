@@ -1,5 +1,5 @@
 from Models.anomaly_detection_model import AnomalyDetectionModel, validate_anomaly_df_schema
-from Models.Lstm.lstm import Lstm
+from Models.Lstm.lstmdetector import LstmDetector
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, LSTM, Dropout, RepeatVector, TimeDistributed
 from tensorflow import keras
@@ -16,9 +16,9 @@ pd.options.mode.chained_assignment = None
 LSTMAE_HYPERPARAMETERS = ['hidden_layer', 'dropout', 'threshold', 'forecast_period_hours', 'val_ratio']
 
 
-class LstmAE(Lstm):
+class LstmDetectorAE(LstmDetector):
     def __init__(self, model_hyperparameters):
-        super(LstmAE, self).__init__()
+        super(LstmDetectorAE, self).__init__()
 
         AnomalyDetectionModel.validate_model_hyperpameters(LSTMAE_HYPERPARAMETERS, model_hyperparameters)
         self.hidden_layer = model_hyperparameters['hidden_layer']
@@ -37,9 +37,9 @@ class LstmAE(Lstm):
         train_df_raw, val_df_raw = DataHelper.split_train_test(data, val_hours)
         val_df_raw, test_df_raw = DataHelper.split_train_test(val_df_raw, int(self.forecast_period_hours * 2))
 
-        train_data, _ = Lstm.prepare_data(train_df_raw, self.forecast_period_hours)
-        val_data, _ = Lstm.prepare_data(val_df_raw, self.forecast_period_hours)
-        test_data, _ = Lstm.prepare_data(test_df_raw, self.forecast_period_hours)
+        train_data, _ = LstmDetector.prepare_data(train_df_raw, self.forecast_period_hours)
+        val_data, _ = LstmDetector.prepare_data(val_df_raw, self.forecast_period_hours)
+        test_data, _ = LstmDetector.prepare_data(test_df_raw, self.forecast_period_hours)
 
         return train_df_raw, \
                val_df_raw, \

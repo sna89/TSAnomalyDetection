@@ -13,6 +13,7 @@ import warnings
 
 pd.set_option('display.max_rows', None)
 np.set_printoptions(threshold=sys.maxsize)
+warnings.filterwarnings("ignore")
 
 
 def get_and_validate_parameters(filename='params.yml'):
@@ -87,8 +88,6 @@ def evaluate_experiment(data, anomalies_pred_df, anomalies_true_df=pd.DataFrame(
 
 
 if __name__ == "__main__":
-    warnings.filterwarnings("ignore")
-
     logger = get_logger('Main')
     logger.info('Starting')
     try:
