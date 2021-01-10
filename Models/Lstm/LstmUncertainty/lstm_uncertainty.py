@@ -11,7 +11,7 @@ from Helpers.file_helper import FileHelper
 
 LSTM_UNCERTAINTY_HYPERPARAMETERS = ['hidden_layer', 'dropout', 'forecast_period_hours', 'val_ratio', 'lr']
 TIMESTEPS_HOURS = 3
-BOOTSTRAP = 100
+BOOTSTRAP = 1000
 EPOCHS = 150
 N_95_PERCENTILE = 2
 EARLY_STOP_EPOCHS = 10
@@ -99,16 +99,14 @@ class LstmDetectorUncertainty(LstmDetector):
 
         test_lower_bounds, test_upper_bounds = self.predict(test_inputs)
 
-        FileHelper.delete_file(self.model_path)
-
-        anomaly_df = LstmDetectorUncertainty.create_anomaly_df(test_lower_bounds,
-                                                               test_upper_bounds,
-                                                               test_labels,
-                                                               None,
-                                                               test_df_raw.index,
-                                                               feature_names=train_df_raw.columns
-                                                               )
-
+        anomaly_df = self.create_anomaly_df(test_lower_bounds,
+                                            test_upper_bounds,
+                                            test_labels,
+                                            None,
+                                            test_df_raw.index,
+                                            feature_names=train_df_raw.columns
+                                            )
+        print(anomaly_df)
         return anomaly_df
 
     def get_lstm_model(self, num_features):
@@ -131,8 +129,8 @@ class LstmDetectorUncertainty(LstmDetector):
         self.model.eval()
         return lower_bound, upper_bound
 
-    @staticmethod
-    def create_anomaly_df(batch_lower_bound,
+    def create_anomaly_df(self,
+                          batch_lower_bound,
                           batch_upper_bound,
                           batch_labels,
                           scaler,
@@ -154,7 +152,10 @@ class LstmDetectorUncertainty(LstmDetector):
                     y = batch_labels[idx][0].cpu().numpy()[feature]
                 sample_lower_bound = batch_lower_bound[idx][0][feature]
                 sample_upper_bound = batch_upper_bound[idx][0][feature]
-                dt_index = index[idx]
+
+                index_idx = int(len(index) - self.forecast_period_hours * DataConst.SAMPLES_PER_HOUR + idx)
+                dt_index = index[index_idx]
+
                 is_anomaly = True if (y <= sample_lower_bound) or (y >= sample_upper_bound) else False
 
                 data[dt_index] = {
