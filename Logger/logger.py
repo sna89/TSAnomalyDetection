@@ -24,8 +24,7 @@ def add_handlers(logger):
 
 def get_logs_path():
     logs_path = FileHelper.get_logs_path()
-    if not FileHelper.path_exists(logs_path):
-        os.mkdir(logs_path)
+    FileHelper.create_directory(logs_path)
     return logs_path
 
 
@@ -35,7 +34,8 @@ def add_file_handler(logger):
     dt_string = now.strftime("%d%m%Y%H")
     logs_path = get_logs_path()
 
-    f_handler = logging.FileHandler(logs_path + '\log_{}.log'.format(dt_string))
+    log_file_name = os.path.join(logs_path, 'log_{}.log'.format(dt_string))
+    f_handler = logging.FileHandler(log_file_name)
     f_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     f_handler.setFormatter(f_format)
     f_handler.setLevel(logging.DEBUG)

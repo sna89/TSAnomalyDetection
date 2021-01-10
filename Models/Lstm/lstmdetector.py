@@ -27,6 +27,7 @@ class LstmDetector(AnomalyDetectionModel):
         return model
 
 
+
 class LstmModel(nn.Module):
     def __init__(self, num_features, hidden_layer, batch_size, dropout_p, device, batch_first=True):
         super(LstmModel, self).__init__()

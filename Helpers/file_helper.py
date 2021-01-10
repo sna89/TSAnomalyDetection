@@ -19,12 +19,19 @@ class FileHelper:
 
     @staticmethod
     def get_logs_path():
-        path = os.getcwd()
-        logs_path = path + '\logs'
-        return logs_path
+        dir_path = os.getcwd()
+        return os.path.join(dir_path, 'logs')
 
     @staticmethod
     def path_exists(path):
         return os.path.isdir(path)
 
+    @staticmethod
+    def create_directory(path):
+        if not FileHelper.path_exists(path):
+            os.mkdir(path)
 
+    @staticmethod
+    def delete_file(file_path):
+        if os.path.exists(file_path):
+            os.remove(file_path)

@@ -1,7 +1,7 @@
 ---
 detector_name: lstm_uncertainty
 
-anomalies: Anomalies_Synthetic_t.csv
+anomalies_file_name: Anomalies_Synthetic_t.csv
 
 create_synthetic_data:
   to_create: True

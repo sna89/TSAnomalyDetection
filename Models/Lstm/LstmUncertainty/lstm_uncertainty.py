@@ -7,6 +7,7 @@ import torch
 from torch.utils.data import TensorDataset, DataLoader
 import torch.nn as nn
 import os
+from Helpers.file_helper import FileHelper
 
 LSTM_UNCERTAINTY_HYPERPARAMETERS = ['hidden_layer', 'dropout', 'forecast_period_hours', 'val_ratio', 'lr']
 TIMESTEPS_HOURS = 3
@@ -38,7 +39,8 @@ class LstmDetectorUncertainty(LstmDetector):
 
         val_hours = int(data.shape[0] * self.val_ratio / DataConst.SAMPLES_PER_HOUR)
         train_df_raw, val_df_raw = DataHelper.split_train_test(data, val_hours)
-        val_df_raw, test_df_raw = DataHelper.split_train_test(val_df_raw, TIMESTEPS_HOURS + int(self.forecast_period_hours * 2))
+        val_df_raw, test_df_raw = DataHelper.split_train_test(val_df_raw, TIMESTEPS_HOURS
+                                                              + self.forecast_period_hours * 2)
 
         x_train, y_train = LstmDetector.prepare_data(train_df_raw, TIMESTEPS_HOURS, self.forecast_period_hours)
         x_val, y_val = LstmDetector.prepare_data(val_df_raw, TIMESTEPS_HOURS, self.forecast_period_hours)
@@ -96,6 +98,9 @@ class LstmDetectorUncertainty(LstmDetector):
         self.model = LstmDetector.load_model(self.model, self.model_path)
 
         test_lower_bounds, test_upper_bounds = self.predict(test_inputs)
+
+        FileHelper.delete_file(self.model_path)
+
         anomaly_df = LstmDetectorUncertainty.create_anomaly_df(test_lower_bounds,
                                                                test_upper_bounds,
                                                                test_labels,
@@ -103,6 +108,7 @@ class LstmDetectorUncertainty(LstmDetector):
                                                                test_df_raw.index,
                                                                feature_names=train_df_raw.columns
                                                                )
+
         return anomaly_df
 
     def get_lstm_model(self, num_features):
@@ -219,7 +225,8 @@ class LstmDetectorUncertainty(LstmDetector):
                     running_val_loss += loss.item()
 
             running_val_loss /= len(val_dl)
-            print(f'epoch: {i:3} train loss: {running_train_loss:10.8f} val loss: {running_val_loss:10.8f}')
+            if i % 10 == 0:
+                print(f'epoch: {i:3} train loss: {running_train_loss:10.8f} val loss: {running_val_loss:10.8f}')
 
             if running_val_loss <= best_val_loss:
                 torch.save(self.model.state_dict(), self.model_path)

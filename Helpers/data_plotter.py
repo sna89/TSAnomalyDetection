@@ -6,6 +6,8 @@ import pandas as pd
 import seaborn as sns
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+import os
+from Helpers.file_helper import FileHelper
 
 
 class DataPlotter:
@@ -18,14 +20,16 @@ class DataPlotter:
         plt.show()
 
     @staticmethod
-    def plot_ts_data(data):
+    def plot_ts_data(data, output_path, plot_name="TSData.html"):
         fig = go.Figure()
 
         for col in data.columns:
             fig.add_trace(go.Scatter(x=data[col].index, y=data[col].values,
                                      mode='lines',
                                      name=col))
-        fig.write_html("TSData.html")
+
+        plot_file_path = os.path.join(output_path, plot_name)
+        fig.write_html(plot_file_path)
 
     @staticmethod
     def plot_data(data):

@@ -23,7 +23,9 @@ class AnomalyDetectionFactory:
             return AnomalyDetector(LstmDetectorAE, self.experiment_hyperparameters, self.model_hyperparameters)
 
         elif self.detector_name == 'lstm_uncertainty':
-            return AnomalyDetector(LstmDetectorUncertainty, self.experiment_hyperparameters, self.model_hyperparameters)
+            return AnomalyDetector(LstmDetectorUncertainty,
+                                   self.experiment_hyperparameters,
+                                   self.model_hyperparameters)
 
         # elif self.detector_name == 'prophet':
         #     return AnomalyDetector(FBProphet, self.experiment_hyperparameters, self.model_hyperparameters)
