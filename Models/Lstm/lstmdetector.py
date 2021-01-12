@@ -12,7 +12,7 @@ class LstmDetector(AnomalyDetectionModel):
     @staticmethod
     def prepare_data(data, forecast_period_hours: float, horizon_hours: float = 0):
         forecast_samples = int(forecast_period_hours * DataConst.SAMPLES_PER_HOUR)
-        horizon_samples = int(horizon_hours * DataConst.SAMPLES_PER_HOUR)
+        horizon_samples = 0 if horizon_hours == 0 else max(1, int(horizon_hours * DataConst.SAMPLES_PER_HOUR))
         Xs = []
         Ys = []
         for i in range(data.shape[0] - forecast_samples - horizon_samples):
@@ -44,12 +44,12 @@ class LstmModel(nn.Module):
                             num_layers=self.n_layers,
                             batch_first=batch_first)
         self.linear = nn.Linear(self.hidden_layer, self.num_features)
-        self.relu = nn.ReLU()
+        self.activation = nn.Tanh()
 
     def forward(self, input_seq, h, test=None):
         lstm_out, a = self.lstm(input_seq, h)
         lstm_out = lstm_out.contiguous().view(-1, self.hidden_layer)
-        lstm_out = self.dropout(self.relu(lstm_out))
+        lstm_out = self.dropout(self.activation(lstm_out))
         predictions = self.linear(lstm_out)
         if not test:
             predictions = predictions.view(self.batch_size, -1, self.num_features)
