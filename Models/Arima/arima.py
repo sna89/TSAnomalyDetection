@@ -26,7 +26,7 @@
 #         self.fitted_model = None
 #
 #     def _init_data(self, data):
-#         self.data = AnomalyDetectionModel.init_data(data)
+#         self.data = AnomalyDetectionModel.validate_data(data)
 #
 #     def fit(self, data):
 #         self._init_data(data)

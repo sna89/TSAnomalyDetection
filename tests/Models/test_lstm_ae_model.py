@@ -1,5 +1,5 @@
 import unittest
-from Models.Lstm.LstmAE.lstmae import LstmDetectorAE
+from Models.Lstm.LstmAE.lstm_ae import LstmUncertaintyDetectorABCAE
 import pandas as pd
 from pandas.testing import assert_frame_equal
 from Helpers.file_helper import FileHelper
@@ -23,8 +23,8 @@ class TestLstmAEModel(unittest.TestCase):
         self.true_anomalies = pd.read_csv(true_anomalies_df_path, index_col=['Unnamed: 0'], parse_dates=['Unnamed: 0'])
 
     def test_lstm_ae_detect(self):
-        lstm_ae_model = LstmDetectorAE(self.lstm_ae_params)
-        lstm_ae_model = lstm_ae_model.fit(self.df)
+        lstm_ae_model = LstmUncertaintyDetectorABCAE(self.lstm_ae_params)
+        lstm_ae_model = lstm_ae_model._fit(self.df)
         predicted_anomalies = self.scaler.inverse_transform(lstm_ae_model.detect(self.df))
 
         predicted_anomalies.to_csv('lstm_ae_test_anomalies.csv')

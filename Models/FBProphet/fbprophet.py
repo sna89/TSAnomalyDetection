@@ -55,7 +55,7 @@
 #         return data
 #
 #     def init_data(self, data):
-#         data = AnomalyDetectionModel.init_data(data)
+#         data = AnomalyDetectionModel.validate_data(data)
 #         data = FBProphet._adjust_prophet_schema(data)
 #         return data
 #

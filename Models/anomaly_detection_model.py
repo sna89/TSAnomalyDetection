@@ -49,17 +49,12 @@ class AnomalyDetectionModel(ABC):
                 raise "Missing model hyperparameters: {}".format(key)
 
     @staticmethod
-    def _validate_data(data):
+    def validate_data(data):
         assert isinstance(data, pd.DataFrame), "Data must be a pandas dataframe"
-        return
-
-    @staticmethod
-    def init_data(data):
-        AnomalyDetectionModel._validate_data(data)
         return data
 
     @abstractmethod
-    def fit(self, df):
+    def _fit(self, df):
         pass
 
     @abstractmethod

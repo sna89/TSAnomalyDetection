@@ -30,7 +30,7 @@
 #         return self
 #
 #     def _init_data(self, data):
-#         self.data = AnomalyDetectionModel.init_data(data)
+#         self.data = AnomalyDetectionModel.validate_data(data)
 #         self.nobs = self.data.shape[0]
 #         self.k = math.ceil(float(self.nobs) * self.anomaly_ratio)
 #

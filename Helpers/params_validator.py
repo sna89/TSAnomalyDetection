@@ -4,7 +4,7 @@ from datetime import datetime
 from Builders.data_builder import PreprocessDataParams
 from Logger.logger import get_logger
 
-UNI_MULTI_VARIATE_DETECTORS = ['lstm_ae', 'lstm_uncertainty']
+UNI_MULTI_VARIATE_DETECTORS = ['lstm_ae', 'lstm_uncertainty', 'lstm_ae_uncertainty']
 UNIVARIATE_DETECTORS = ['esd', 'arima', 'prophet'] + UNI_MULTI_VARIATE_DETECTORS
 MULTIVARIATE_DETECTORS = [] + UNI_MULTI_VARIATE_DETECTORS
 
@@ -59,7 +59,9 @@ class ParamsValidator:
                                       recommendation="skiprows greater than 0. recommended value = 6")
                 raise ValueError(msg)
 
-        if self.detector_name == 'lstm_ae' or self.detector_name == 'lstm_uncertainty':
+        if self.detector_name == 'lstm_ae' \
+                or self.detector_name == 'lstm_uncertainty'\
+                or self.detector_name == 'lstm_ae_uncertainty':
             if not self.experiment_hyperparameters.scale:
                 msg = base_msg.format(model=self.detector_name,
                                       recommendation="scale applied to data.")

@@ -30,7 +30,7 @@ experiment_hyperparameters:
     days: 0
     weeks: 2
   train_freq:
-    hours: 3
+    hours: 1
     days: 0
     weeks: 0
   forecast_period_hours: 0.14
@@ -48,6 +48,13 @@ model_hyperparameters:
   arima:
     seasonality: 6
 
+  prophet:
+    interval_width: 0.999
+    changepoint_prior_scale: 0.5
+    daily_seasonality: 10
+    weekly_seasonality: 10
+    holidays_country_name:
+
   lstm_ae:
     hidden_layer: 64
     dropout: 0.2
@@ -56,18 +63,23 @@ model_hyperparameters:
     val_ratio: 0.2
 
   lstm_uncertainty:
-    hidden_layer: 64
-    dropout: 0.1
-    batch_size: 32
-    val_ratio: 0.1
-    lr: 0.00005
+    hidden_layer: 128
+    dropout: 0.3
+    batch_size: 64
+    val_ratio: 0.2
+    lr: 0.0001
+    timesteps_hours: 4
 
-  prophet:
-    interval_width: 0.999
-    changepoint_prior_scale: 0.5
-    daily_seasonality: 10
-    weekly_seasonality: 10
-    holidays_country_name:
+  lstm_ae_uncertainty:
+    hidden_layer: 128
+    dropout: 0.3
+    batch_size: 64
+    val_ratio: 0.2
+    lr: 0.0001
+    timesteps_hours: 4
+
+
+
 
 metadata:
 #  - source: csv
