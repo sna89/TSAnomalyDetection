@@ -3,6 +3,7 @@ from Models.Lstm.lstm_uncertainty_detector_abc import LstmUncertaintyDetectorABC
 
 
 LSTM_AE_UNCERTAINTY_HYPERPARAMETERS = ['hidden_layer',
+                                       'encoder_dim',
                                        'dropout',
                                        'lr',
                                        'val_ratio',
@@ -15,12 +16,17 @@ class LstmAeUncertaintyDetector(LstmUncertaintyDetectorABC):
         super(LstmAeUncertaintyDetector, self).__init__(model_hyperparameters)
 
         AnomalyDetectionModel.validate_model_hyperpameters(LSTM_AE_UNCERTAINTY_HYPERPARAMETERS, model_hyperparameters)
+        self.encoder_dim = model_hyperparameters['encoder_dim']
 
     def get_lstm_model(self, num_features):
-        model = LSTM_AE_MODEL(num_features, self.hidden_layer, self.batch_size, self.dropout, self.device)
+        model = LSTM_AE_MODEL(num_features,
+                              self.hidden_layer,
+                              encoder_dim=self.encoder_dim,
+                              num_layers=1,
+                              dropout_p=self.dropout)
         return model.to(self.device)
 
-    def fit(self, data, use_hidden=True):
+    def fit(self, data, use_hidden=False):
         return self._fit(data, use_hidden=use_hidden)
 
     @validate_anomaly_df_schema

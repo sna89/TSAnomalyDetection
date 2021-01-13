@@ -1,5 +1,5 @@
 ---
-detector_name: lstm_uncertainty
+detector_name: lstm_ae_uncertainty
 
 anomalies_file_name: Anomalies_Synthetic_t.csv
 
@@ -72,6 +72,7 @@ model_hyperparameters:
 
   lstm_ae_uncertainty:
     hidden_layer: 128
+    encoder_dim: 64
     dropout: 0.3
     batch_size: 64
     val_ratio: 0.2

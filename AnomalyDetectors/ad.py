@@ -64,7 +64,7 @@ class AnomalyDetector():
                 to_fit = True
 
             if to_fit:
-                model = model._fit(df_)
+                model = model.fit(df_)
                 to_fit = False
 
             detected_anomalies = model.detect(df_)

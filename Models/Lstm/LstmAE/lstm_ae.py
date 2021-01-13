@@ -7,7 +7,7 @@ import numpy as np
 from Helpers.data_helper import DataHelper, DataConst
 from sklearn.metrics import mean_squared_error
 from sklearn.covariance import EmpiricalCovariance
-
+from Models.Lstm.lstm_uncertainty_detector_abc import LstmUncertaintyDetectorABC
 
 pd.options.mode.chained_assignment = None
 
@@ -30,15 +30,15 @@ class LstmAeDetector(AnomalyDetectionModel):
         self.model = None
 
     def init_data(self, data):
-        data = AnomalyDetectionModel.init_data(data)
+        data = AnomalyDetectionModel.validate_data(data)
 
         val_hours = int(data.shape[0] * self.val_ratio / 6)
         train_df_raw, val_df_raw = DataHelper.split_train_test(data, val_hours)
         val_df_raw, test_df_raw = DataHelper.split_train_test(val_df_raw, int(self.forecast_period_hours * 2))
 
-        train_data, _ = LstmDetector.prepare_data(train_df_raw, self.forecast_period_hours)
-        val_data, _ = LstmDetector.prepare_data(val_df_raw, self.forecast_period_hours)
-        test_data, _ = LstmDetector.prepare_data(test_df_raw, self.forecast_period_hours)
+        train_data, _ = LstmUncertaintyDetectorABC.prepare_data(train_df_raw, self.forecast_period_hours)
+        val_data, _ = LstmUncertaintyDetectorABC.prepare_data(val_df_raw, self.forecast_period_hours)
+        test_data, _ = LstmUncertaintyDetectorABC.prepare_data(test_df_raw, self.forecast_period_hours)
 
         return train_df_raw, \
                val_df_raw, \
