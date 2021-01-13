@@ -1,5 +1,4 @@
 from Models.anomaly_detection_model import AnomalyDetectionModel, validate_anomaly_df_schema
-from Models.Lstm.lstm_uncertainty_detector_abc import LstmUncertaintyDetectorABC
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, LSTM, Dropout, RepeatVector, TimeDistributed
 from tensorflow import keras
@@ -16,9 +15,9 @@ pd.options.mode.chained_assignment = None
 LSTMAE_HYPERPARAMETERS = ['hidden_layer', 'dropout', 'threshold', 'forecast_period_hours', 'val_ratio']
 
 
-class LstmUncertaintyDetectorABCAE(LstmUncertaintyDetectorABC):
+class LstmAeDetector(AnomalyDetectionModel):
     def __init__(self, model_hyperparameters):
-        super(LstmUncertaintyDetectorABCAE, self).__init__()
+        super(LstmAeDetector, self).__init__()
 
         AnomalyDetectionModel.validate_model_hyperpameters(LSTMAE_HYPERPARAMETERS, model_hyperparameters)
         self.hidden_layer = model_hyperparameters['hidden_layer']
@@ -37,9 +36,9 @@ class LstmUncertaintyDetectorABCAE(LstmUncertaintyDetectorABC):
         train_df_raw, val_df_raw = DataHelper.split_train_test(data, val_hours)
         val_df_raw, test_df_raw = DataHelper.split_train_test(val_df_raw, int(self.forecast_period_hours * 2))
 
-        train_data, _ = LstmUncertaintyDetectorABC.prepare_data(train_df_raw, self.forecast_period_hours)
-        val_data, _ = LstmUncertaintyDetectorABC.prepare_data(val_df_raw, self.forecast_period_hours)
-        test_data, _ = LstmUncertaintyDetectorABC.prepare_data(test_df_raw, self.forecast_period_hours)
+        train_data, _ = LstmDetector.prepare_data(train_df_raw, self.forecast_period_hours)
+        val_data, _ = LstmDetector.prepare_data(val_df_raw, self.forecast_period_hours)
+        test_data, _ = LstmDetector.prepare_data(test_df_raw, self.forecast_period_hours)
 
         return train_df_raw, \
                val_df_raw, \
@@ -48,7 +47,7 @@ class LstmUncertaintyDetectorABCAE(LstmUncertaintyDetectorABC):
                val_data, \
                test_data
 
-    def _fit(self, data):
+    def fit(self, data):
         _, _, _, \
         train_data, \
         val_data, \
@@ -113,7 +112,7 @@ class LstmUncertaintyDetectorABCAE(LstmUncertaintyDetectorABC):
     def train(self, train_data):
         es = keras.callbacks.EarlyStopping(monitor='val_loss', patience=3, mode='min')
 
-        self.model._fit(
+        self.model.fit(
             train_data, train_data,
             epochs=100,
             batch_size=self.batch_size,
@@ -142,7 +141,3 @@ class LstmUncertaintyDetectorABCAE(LstmUncertaintyDetectorABC):
         errors = np.mean([np.abs(true[i] - prediction[i]) for i in range(len(prediction))], axis=1)
         dist = error_emp_covariance.mahalanobis(errors)
         return dist
-
-
-
-
