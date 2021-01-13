@@ -99,7 +99,7 @@ class LstmUncertaintyDetectorABC(AnomalyDetectionModel):
         self.train(train_dl, val_dl,epochs=EPOCHS, early_stop_epochs=EARLY_STOP_EPOCHS, use_hidden=use_hidden)
         return self
 
-    def _detect(self, data):
+    def _detect(self, data, use_hidden):
         train_df_raw, val_df_raw, test_df_raw, \
         x_train, y_train, \
         x_val, y_val, \
@@ -122,7 +122,7 @@ class LstmUncertaintyDetectorABC(AnomalyDetectionModel):
         self.model = self.get_lstm_model(num_features)
         self.model = LstmUncertaintyDetectorABC.load_model(self.model, self.model_path)
 
-        mc_mean, lower_bounds, upper_bounds = self.predict(inputs)
+        mc_mean, lower_bounds, upper_bounds = self.predict(inputs, use_hidden=use_hidden)
 
         anomaly_df = self.create_anomaly_df(mc_mean,
                                             lower_bounds,
@@ -202,17 +202,31 @@ class LstmUncertaintyDetectorABC(AnomalyDetectionModel):
 
         return
 
-    def predict(self, inputs, bootstrap_iter=BOOTSTRAP, scaler=None):
+    def predict(self, inputs, use_hidden, bootstrap_iter=BOOTSTRAP, scaler=None):
         self.model.train()
         batch_size = inputs.size()[0]
-        h = self.model.init_hidden(batch_size)
+
+        if use_hidden:
+            h = self.model.init_hidden(batch_size)
+
         if scaler:
-            predictions = np.array(
-                [scaler.inverse_transform(self.model(inputs, h, True)[0].cpu().detach().numpy()) for _ in
+            if use_hidden:
+                predictions = np.array(
+                [scaler.inverse_transform(self.model(inputs, h, batch_first=True)[0].cpu().detach().numpy()) for _ in
                  range(bootstrap_iter)])
+            else:
+                predictions = np.array(
+                    [scaler.inverse_transform(self.model(inputs, batch_first=True)[0].cpu().detach().numpy()) for _ in
+                     range(bootstrap_iter)])
+
         else:
-            predictions = np.array(
-                [self.model(inputs, h, True)[0].cpu().detach().numpy() for _ in range(bootstrap_iter)])
+            if use_hidden:
+                predictions = np.array(
+                    [self.model(inputs, h, batch_first=True)[0].cpu().detach().numpy() for _ in range(bootstrap_iter)])
+            else:
+                predictions = np.array(
+                    [self.model(inputs, batch_first=True)[0].cpu().detach().numpy() for _ in range(bootstrap_iter)])
+
         mc_mean = predictions.mean(axis=0)
         mc_std = predictions.std(axis=0)
         lower_bound = mc_mean - N_95_PERCENTILE * mc_std
@@ -278,6 +292,7 @@ class LstmUncertaintyDetectorABC(AnomalyDetectionModel):
         anomaly_df = anomaly_df.pivot(columns='Feature', values='y')
         return anomaly_df
 
+
 class LstmModel(nn.Module):
     def __init__(self, num_features, hidden_layer, batch_size, dropout_p, device, batch_first=True):
         super(LstmModel, self).__init__()
@@ -321,9 +336,9 @@ class LstmModel(nn.Module):
         return hidden
 
 
-class LSTM_AE_MODEL(nn.Module):
+class LstmAeModel(nn.Module):
     def __init__(self, input_dim, hidden_layer, encoder_dim, num_layers, dropout_p=0.2):
-        super(LSTM_AE_MODEL, self).__init__()
+        super(LstmAeModel, self).__init__()
         self.input_dim = input_dim
         self.hidden_layer = hidden_layer
         self.encoder_dim = encoder_dim

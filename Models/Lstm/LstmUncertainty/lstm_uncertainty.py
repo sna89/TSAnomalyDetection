@@ -15,17 +15,18 @@ class LstmUncertaintyDetector(LstmUncertaintyDetectorABC):
         super(LstmUncertaintyDetector, self).__init__(model_hyperparameters)
 
         AnomalyDetectionModel.validate_model_hyperpameters(LSTM_UNCERTAINTY_HYPERPARAMETERS, model_hyperparameters)
+        self.use_hidden = True
 
     def get_lstm_model(self, num_features):
         model = LstmModel(num_features, self.hidden_layer, self.batch_size, self.dropout, self.device)
         return model.to(self.device)
 
-    def fit(self, data, use_hidden=True):
-        return self._fit(data, use_hidden=use_hidden)
+    def fit(self, data):
+        return self._fit(data, use_hidden=self.use_hidden)
 
     @validate_anomaly_df_schema
     def detect(self, data):
-        return self._detect(data)
+        return self._detect(data, use_hidden=self.use_hidden)
 
 
 
