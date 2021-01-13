@@ -103,7 +103,10 @@ class LstmUncertaintyDetectorABC(AnomalyDetectionModel):
         train_df_raw, val_df_raw, test_df_raw, \
         x_train, y_train, \
         x_val, y_val, \
-        x_test, y_test = self.init_data(data)
+        x_test, y_test = self.init_data(data,
+                                        self.val_ratio,
+                                        self.timesteps_hours,
+                                        self.forecast_period_hours)
 
         num_features = x_train.shape[2]
 
