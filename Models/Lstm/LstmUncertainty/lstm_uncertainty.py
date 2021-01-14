@@ -14,7 +14,7 @@ LSTM_UNCERTAINTY_HYPERPARAMETERS = ['hidden_layer',
                                     'dropout',
                                     'val_ratio',
                                     'lr',
-                                    'timesteps_hours'
+                                    'timesteps_hours',
                                     'forecast_period_hours']
 
 
@@ -245,16 +245,10 @@ class LstmUncertainty(LstmDetector):
         # pd.set_option('display.max_columns', 999)
         # print(anomaly_df)
 
-        for idx in anomaly_df.index:
-            idx_df = anomaly_df[anomaly_df.index == idx]
-            anomaly_idx_df = idx_df[idx_df['is_anomaly'] == True]
-            if not anomaly_idx_df.empty:
-                anomaly_df.loc[idx, 'is_anomaly'] = True
-
+        anomaly_df = LstmDetector.identify_anomalies(anomaly_df, num_features)
         anomaly_df = anomaly_df[anomaly_df['is_anomaly'] == True]
         anomaly_df = anomaly_df.pivot(columns='Feature', values='y')
         return anomaly_df
-
 
 
 

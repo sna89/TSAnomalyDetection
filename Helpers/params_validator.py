@@ -4,7 +4,7 @@ from datetime import datetime
 from Builders.data_builder import PreprocessDataParams
 from Logger.logger import get_logger
 
-UNI_MULTI_VARIATE_DETECTORS = ['lstm_ae', 'lstm_uncertainty']
+UNI_MULTI_VARIATE_DETECTORS = ['lstm_ae', 'lstm_uncertainty', 'lstm_ae_uncertainty']
 UNIVARIATE_DETECTORS = ['esd', 'arima', 'prophet'] + UNI_MULTI_VARIATE_DETECTORS
 MULTIVARIATE_DETECTORS = [] + UNI_MULTI_VARIATE_DETECTORS
 
@@ -69,7 +69,7 @@ class ParamsValidator:
 
         if self.detector_name == 'lstm_ae_uncertainty':
             if not self.experiment_hyperparameters.forecast_period_hours == \
-                   self.model_hyperparameters.lstm_ae_uncertainty.timesteps_hours:
+                   self.model_hyperparameters['timesteps_hours']:
                     msg = base_msg.format(model=self.detector_name,
                                           recommendation="timesteps_hours equal to forecast_period_hours.")
                     raise ValueError(msg)

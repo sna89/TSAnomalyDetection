@@ -50,6 +50,19 @@ class LstmDetector(AnomalyDetectionModel):
         pass
 
     @staticmethod
+    def identify_anomalies(anomaly_df, num_features):
+        for idx in anomaly_df.index:
+            idx_df = anomaly_df[anomaly_df.index == idx]
+            anomaly_idx_df = idx_df[idx_df['is_anomaly'] == True]
+            if not anomaly_idx_df.empty:
+                num_anomalies_in_sample = anomaly_idx_df.shape[0]
+                if num_anomalies_in_sample > np.floor(np.sqrt(num_features)):
+                    anomaly_df.loc[idx, 'is_anomaly'] = True
+                else:
+                    anomaly_df.loc[idx, 'is_anomaly'] = False
+        return anomaly_df
+
+    @staticmethod
     def load_model(model, model_path):
         state_dict = torch.load(model_path)
         model.load_state_dict(state_dict)
