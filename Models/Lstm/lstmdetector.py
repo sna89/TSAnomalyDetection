@@ -10,7 +10,7 @@ class LstmDetectorConst:
     BOOTSTRAP = 100
     EPOCHS = 150
     N_99_PERCENTILE = 2.57
-    EARLY_STOP_EPOCHS = 5
+    EARLY_STOP_EPOCHS = 6
 
 
 class LstmDetector(AnomalyDetectionModel):
