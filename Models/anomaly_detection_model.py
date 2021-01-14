@@ -2,7 +2,6 @@ import pandas as pd
 from abc import ABC, abstractmethod
 import numpy as np
 import functools
-from Helpers.data_helper import DataHelper
 from Logger.logger import get_logger
 
 
@@ -46,7 +45,7 @@ class AnomalyDetectionModel(ABC):
     def validate_model_hyperpameters(expected_model_hyperparmeters, model_hyperparameters):
         for key in expected_model_hyperparmeters:
             if key not in model_hyperparameters:
-                raise "Missing model hyperparameters: {}".format(key)
+                raise ValueError("Missing model hyperparameters: {}".format(key))
 
     @staticmethod
     def _validate_data(data):

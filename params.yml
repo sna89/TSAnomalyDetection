@@ -1,10 +1,10 @@
 ---
-detector_name: lstm_uncertainty
+detector_name: lstm_ae_uncertainty
 
 anomalies_file_name: Anomalies_Synthetic_t.csv
 
 create_synthetic_data:
-  to_create: False
+  to_create: True
   num_of_series: 1
   higher_freq: False
   holiday: False
@@ -33,7 +33,7 @@ experiment_hyperparameters:
     hours: 3
     days: 0
     weeks: 0
-  forecast_period_hours: 0.14
+  forecast_period_hours: 1
   include_train_time: True
   remove_outliers: False
   scale: True
@@ -48,6 +48,13 @@ model_hyperparameters:
   arima:
     seasonality: 6
 
+  prophet:
+    interval_width: 0.999
+    changepoint_prior_scale: 0.5
+    daily_seasonality: 10
+    weekly_seasonality: 10
+    holidays_country_name:
+
   lstm_ae:
     hidden_layer: 64
     dropout: 0.2
@@ -61,13 +68,16 @@ model_hyperparameters:
     batch_size: 32
     val_ratio: 0.1
     lr: 0.00005
+    timesteps_hours: 6
 
-  prophet:
-    interval_width: 0.999
-    changepoint_prior_scale: 0.5
-    daily_seasonality: 10
-    weekly_seasonality: 10
-    holidays_country_name:
+  lstm_ae_uncertainty:
+    hidden_layer: 64
+    encoder_dim: 64
+    dropout: 0.1
+    batch_size: 32
+    val_ratio: 0.1
+    lr: 0.00005
+    timesteps_hours: 1
 
 metadata:
 #  - source: csv

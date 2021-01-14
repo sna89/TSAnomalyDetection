@@ -1,24 +1,53 @@
 from Models.anomaly_detection_model import AnomalyDetectionModel
 import numpy as np
-from Helpers.data_helper import DataConst
-import torch.nn as nn
+from Helpers.data_helper import DataConst, DataHelper
 import torch
+from abc import abstractmethod
+from torch.utils.data import TensorDataset, DataLoader
+
+
+class LstmDetectorConst:
+    BOOTSTRAP = 100
+    EPOCHS = 150
+    N_99_PERCENTILE = 2.57
+    EARLY_STOP_EPOCHS = 5
 
 
 class LstmDetector(AnomalyDetectionModel):
     def __init__(self):
         super(LstmDetector, self).__init__()
 
+    @abstractmethod
+    def init_data(self, data):
+        pass
+
     @staticmethod
+    @abstractmethod
     def prepare_data(data, forecast_period_hours: float, horizon_hours: float = 0):
-        forecast_samples = int(forecast_period_hours * DataConst.SAMPLES_PER_HOUR)
-        horizon_samples = 0 if horizon_hours == 0 else max(1, int(horizon_hours * DataConst.SAMPLES_PER_HOUR))
-        Xs = []
-        Ys = []
-        for i in range(data.shape[0] - forecast_samples - horizon_samples):
-            Xs.append(data.iloc[i:i + forecast_samples].values)
-            Ys.append(data.iloc[i + forecast_samples : i + forecast_samples + horizon_samples].values)
-        return np.array(Xs), np.array(Ys)
+        pass
+
+    @abstractmethod
+    def train(self, train_dl, val_dl):
+        pass
+
+    @abstractmethod
+    def get_lstm_model(self, num_features):
+        pass
+
+    @abstractmethod
+    def predict(self, inputs, bootstrap_iter, scaler):
+        pass
+
+    @abstractmethod
+    def create_anomaly_df(self,
+                          seq_mean,
+                          seq_lower_bound,
+                          seq_upper_bound,
+                          seq_inputs,
+                          scaler,
+                          index,
+                          feature_names):
+        pass
 
     @staticmethod
     def load_model(model, model_path):
@@ -26,45 +55,19 @@ class LstmDetector(AnomalyDetectionModel):
         model.load_state_dict(state_dict)
         return model
 
+    @staticmethod
+    def split_data(data, val_ratio, test_hours):
+        val_hours = int(data.shape[0] * val_ratio / DataConst.SAMPLES_PER_HOUR)
+        train_df_raw, val_df_raw = DataHelper.split_train_test(data, val_hours)
+        val_df_raw, test_df_raw = DataHelper.split_train_test(val_df_raw, test_hours)
 
-class LstmModel(nn.Module):
-    def __init__(self, num_features, hidden_layer, batch_size, dropout_p, device, batch_first=True):
-        super(LstmModel, self).__init__()
+        return train_df_raw, val_df_raw, test_df_raw
 
-        self.num_features = num_features
-        self.hidden_layer = hidden_layer
-        self.batch_size = batch_size
-        self.n_layers = 2
-        self.device = device
+    @staticmethod
+    def get_tensor_dataset(inputs, labels):
+        dataset = TensorDataset(torch.from_numpy(inputs), torch.from_numpy(labels))
+        return dataset
 
-        self.dropout = nn.Dropout(dropout_p)
-        self.lstm = nn.LSTM(self.num_features,
-                            self.hidden_layer,
-                            dropout=dropout_p,
-                            num_layers=self.n_layers,
-                            batch_first=batch_first)
-        self.linear = nn.Linear(self.hidden_layer, self.num_features)
-        self.activation = nn.Tanh()
-
-    def forward(self, input_seq, h, test=None):
-        lstm_out, a = self.lstm(input_seq, h)
-        lstm_out = lstm_out.contiguous().view(-1, self.hidden_layer)
-        lstm_out = self.dropout(self.activation(lstm_out))
-        predictions = self.linear(lstm_out)
-        if not test:
-            predictions = predictions.view(self.batch_size, -1, self.num_features)
-        else:
-            predictions = predictions.view(*input_seq.size())
-        predictions = predictions[:, -1:, :]
-        return predictions, h
-
-    def init_hidden(self, batch_size=None):
-        weight = next(self.parameters()).data
-
-        if not batch_size:
-            batch_size = self.batch_size
-
-        hidden = (weight.new(self.n_layers, batch_size, self.hidden_layer).zero_().to(self.device),
-                  weight.new(self.n_layers, batch_size, self.hidden_layer).zero_().to(self.device))
-
-        return hidden
+    @staticmethod
+    def get_dataloader(dataset, batch_size, shuffle=False, drop_last=True):
+        return DataLoader(dataset, shuffle=shuffle, drop_last=drop_last, batch_size=batch_size)

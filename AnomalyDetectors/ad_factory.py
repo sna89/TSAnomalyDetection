@@ -1,7 +1,9 @@
 # from Models.SeasonalESD.seasonal_esd import SeasonalESD
 # from Models.Arima.arima import Arima
 from Models.Lstm.LstmAE.lstmae import LstmDetectorAE
-from Models.Lstm.LstmUncertainty.lstm_uncertainty import LstmDetectorUncertainty
+from Models.Lstm.LstmUncertainty.lstm_uncertainty import LstmUncertainty
+from Models.Lstm.LstmAeUncertainty.lstm_ae_uncertainty import LstmAeUncertainty
+
 # from Models.FBProphet.fbprophet import FBProphet
 from AnomalyDetectors.ad import AnomalyDetector
 
@@ -19,16 +21,22 @@ class AnomalyDetectionFactory:
         # elif self.detector_name == 'arima':
         #     return AnomalyDetector(Arima, self.experiment_hyperparameters, self.model_hyperparameters)
 
+        # elif self.detector_name == 'prophet':
+        #     return AnomalyDetector(FBProphet, self.experiment_hyperparameters, self.model_hyperparameters)
+
         if self.detector_name == 'lstm_ae':
             return AnomalyDetector(LstmDetectorAE, self.experiment_hyperparameters, self.model_hyperparameters)
 
         elif self.detector_name == 'lstm_uncertainty':
-            return AnomalyDetector(LstmDetectorUncertainty,
+            return AnomalyDetector(LstmUncertainty,
                                    self.experiment_hyperparameters,
                                    self.model_hyperparameters)
 
-        # elif self.detector_name == 'prophet':
-        #     return AnomalyDetector(FBProphet, self.experiment_hyperparameters, self.model_hyperparameters)
+        elif self.detector_name == 'lstm_ae_uncertainty':
+            return AnomalyDetector(LstmAeUncertainty,
+                                   self.experiment_hyperparameters,
+                                   self.model_hyperparameters)
+
 
         else:
             msg = 'No such detector: {}'.format(self.detector_name)
