@@ -1,5 +1,6 @@
 from Models.anomaly_detection_model import AnomalyDetectionModel, validate_anomaly_df_schema
 from Models.Lstm.lstmdetector import LstmDetector
+from Models.Lstm.LstmAeUncertainty.lstm_ae_uncertainty import LstmAeUncertainty
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, LSTM, Dropout, RepeatVector, TimeDistributed
 from tensorflow import keras
@@ -8,7 +9,7 @@ import numpy as np
 from Helpers.data_helper import DataHelper, DataConst
 from sklearn.metrics import mean_squared_error
 from sklearn.covariance import EmpiricalCovariance
-
+from constants import AnomalyDfColumns
 
 pd.options.mode.chained_assignment = None
 
@@ -16,7 +17,7 @@ pd.options.mode.chained_assignment = None
 LSTMAE_HYPERPARAMETERS = ['hidden_layer', 'dropout', 'threshold', 'forecast_period_hours', 'val_ratio']
 
 
-class LstmDetectorAE(LstmDetector):
+class LstmDetectorAE():
     def __init__(self, model_hyperparameters):
         super(LstmDetectorAE, self).__init__()
 
@@ -29,17 +30,25 @@ class LstmDetectorAE(LstmDetector):
         self.val_ratio = model_hyperparameters['val_ratio']
 
         self.model = None
+        self.scaler = None
 
     def init_data(self, data):
         data = AnomalyDetectionModel.init_data(data)
 
-        val_hours = int(data.shape[0] * self.val_ratio / 6)
-        train_df_raw, val_df_raw = DataHelper.split_train_test(data, val_hours)
-        val_df_raw, test_df_raw = DataHelper.split_train_test(val_df_raw, int(self.forecast_period_hours * 2))
+        train_df_raw, \
+            val_df_raw, \
+            test_df_raw = LstmDetector.split_data(data,
+                                                  self.val_ratio,
+                                                  int(self.forecast_period_hours * 2))
 
-        train_data, _ = LstmDetector.prepare_data(train_df_raw, self.forecast_period_hours)
-        val_data, _ = LstmDetector.prepare_data(val_df_raw, self.forecast_period_hours)
-        test_data, _ = LstmDetector.prepare_data(test_df_raw, self.forecast_period_hours)
+        self.scaler, \
+            train_scaled, \
+            val_scaled, \
+            test_scaled = LstmDetector.scale_data(train_df_raw, val_df_raw, test_df_raw)
+
+        train_data, _ = LstmAeUncertainty.prepare_data(train_scaled, self.forecast_period_hours)
+        val_data, _ = LstmAeUncertainty.prepare_data(val_scaled, self.forecast_period_hours)
+        test_data, _ = LstmAeUncertainty.prepare_data(test_scaled, self.forecast_period_hours)
 
         return train_df_raw, \
                val_df_raw, \
@@ -63,13 +72,11 @@ class LstmDetectorAE(LstmDetector):
     @validate_anomaly_df_schema
     def detect(self, data):
         num_features = data.shape[1]
-        _, _, test_df_raw, \
-        train_data, \
-        val_data, \
-        test_data = self.init_data(data)
 
-        if test_data.shape[0] == 0:
-            return pd.DataFrame()
+        _, _, test_df_raw, \
+            train_data, \
+            val_data, \
+            test_data = self.init_data(data)
 
         val_pred = self.predict(val_data)
         test_pred = self.predict(test_data)
@@ -84,10 +91,11 @@ class LstmDetectorAE(LstmDetector):
         print('test_distance: {}'.format(test_distance))
 
         test_score_df = pd.DataFrame(test_df_raw[int(self.forecast_period_hours * DataConst.SAMPLES_PER_HOUR):])
-        test_score_df['distance'] = test_distance
-        test_score_df['threshold'] = thresold_precentile
-        test_score_df['anomaly'] = test_score_df.distance > test_score_df.threshold
-        anomalies = test_score_df[test_score_df.anomaly == True]
+        test_score_df[AnomalyDfColumns.Distance] = test_distance
+        test_score_df[AnomalyDfColumns.Threshold] = thresold_precentile
+        test_score_df[AnomalyDfColumns.IsAnomaly] = test_score_df.distance > test_score_df.threshold
+
+        anomalies = test_score_df[test_score_df[AnomalyDfColumns.IsAnomaly] == True]
         anomalies = anomalies.iloc[:, :num_features]
 
         return anomalies

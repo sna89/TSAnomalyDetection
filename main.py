@@ -6,12 +6,13 @@ from Logger.logger import get_logger
 from Helpers.params_helper import ParamsHelper
 from Helpers.params_validator import ParamsValidator
 from Builders.data_builder import DataConstructor
-from Helpers.eval_builder import EvalHelper
+from Builders.eval_builder import EvalHelper
 from Helpers.data_plotter import DataPlotter
 from Helpers.data_creator import DataCreator, DataCreatorMetadata
 import warnings
 from Helpers.file_helper import FileHelper
 import os
+from constants import Paths
 
 pd.set_option('display.max_rows', None)
 np.set_printoptions(threshold=sys.maxsize)
@@ -50,19 +51,20 @@ def contruct_data(params_helper):
     return data
 
 
-def get_data(params_helper, output_path):
+def get_data(params_helper):
     synthetic_data_params = params_helper.get_synthetic_data_params()
-    anomalies_file_path = os.path.join(output_path, params_helper.get_anomalies_file_name())
+    anomalies_file_path = os.path.join(Paths.output_path, params_helper.get_anomalies_file_path())
 
     anomalies_true_df = pd.DataFrame()
     if synthetic_data_params.to_create:
-        _, anomalies_true_df = create_synthetic_data(synthetic_data_params, output_path)
+        _, anomalies_true_df = create_synthetic_data(synthetic_data_params, Paths.output_path)
         if anomalies_file_path:
             anomalies_true_df.to_csv(anomalies_file_path)
 
     if anomalies_file_path:
+        anomalies_index = params_helper.get_anomalies_index()
         anomalies_true_df = pd.read_csv(anomalies_file_path,
-                                        index_col=['Unnamed: 0'])
+                                        index_col=[anomalies_index])
         anomalies_true_df.index = pd.to_datetime(anomalies_true_df.index)
 
     data = contruct_data(params_helper)
@@ -110,17 +112,17 @@ def evaluate_experiment(data, anomalies_pred_df, anomalies_true_df=pd.DataFrame(
 
 
 if __name__ == "__main__":
+    warnings.filterwarnings("ignore")
+
     logger = get_logger('Main')
     logger.info('Starting')
-    warnings.filterwarnings("ignore")
+
+    FileHelper.create_directory(Paths.output_path)
     try:
         params_helper = get_and_validate_parameters()
 
-        output_path = os.path.join(os.getcwd(), 'outputs')
-        FileHelper.create_directory(output_path)
-
-        data, anomalies_true_df = get_data(params_helper, output_path)
-        DataPlotter.plot_ts_data(data, output_path)
+        data, anomalies_true_df = get_data(params_helper)
+        DataPlotter.plot_ts_data(data)
 
         anomalies_pred_df = run_experiment(params_helper, data)
         output_results(params_helper, data, anomalies_pred_df, anomalies_true_df)

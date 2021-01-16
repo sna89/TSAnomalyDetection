@@ -15,7 +15,6 @@ class AnomalyDetector():
         self.model = model
 
         self.experiment_hyperparameters = ExperimentHyperParameters(**experiment_hyperparameters)
-        self.scaler = None
         self.train_period = Period(**self.experiment_hyperparameters.train_period)
 
         train_freq = Period(**self.experiment_hyperparameters.train_freq)
@@ -54,9 +53,6 @@ class AnomalyDetector():
                                         epoch_start_time,
                                         epoch_end_time))
 
-            if self.experiment_hyperparameters.scale:
-                df_, self.scaler = DataHelper.scale(df_, self.experiment_hyperparameters.forecast_period_hours)
-
             if elapsed_time >= self.train_freq_delta:
                 del model
                 model = self.model(self.model_hyperparameters)
@@ -70,18 +66,14 @@ class AnomalyDetector():
             detected_anomalies = model.detect(df_)
 
             if not detected_anomalies.empty:
-                if self.scaler:
-                    detected_anomalies = pd.DataFrame(data=self.scaler.inverse_transform(detected_anomalies),
-                                                      index=detected_anomalies.index)
-
                 filtered_anomalies = detected_anomalies
 
-                if not self.experiment_hyperparameters.include_train_time or epoch > 1:
+                if epoch > 1 or not self.experiment_hyperparameters.include_train_time:
                     filtered_anomalies = self.filter_anomalies_in_forecast(detected_anomalies, epoch_end_time)
 
                 if not filtered_anomalies.empty:
-                    self.logger.info("Filtered anomalies: {}".format(filtered_anomalies))
                     self.df_anomalies = pd.concat([self.df_anomalies, filtered_anomalies], axis=0)
+                    self.logger.info("Filtered anomalies: {}".format(filtered_anomalies))
                 else:
                     self.logger.info("No anomalies detected in current iteration")
 

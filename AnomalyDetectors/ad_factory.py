@@ -3,7 +3,6 @@
 from Models.Lstm.LstmAE.lstmae import LstmDetectorAE
 from Models.Lstm.LstmUncertainty.lstm_uncertainty import LstmUncertainty
 from Models.Lstm.LstmAeUncertainty.lstm_ae_uncertainty import LstmAeUncertainty
-
 # from Models.FBProphet.fbprophet import FBProphet
 from AnomalyDetectors.ad import AnomalyDetector
 
@@ -36,7 +35,6 @@ class AnomalyDetectionFactory:
             return AnomalyDetector(LstmAeUncertainty,
                                    self.experiment_hyperparameters,
                                    self.model_hyperparameters)
-
 
         else:
             msg = 'No such detector: {}'.format(self.detector_name)

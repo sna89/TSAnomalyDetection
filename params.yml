@@ -1,10 +1,12 @@
 ---
-detector_name: lstm_ae_uncertainty
+detector_name: lstm_uncertainty
 
-anomalies_file_name: Anomalies_Synthetic_t.csv
+anomalies:
+  filename: Anomalies_Synthetic_t.csv
+  index: 'Unnamed: 0'
 
 create_synthetic_data:
-  to_create: True
+  to_create: False
   num_of_series: 1
   higher_freq: False
   holiday: False
@@ -33,7 +35,7 @@ experiment_hyperparameters:
     hours: 3
     days: 0
     weeks: 0
-  forecast_period_hours: 1
+  forecast_period_hours: 0.12
   include_train_time: True
   remove_outliers: False
   scale: True

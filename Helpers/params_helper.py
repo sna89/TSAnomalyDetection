@@ -60,8 +60,13 @@ class ParamsHelper:
         except Exception as e:
             raise ValueError("cannot find parameter {}".format(e))
 
-    def get_anomalies_file_name(self):
-        return self.get_params('anomalies_file_name')
+    def get_anomalies_file_path(self):
+        anomalies = self.get_params('anomalies')
+        return anomalies['filename']
+
+    def get_anomalies_index(self):
+        anomalies = self.get_params('anomalies')
+        return anomalies['index']
 
     def get_experiment_hyperparams(self):
         return self.get_params('experiment_hyperparameters')

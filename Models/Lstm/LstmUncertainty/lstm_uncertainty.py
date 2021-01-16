@@ -8,6 +8,7 @@ import torch
 import torch.nn as nn
 import os
 from Models.Lstm.lstmdetector import LstmDetectorConst
+from constants import AnomalyDfColumns
 
 LSTM_UNCERTAINTY_HYPERPARAMETERS = ['hidden_layer',
                                     'batch_size',
@@ -31,8 +32,6 @@ class LstmUncertainty(LstmDetector):
         self.lr = model_hyperparameters['lr']
         self.timesteps_hours = model_hyperparameters['timesteps_hours']
 
-        self.model = None
-
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         self.model_path = os.path.join(os.getcwd(), 'lstm_ts.pth')
 
@@ -42,9 +41,9 @@ class LstmUncertainty(LstmDetector):
         horizon_samples = 0 if horizon_hours == 0 else max(1, int(horizon_hours * DataConst.SAMPLES_PER_HOUR))
         Xs = []
         Ys = []
-        for i in range(data.shape[0] - forecast_samples - horizon_samples):
-            Xs.append(data.iloc[i:i + forecast_samples].values)
-            Ys.append(data.iloc[i + forecast_samples : i + forecast_samples + horizon_samples].values)
+        for i in range(data.shape[0] - forecast_samples - horizon_samples + 1):
+            Xs.append(data[i: i + forecast_samples])
+            Ys.append(data[i + forecast_samples: i + forecast_samples + horizon_samples])
         return np.array(Xs), np.array(Ys)
 
     def init_data(self, data):
@@ -53,11 +52,16 @@ class LstmUncertainty(LstmDetector):
         train_df_raw, val_df_raw, test_df_raw = LstmDetector.split_data(data,
                                                                         self.val_ratio,
                                                                         self.timesteps_hours +
-                                                                        self.forecast_period_hours * 2)
+                                                                        self.forecast_period_hours)
 
-        x_train, y_train = self.prepare_data(train_df_raw, self.timesteps_hours, self.forecast_period_hours)
-        x_val, y_val = self.prepare_data(val_df_raw, self.timesteps_hours, self.forecast_period_hours)
-        x_test, y_test = self.prepare_data(test_df_raw, self.timesteps_hours, self.forecast_period_hours)
+        self.scaler, \
+            train_scaled, \
+            val_scaled, \
+            test_scaled = LstmDetector.scale_data(train_df_raw, val_df_raw, test_df_raw)
+
+        x_train, y_train = self.prepare_data(train_scaled, self.timesteps_hours, self.forecast_period_hours)
+        x_val, y_val = self.prepare_data(val_scaled, self.timesteps_hours, self.forecast_period_hours)
+        x_test, y_test = self.prepare_data(test_scaled, self.timesteps_hours, self.forecast_period_hours)
 
         return train_df_raw, val_df_raw, test_df_raw, \
                x_train, y_train, \
@@ -152,9 +156,6 @@ class LstmUncertainty(LstmDetector):
 
         num_features = x_train.shape[2]
 
-        if x_test.shape[0] == 0:
-            return pd.DataFrame()
-
         test_dataset = LstmDetector.get_tensor_dataset(x_test, y_test)
         inputs, labels = test_dataset.tensors[0], test_dataset.tensors[1]
 
@@ -164,13 +165,12 @@ class LstmUncertainty(LstmDetector):
         self.model = self.get_lstm_model(num_features)
         self.model = LstmDetector.load_model(self.model, self.model_path)
 
-        mc_mean, lower_bounds, upper_bounds = self.predict(inputs)
+        mc_mean, lower_bounds, upper_bounds = self.predict(inputs, LstmDetectorConst.BOOTSTRAP, True)
 
         anomaly_df = self.create_anomaly_df(mc_mean,
                                             lower_bounds,
                                             upper_bounds,
                                             labels,
-                                            None,
                                             test_df_raw.index,
                                             feature_names=test_df_raw.columns)
         return anomaly_df
@@ -179,32 +179,13 @@ class LstmUncertainty(LstmDetector):
         model = LstmUncertaintyModel(num_features, self.hidden_layer, self.batch_size, self.dropout, self.device)
         return model.to(self.device)
 
-    def predict(self, inputs, bootstrap_iter=LstmDetectorConst.BOOTSTRAP, scaler=None):
-        self.model.train()
-        batch_size = inputs.size()[0]
-        h = self.model.init_hidden(batch_size)
-        if scaler:
-            predictions = np.array(
-                [scaler.inverse_transform(self.model(inputs, h, True)[0].cpu().detach().numpy()) for _ in
-                 range(bootstrap_iter)])
-        else:
-            predictions = np.array(
-                [self.model(inputs, h, True)[0].cpu().detach().numpy() for _ in range(bootstrap_iter)])
-        mc_mean = predictions.mean(axis=0)
-        mc_std = predictions.std(axis=0)
-        lower_bound = mc_mean - LstmDetectorConst.N_99_PERCENTILE * mc_std
-        upper_bound = mc_mean + LstmDetectorConst.N_99_PERCENTILE * mc_std
-        self.model.eval()
-        return mc_mean, lower_bound, upper_bound
-
     def create_anomaly_df(self,
                           batch_mean,
                           batch_lower_bound,
                           batch_upper_bound,
                           batch_labels,
-                          scaler,
                           index,
-                          feature_names=['RH', 'Temp']):
+                          feature_names):
 
         bs = len(batch_lower_bound)
         num_features = batch_lower_bound.shape[2]
@@ -215,10 +196,8 @@ class LstmUncertainty(LstmDetector):
             data = {}
 
             for idx in range(bs):
-                if scaler:
-                    y = scaler.inverse_transform(batch_labels[idx][0].cpu().numpy())[feature]
-                else:
-                    y = batch_labels[idx][0].cpu().numpy()[feature]
+                y = self.scaler.inverse_transform(batch_labels[idx][0].cpu().numpy())[feature]
+
                 sample_mean = batch_mean[idx][0][feature]
                 sample_lower_bound = batch_lower_bound[idx][0][feature]
                 sample_upper_bound = batch_upper_bound[idx][0][feature]
@@ -230,11 +209,11 @@ class LstmUncertainty(LstmDetector):
 
                 data[dt_index] = {
                     'Feature': feature_names[feature],
-                    'mc_mean': sample_mean,
-                    'LowerBound': sample_lower_bound,
-                    'UpperBound': sample_upper_bound,
-                    'y': y,
-                    'is_anomaly': is_anomaly
+                    AnomalyDfColumns.McMean: sample_mean,
+                    AnomalyDfColumns.LowerBound: sample_lower_bound,
+                    AnomalyDfColumns.UpperBound: sample_upper_bound,
+                    AnomalyDfColumns.Y: y,
+                    AnomalyDfColumns.IsAnomaly: is_anomaly
                 }
 
             df = pd.DataFrame.from_dict(data, orient='index')
@@ -246,8 +225,8 @@ class LstmUncertainty(LstmDetector):
         # print(anomaly_df)
 
         anomaly_df = LstmDetector.identify_anomalies(anomaly_df, num_features)
-        anomaly_df = anomaly_df[anomaly_df['is_anomaly'] == True]
-        anomaly_df = anomaly_df.pivot(columns='Feature', values='y')
+        anomaly_df = anomaly_df[anomaly_df[AnomalyDfColumns.IsAnomaly] == True]
+        anomaly_df = anomaly_df.pivot(columns='Feature', values=AnomalyDfColumns.Y)
         return anomaly_df
 
 

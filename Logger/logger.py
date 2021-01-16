@@ -4,6 +4,7 @@ import functools
 from functools import partial
 import os
 from Helpers.file_helper import FileHelper
+from constants import Paths
 
 
 def get_logger(name):
@@ -34,7 +35,7 @@ def add_file_handler(logger):
     dt_string = now.strftime("%d%m%Y%H")
     logs_path = get_logs_path()
 
-    log_file_name = os.path.join(logs_path, 'log_{}.log'.format(dt_string))
+    log_file_name = os.path.join(Paths.output_path, logs_path, 'log_{}.log'.format(dt_string))
     f_handler = logging.FileHandler(log_file_name)
     f_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     f_handler.setFormatter(f_format)

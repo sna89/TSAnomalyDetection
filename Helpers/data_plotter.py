@@ -7,7 +7,7 @@ import seaborn as sns
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import os
-from Helpers.file_helper import FileHelper
+from constants import Paths
 
 
 class DataPlotter:
@@ -20,7 +20,7 @@ class DataPlotter:
         plt.show()
 
     @staticmethod
-    def plot_ts_data(data, output_path, plot_name="TSData.html"):
+    def plot_ts_data(data, plot_name="TSData.html"):
         fig = go.Figure()
 
         for col in data.columns:
@@ -28,7 +28,7 @@ class DataPlotter:
                                      mode='lines',
                                      name=col))
 
-        plot_file_path = os.path.join(output_path, plot_name)
+        plot_file_path = os.path.join(Paths.output_path, plot_name)
         fig.write_html(plot_file_path)
 
     @staticmethod
