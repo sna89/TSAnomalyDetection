@@ -3,15 +3,19 @@ from sklearn.metrics import confusion_matrix
 from Logger.logger import get_logger
 from sklearn.metrics import classification_report
 from sklearn.metrics import roc_auc_score
+from constants import AnomalyDfColumns
 
 
 class EvalHelper:
-    def __init__(self, data, y_true_df, y_pred_df):
+    def __init__(self, data, anomalies_true_df, anomalies_pred_df):
         self.logger = get_logger(__class__.__name__)
 
         self.eval_df = pd.DataFrame(index=data.index)
-        self.y_true_df = y_true_df
-        self.y_pred_df = y_pred_df
+        self.y_true_df = anomalies_true_df
+
+        feature = anomalies_pred_df[AnomalyDfColumns.Feature].unique()[0]
+        self.y_pred_df = anomalies_pred_df[(anomalies_pred_df[AnomalyDfColumns.IsAnomaly] == 1) &
+                                           (anomalies_pred_df[AnomalyDfColumns.Feature] == feature)]
 
     def build(self):
         self.eval_df['y_true'] = self.y_true_df.any(axis=1)

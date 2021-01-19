@@ -9,7 +9,7 @@ from constants import AnomalyDfColumns
 
 class LstmDetectorConst:
     BOOTSTRAP = 100
-    EPOCHS = 1
+    EPOCHS = 150
     N_99_PERCENTILE = 2.57
     EARLY_STOP_EPOCHS = 6
 
@@ -75,13 +75,13 @@ class LstmDetector(AnomalyDetectionModel):
     def identify_anomalies(anomaly_df, num_features):
         for idx in anomaly_df.index:
             idx_df = anomaly_df[anomaly_df.index == idx]
-            anomaly_idx_df = idx_df[idx_df[AnomalyDfColumns.IsAnomaly] == True]
+            anomaly_idx_df = idx_df[idx_df[AnomalyDfColumns.IsAnomaly] == 1]
             if not anomaly_idx_df.empty:
                 num_anomalies_in_sample = anomaly_idx_df.shape[0]
                 if num_anomalies_in_sample >= np.floor(np.sqrt(num_features)):
-                    anomaly_df.loc[idx, AnomalyDfColumns.IsAnomaly] = True
+                    anomaly_df.loc[idx, AnomalyDfColumns.IsAnomaly] = 1
                 else:
-                    anomaly_df.loc[idx, AnomalyDfColumns.IsAnomaly] = False
+                    anomaly_df.loc[idx, AnomalyDfColumns.IsAnomaly] = 0
         return anomaly_df
 
     @staticmethod

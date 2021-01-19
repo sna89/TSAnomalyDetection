@@ -67,8 +67,9 @@ class DataPlotter:
         for feature in features:
             fig = go.Figure()
 
-            actual = data_df[feature].values
-            fig.add_trace(go.Scatter(x=data_df.index, y=actual,
+            feature_data_df = data_df[feature]
+
+            fig.add_trace(go.Scatter(x=data_df.index, y=feature_data_df.values,
                                      mode='lines',
                                      line=go.scatter.Line(color="blue"),
                                      name=feature
@@ -136,7 +137,7 @@ class DataPlotter:
 
                 if not actual_anomaly_df.empty:
                     actual_anomalies_index = pd.DatetimeIndex(actual_anomaly_df.index)
-                    actual_anomalies_values = data_df.loc[actual_anomalies_index]
+                    actual_anomalies_values = feature_data_df.loc[actual_anomalies_index].values
 
                     fig.add_trace(go.Scatter(y=actual_anomalies_values,
                                              x=actual_anomalies_index,

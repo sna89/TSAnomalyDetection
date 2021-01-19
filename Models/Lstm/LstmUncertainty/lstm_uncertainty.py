@@ -205,7 +205,7 @@ class LstmUncertainty(LstmDetector):
                 index_idx = int(len(index) - self.forecast_period_hours * DataConst.SAMPLES_PER_HOUR + idx)
                 dt_index = index[index_idx]
 
-                is_anomaly = 1 if (y <= sample_lower_bound) or (y >= sample_upper_bound) else 0
+                is_anomaly = 1 if (y < sample_lower_bound) or (y > sample_upper_bound) else 0
 
                 data[dt_index] = {
                     AnomalyDfColumns.Feature: feature_names[feature],
@@ -220,7 +220,7 @@ class LstmUncertainty(LstmDetector):
             dfs.append(df)
 
         anomaly_df = pd.concat(dfs, axis=0)
-
+        anomaly_df = anomaly_df.astype({AnomalyDfColumns.IsAnomaly: 'int32'})
         # pd.set_option('display.max_columns', 999)
         # print(anomaly_df)
 
