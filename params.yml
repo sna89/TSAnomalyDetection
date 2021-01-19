@@ -5,17 +5,18 @@ anomalies:
   filename: Anomalies_Synthetic_t.csv
   index: 'Unnamed: 0'
 
+output:
+  csv: True
+  plot: True
+  features_to_plot:
+
 create_synthetic_data:
-  to_create: False
-  num_of_series: 1
+  to_create: True
+  num_of_series: 5
   higher_freq: False
   holiday: False
   weekend: False
   filename: Synthetic_t.csv
-
-output:
-  csv: True
-  plot: True
 
 preprocess_data_params:
   test: False
@@ -30,13 +31,13 @@ experiment_hyperparameters:
   train_period:
     hours: 0.5
     days: 0
-    weeks: 2
+    weeks: 3
   train_freq:
     hours: 3
     days: 0
     weeks: 0
   forecast_period_hours: 0.12
-  include_train_time: True
+  include_train_time: False
   remove_outliers: False
   scale: True
 
@@ -65,7 +66,7 @@ model_hyperparameters:
     val_ratio: 0.2
 
   lstm_uncertainty:
-    hidden_layer: 64
+    hidden_layer: 256
     dropout: 0.1
     batch_size: 32
     val_ratio: 0.1

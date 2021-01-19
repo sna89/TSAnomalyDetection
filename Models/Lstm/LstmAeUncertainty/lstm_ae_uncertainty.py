@@ -200,11 +200,11 @@ class LstmAeUncertainty(LstmDetector):
                 is_anomaly = True if (y <= sample_lower_bound) or (y >= sample_upper_bound) else False
 
                 data[dt_index] = {
-                    'Feature': feature_names[feature],
-                    AnomalyDfColumns.McMean: sample_mean,
+                    AnomalyDfColumns.Feature: feature_names[feature],
+                    AnomalyDfColumns.Prediction: sample_mean,
                     AnomalyDfColumns.LowerBound: sample_lower_bound,
                     AnomalyDfColumns.UpperBound: sample_upper_bound,
-                    AnomalyDfColumns.Y: y,
+                    AnomalyDfColumns.Actual: y,
                     AnomalyDfColumns.IsAnomaly: is_anomaly
                 }
 
@@ -217,8 +217,6 @@ class LstmAeUncertainty(LstmDetector):
         # print(anomaly_df)
 
         anomaly_df = LstmDetector.identify_anomalies(anomaly_df, num_features)
-        anomaly_df = anomaly_df[anomaly_df[AnomalyDfColumns.IsAnomaly] == True]
-        anomaly_df = anomaly_df.pivot(columns='Feature', values=AnomalyDfColumns.Y)
         return anomaly_df
 
 

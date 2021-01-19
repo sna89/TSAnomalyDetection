@@ -1,18 +1,18 @@
 import os
-from dataclasses import dataclass
 
 
 class Paths:
     output_path = os.path.join(os.getcwd(), 'outputs')
 
 
-@dataclass
 class AnomalyDfColumns:
+    Index = 'SampleTime'
+    Feature = 'Feature'
     IsAnomaly = 'IsAnomaly'
-    Y = 'y'
+    Actual = 'Actual'
     Distance = 'Distance'
     Threshold = 'Threshold'
-    McMean = 'Mean'
+    Prediction = 'Prediction'
     LowerBound = 'LowerBound'
     UpperBound = 'UpperBound'
 

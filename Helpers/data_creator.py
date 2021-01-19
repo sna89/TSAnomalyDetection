@@ -13,7 +13,7 @@ class DataCreatorGeneratorConst:
 
 class DataCreatorMetadata:
     START_DATE = '2016-01-01 08:00'
-    END_DATE = '2016-02-08 08:00'
+    END_DATE = '2016-01-31 08:00'
     GRANULARITY = '10min'
 
 
@@ -141,7 +141,7 @@ class DataCreator:
         anomalies_start_time = DataHelper.relative_delta_time(max_idx,
                                                               minutes=0,
                                                               hours=0,
-                                                              days=-21,
+                                                              days=-7,
                                                               weeks=0)
         anomalies_start_idx = dt_index.slice_indexer(start=dt_index.min(), end=anomalies_start_time, step=1).stop
         return anomalies_start_idx

@@ -6,7 +6,7 @@ from tensorflow.keras.layers import Dense, LSTM, Dropout, RepeatVector, TimeDist
 from tensorflow import keras
 import pandas as pd
 import numpy as np
-from Helpers.data_helper import DataHelper, DataConst
+from Helpers.data_helper import DataConst
 from sklearn.metrics import mean_squared_error
 from sklearn.covariance import EmpiricalCovariance
 from constants import AnomalyDfColumns
@@ -71,7 +71,7 @@ class LstmDetectorAE():
 
     @validate_anomaly_df_schema
     def detect(self, data):
-        num_features = data.shape[1]
+        # num_features = data.shape[1]
 
         _, _, test_df_raw, \
             train_data, \
@@ -90,15 +90,15 @@ class LstmDetectorAE():
         test_distance = self.get_mahalanobis_distance(val_error_emp_covariance, test_data, test_pred)
         print('test_distance: {}'.format(test_distance))
 
-        test_score_df = pd.DataFrame(test_df_raw[int(self.forecast_period_hours * DataConst.SAMPLES_PER_HOUR):])
-        test_score_df[AnomalyDfColumns.Distance] = test_distance
-        test_score_df[AnomalyDfColumns.Threshold] = thresold_precentile
-        test_score_df[AnomalyDfColumns.IsAnomaly] = test_score_df.distance > test_score_df.threshold
+        anomalies_df = pd.DataFrame(test_df_raw[int(self.forecast_period_hours * DataConst.SAMPLES_PER_HOUR):])
+        anomalies_df[AnomalyDfColumns.Distance] = test_distance
+        anomalies_df[AnomalyDfColumns.Threshold] = thresold_precentile
+        anomalies_df[AnomalyDfColumns.IsAnomaly] = anomalies_df.distance > anomalies_df.threshold
 
-        anomalies = test_score_df[test_score_df[AnomalyDfColumns.IsAnomaly] == True]
-        anomalies = anomalies.iloc[:, :num_features]
+        # anomalies = test_score_df[test_score_df[AnomalyDfColumns.IsAnomaly] == True]
+        # anomalies = anomalies.iloc[:, :num_features]
 
-        return anomalies
+        return anomalies_df
 
     def build_lstm_ae_model(self, timesteps, num_features):
         model = Sequential([

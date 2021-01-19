@@ -12,9 +12,10 @@ from Helpers.data_creator import DataCreator, DataCreatorMetadata
 import warnings
 from Helpers.file_helper import FileHelper
 import os
-from constants import Paths
+from constants import Paths, AnomalyDfColumns
 
 pd.set_option('display.max_rows', None)
+pd.set_option('display.max_columns', None)
 np.set_printoptions(threshold=sys.maxsize)
 
 
@@ -86,16 +87,18 @@ def run_experiment(params_helper, data):
 
 
 def output_results(params_helper, data, anomalies_pred_df, anomalies_true_df=pd.DataFrame()):
-    is_output = params_helper.get_is_output()
+    output = params_helper.get_output()
     experiment_name = params_helper.create_experiment_name()
 
-    if is_output.csv:
-        anomalies_pred_df.to_csv('{}.csv'.format(experiment_name))
+    if output.csv:
+        anomalies_pred_df.to_csv(os.path.join(Paths.output_path, '{}.csv'.format(experiment_name)))
 
-    if is_output.plot:
+    if output.plot:
+        features_to_plot = output.features_to_plot
         DataPlotter.plot_anomalies(data=data,
-                                   df_anomalies=anomalies_pred_df,
-                                   anomalies_true_df=anomalies_true_df)
+                                   predicted_anomaly_df=anomalies_pred_df,
+                                   actual_anomaly_df=anomalies_true_df,
+                                   features_to_plot=features_to_plot)
 
     evaluate_experiment(data, anomalies_pred_df, anomalies_true_df)
 

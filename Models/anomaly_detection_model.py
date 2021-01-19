@@ -16,16 +16,16 @@ def validate_anomaly_df_schema(detect):
         anomalies = detect(self, data)
 
         err_msg = "Error in anomaly schema validation: {}"
-        if isinstance(anomalies, pd.Series):
-            anomalies.rename(AnomalyDetectionConst.ATTRIBUTE_NAME, inplace=True)
-            assert anomalies.dtype == np.float64, err_msg.format("Anomaly data type should be np.float64")
-
-        elif isinstance(anomalies, pd.DataFrame):
-            # num_columns = anomalies.shape[1]
-            # assert num_columns == 3, \
-            #     'Anomalies dataframe should consist actual value and low and high confidence interval'
-            for dtype in anomalies.dtypes:
-                assert dtype == np.float64, err_msg.format("Anomaly data type should be np.float64")
+        # if isinstance(anomalies, pd.Series):
+        #     anomalies.rename(AnomalyDetectionConst.ATTRIBUTE_NAME, inplace=True)
+        #     assert anomalies.dtype == np.float64, err_msg.format("Anomaly data type should be np.float64")
+        #
+        # elif isinstance(anomalies, pd.DataFrame):
+        #     # num_columns = anomalies.shape[1]
+        #     # assert num_columns == 3, \
+        #     #     'Anomalies dataframe should consist actual value and low and high confidence interval'
+        #     for dtype in anomalies.dtypes:
+        #         assert dtype == np.float64, err_msg.format("Anomaly data type should be np.float64")
 
         if anomalies.shape[0] > 0:
             assert isinstance(anomalies.index, pd.DatetimeIndex), \

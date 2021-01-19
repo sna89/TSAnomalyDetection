@@ -9,6 +9,7 @@ from typing import Dict, List, Union
 class Output:
     csv: bool
     plot: bool
+    features_to_plot: Union[List[str], str]
 
 
 @dataclass
@@ -91,7 +92,7 @@ class ParamsHelper:
         detectors = list(model_hyperparameters_dict.keys())
         return detectors
 
-    def get_is_output(self):
+    def get_output(self):
         return Output(**self.get_params('output'))
 
     def create_experiment_name(self):
@@ -101,10 +102,10 @@ class ParamsHelper:
         model_hyperparameters = self.get_model_hyperparams()
         get_preprocess_data_params = self.get_preprocess_data_params()
 
-        experiment_name = detector_name + '_' + date_time
-                          # '_'.join("{}={}".format(key,val) for (key,val) in model_hyperparameters.items()) + '_' + \
-                          # '_'.join("{}={}".format(key,val) for (key,val) in get_preprocess_data_params.items() if
-                          #          key != 'test_period') +
+        experiment_name = 'PredictedAnomalies_' + detector_name + '_' + date_time
+        # '_'.join("{}={}".format(key,val) for (key,val) in model_hyperparameters.items()) + '_' + \
+        # '_'.join("{}={}".format(key,val) for (key,val) in get_preprocess_data_params.items() if
+        #          key != 'test_period') +
 
         return experiment_name
 
