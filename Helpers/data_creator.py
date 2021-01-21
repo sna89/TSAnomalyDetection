@@ -112,7 +112,7 @@ class DataCreator:
             # cls.output_holidays(weekend_holyday_decrement, dt_index)
 
         trend = DataCreator._create_trend(daily, days, daily_high_freq)
-        noise = np.random.normal(loc=0, scale=float(1) / 20, size=T)
+        noise = np.random.normal(loc=0, scale=float(1) / 10, size=T)
         # bias = np.random.uniform(low=-0.2, high=0.2)
 
         anomalies = DataCreator.create_anomaly_data(T, anomalies_indices)

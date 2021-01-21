@@ -5,6 +5,7 @@ import torch
 from abc import abstractmethod
 from torch.utils.data import TensorDataset, DataLoader
 from constants import AnomalyDfColumns
+import torch.nn as nn
 
 
 class LstmDetectorConst:
@@ -21,6 +22,7 @@ class LstmDetector(AnomalyDetectionModel):
         self.model = None
         self.scaler = None
         self.batch_size = None
+        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     @abstractmethod
     def init_data(self, data):
@@ -39,7 +41,45 @@ class LstmDetector(AnomalyDetectionModel):
     def get_lstm_model(self, num_features):
         pass
 
-    def predict(self, inputs, bootstrap_iter, use_hidden):
+    @abstractmethod
+    def create_anomaly_df(self,
+                          seq_mean,
+                          seq_lower_bound,
+                          seq_upper_bound,
+                          seq_inputs,
+                          index,
+                          feature_names):
+        pass
+
+    def get_inherent_noise(self, val_dl, h=None, use_hidden=False):
+        self.model.eval()
+
+        if use_hidden and h is None:
+            h = self.model.init_hidden(self.batch_size)
+
+        loss_function = nn.MSELoss().to(self.device)
+        running_val_loss = 0
+        for seq, labels in val_dl:
+            with torch.no_grad():
+                seq = seq.type(torch.FloatTensor).to(self.device)
+                labels = labels.type(torch.FloatTensor).to(self.device)
+
+                if h:
+                    y_pred, h = self.model(seq, h)
+                else:
+                    y_pred = self.model(seq)
+
+                y_pred = y_pred.type(torch.FloatTensor).to(self.device)
+
+                loss = loss_function(y_pred, labels)
+
+                running_val_loss += loss.item()
+
+        running_val_loss /= len(val_dl)
+        inherent_noise = running_val_loss
+        return inherent_noise
+
+    def predict(self, inputs, bootstrap_iter, inherent_noise, use_hidden):
         self.model.train()
 
         if use_hidden:
@@ -55,21 +95,14 @@ class LstmDetector(AnomalyDetectionModel):
                  range(bootstrap_iter)])
 
         mc_mean = predictions.mean(axis=0)
-        mc_std = predictions.std(axis=0)
-        lower_bound = mc_mean - LstmDetectorConst.N_99_PERCENTILE * mc_std
-        upper_bound = mc_mean + LstmDetectorConst.N_99_PERCENTILE * mc_std
+        mc_var = predictions.var(axis=0)
+        uncertainty = np.sqrt(mc_var + inherent_noise)
+
+        lower_bound = mc_mean - LstmDetectorConst.N_99_PERCENTILE * uncertainty
+        upper_bound = mc_mean + LstmDetectorConst.N_99_PERCENTILE * uncertainty
+
         self.model.eval()
         return mc_mean, lower_bound, upper_bound
-
-    @abstractmethod
-    def create_anomaly_df(self,
-                          seq_mean,
-                          seq_lower_bound,
-                          seq_upper_bound,
-                          seq_inputs,
-                          index,
-                          feature_names):
-        pass
 
     @staticmethod
     def identify_anomalies(anomaly_df, num_features):

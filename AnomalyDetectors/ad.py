@@ -64,7 +64,7 @@ class AnomalyDetector():
                 to_fit = False
 
             detected_anomalies = model.detect(df_)
-            detected_anomalies.to_csv('test.csv')
+
             if not detected_anomalies.empty:
                 filtered_anomalies = detected_anomalies
 

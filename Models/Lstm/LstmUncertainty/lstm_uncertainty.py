@@ -9,6 +9,7 @@ import torch.nn as nn
 import os
 from Models.Lstm.lstmdetector import LstmDetectorConst
 from constants import AnomalyDfColumns
+import torch.nn as nn
 
 LSTM_UNCERTAINTY_HYPERPARAMETERS = ['hidden_layer',
                                     'batch_size',
@@ -32,7 +33,6 @@ class LstmUncertainty(LstmDetector):
         self.lr = model_hyperparameters['lr']
         self.timesteps_hours = model_hyperparameters['timesteps_hours']
 
-        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         self.model_path = os.path.join(os.getcwd(), 'lstm_ts.pth')
 
     @staticmethod
@@ -115,22 +115,8 @@ class LstmUncertainty(LstmDetector):
 
             running_train_loss /= len(train_dl)
 
-            running_val_loss = 0
-            self.model.eval()
+            running_val_loss = self.get_inherent_noise(val_dl, h, use_hidden=True)
 
-            for seq, labels in val_dl:
-                with torch.no_grad():
-                    seq = seq.type(torch.FloatTensor).to(self.device)
-                    labels = labels.type(torch.FloatTensor).to(self.device)
-
-                    y_pred, h = self.model(seq, h)
-                    y_pred = y_pred.type(torch.FloatTensor).to(self.device)
-
-                    loss = loss_function(y_pred, labels)
-
-                    running_val_loss += loss.item()
-
-            running_val_loss /= len(val_dl)
             if i % 10 == 0:
                 print(f'epoch: {i:3} train loss: {running_train_loss:10.8f} val loss: {running_val_loss:10.8f}')
 
@@ -156,21 +142,24 @@ class LstmUncertainty(LstmDetector):
 
         num_features = x_train.shape[2]
 
-        test_dataset = LstmDetector.get_tensor_dataset(x_test, y_test)
-        inputs, labels = test_dataset.tensors[0], test_dataset.tensors[1]
+        val_dataset = LstmDetector.get_tensor_dataset(x_val, y_val)
+        val_dl = LstmDetector.get_dataloader(val_dataset, self.batch_size)
 
-        inputs = inputs.type(torch.FloatTensor).to(self.device)
-        labels = labels.type(torch.FloatTensor).to(self.device)
+        test_dataset = LstmDetector.get_tensor_dataset(x_test, y_test)
+        test_inputs, test_labels = test_dataset.tensors[0], test_dataset.tensors[1]
+        test_inputs = test_inputs.type(torch.FloatTensor).to(self.device)
+        test_labels = test_labels.type(torch.FloatTensor).to(self.device)
 
         self.model = self.get_lstm_model(num_features)
         self.model = LstmDetector.load_model(self.model, self.model_path)
 
-        mc_mean, lower_bounds, upper_bounds = self.predict(inputs, LstmDetectorConst.BOOTSTRAP, True)
+        inherent_noise = self.get_inherent_noise(val_dl, use_hidden=True)
+        mc_mean, lower_bounds, upper_bounds = self.predict(test_inputs, LstmDetectorConst.BOOTSTRAP, inherent_noise, True)
 
         anomaly_df = self.create_anomaly_df(mc_mean,
                                             lower_bounds,
                                             upper_bounds,
-                                            labels,
+                                            test_labels,
                                             test_df_raw.index,
                                             feature_names=test_df_raw.columns)
         return anomaly_df

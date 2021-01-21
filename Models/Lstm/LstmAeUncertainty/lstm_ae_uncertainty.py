@@ -114,21 +114,7 @@ class LstmAeUncertainty(LstmDetector):
 
             running_train_loss /= len(train_dl)
 
-            running_val_loss = 0
-            self.model.eval()
-
-            for seq, _ in val_dl:
-                with torch.no_grad():
-                    seq = seq.type(torch.FloatTensor).to(self.device)
-
-                    y_pred = self.model(seq)
-                    y_pred = y_pred.type(torch.FloatTensor).to(self.device)
-
-                    loss = loss_function(y_pred, seq)
-
-                    running_val_loss += loss.item()
-
-            running_val_loss /= len(val_dl)
+            running_val_loss = self.get_inherent_noise(val_dl, use_hidden=False)
             if i % 10 == 0:
                 print(f'epoch: {i:3} train loss: {running_train_loss:10.8f} val loss: {running_val_loss:10.8f}')
 
@@ -154,6 +140,9 @@ class LstmAeUncertainty(LstmDetector):
 
         num_features = x_train.shape[2]
 
+        val_dataset = LstmDetector.get_tensor_dataset(x_val, y_val)
+        val_dl = LstmDetector.get_dataloader(val_dataset)
+
         test_dataset = LstmDetector.get_tensor_dataset(x_test, y_test)
         inputs, _ = test_dataset.tensors[0], test_dataset.tensors[1]
         inputs = inputs.type(torch.FloatTensor).to(self.device)
@@ -161,7 +150,8 @@ class LstmAeUncertainty(LstmDetector):
         self.model = self.get_lstm_model(num_features)
         self.model = LstmDetector.load_model(self.model, self.model_path)
 
-        mc_mean, lower_bounds, upper_bounds = self.predict(inputs, LstmDetectorConst.BOOTSTRAP, False)
+        inherent_noise = self.get_inherent_noise(val_dl, use_hidden=False)
+        mc_mean, lower_bounds, upper_bounds = self.predict(inputs, LstmDetectorConst.BOOTSTRAP, inherent_noise, False)
 
         anomaly_df = self.create_anomaly_df(mc_mean,
                                             lower_bounds,
