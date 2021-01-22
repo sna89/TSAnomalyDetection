@@ -112,6 +112,7 @@ def evaluate_experiment(data, anomalies_pred_df, anomalies_true_df=pd.DataFrame(
         evaluator.output_confusion_matrix()
         evaluator.output_classification_report()
         evaluator.output_auc()
+        evaluator.calc_coverage()
 
 
 if __name__ == "__main__":

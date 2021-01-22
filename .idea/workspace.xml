@@ -6,10 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="27da9a7e-1324-4c59-8a3a-c97de520e9de" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AnomalyDetectors/ad.py" beforeDir="false" afterPath="$PROJECT_DIR$/AnomalyDetectors/ad.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Builders/eval_builder.py" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/eval_builder.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Models/Lstm/lstmdetector.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Lstm/lstmdetector.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lstm_ts.pth" beforeDir="false" afterPath="$PROJECT_DIR$/lstm_ts.pth" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/params.yml" beforeDir="false" afterPath="$PROJECT_DIR$/params.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

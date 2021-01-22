@@ -11,8 +11,8 @@ import torch.nn as nn
 class LstmDetectorConst:
     BOOTSTRAP = 100
     EPOCHS = 150
-    N_99_PERCENTILE = 2.57
-    EARLY_STOP_EPOCHS = 6
+    N_99_PERCENTILE = 1.66
+    EARLY_STOP_EPOCHS = 5
 
 
 class LstmDetector(AnomalyDetectionModel):

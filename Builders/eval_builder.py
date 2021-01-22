@@ -4,13 +4,15 @@ from Logger.logger import get_logger
 from sklearn.metrics import classification_report
 from sklearn.metrics import roc_auc_score
 from constants import AnomalyDfColumns
+import numpy as np
 
 
 class EvalHelper:
-    def __init__(self, data, anomalies_true_df, anomalies_pred_df):
+    def __init__(self, prediction_df, anomalies_true_df, anomalies_pred_df):
         self.logger = get_logger(__class__.__name__)
 
-        self.eval_df = pd.DataFrame(index=data.index)
+        self.prediction_df = prediction_df
+        self.eval_df = pd.DataFrame(index=prediction_df.index)
         self.y_true_df = anomalies_true_df
 
         feature = anomalies_pred_df[AnomalyDfColumns.Feature].unique()[0]
@@ -37,5 +39,28 @@ class EvalHelper:
         self.logger.info(classification_report(self.eval_df['y_true'], self.eval_df['y_pred']))
 
     def output_auc(self):
-        auc = roc_auc_score(self.eval_df['y_true'],self.eval_df['y_pred'])
+        auc = roc_auc_score(self.eval_df['y_true'], self.eval_df['y_pred'])
         self.logger.info("AUC: {}".format(auc))
+
+    def calc_coverage(self):
+        feature_coverage_list =[]
+        columns = self.prediction_df.columns
+        features = list(self.prediction_df[AnomalyDfColumns.Feature].unique())
+
+        if AnomalyDfColumns.LowerBound in columns and \
+                AnomalyDfColumns.UpperBound in columns and \
+                AnomalyDfColumns.Actual in columns:
+
+            for feature in features:
+                feature_prediction_df = self.prediction_df[AnomalyDfColumns.Feature == feature]
+                feature_coverage_series = feature_prediction_df.apply(lambda row: 1 if row[AnomalyDfColumns.LowerBound] <=
+                                                                     row[AnomalyDfColumns.Actual] <=
+                                                                     row[AnomalyDfColumns.UpperBound]
+                else 0)
+
+                feature_coverage = feature_coverage_series.mean()
+                feature_coverage_list.append(feature_coverage)
+                self.logger.info("Feature {} Coverage: {}".format(feature, feature_coverage))
+
+            avg_coverage = np.array(feature_coverage_list).mean()
+            self.logger.info("Average Coverage: {}".format(avg_coverage))
