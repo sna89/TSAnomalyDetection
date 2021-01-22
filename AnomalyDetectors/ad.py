@@ -4,6 +4,7 @@ from Logger.logger import get_logger
 from Helpers.params_helper import ExperimentHyperParameters
 from dateutil.relativedelta import relativedelta
 from datetime import timedelta
+from constants import AnomalyDfColumns
 
 
 class AnomalyDetector():
@@ -78,7 +79,15 @@ class AnomalyDetector():
                     self.logger.info("No anomalies detected in current iteration")
 
                 if self.experiment_hyperparameters.remove_outliers:
-                    df_no_anomalies.drop(labels=detected_anomalies.index, axis=0, inplace=True)
+                    if AnomalyDfColumns.Prediction in detected_anomalies.columns:
+                        actual_detected_anomalies = detected_anomalies[detected_anomalies[AnomalyDfColumns.IsAnomaly] == 1]
+                        for idx, row in actual_detected_anomalies.iterrows():
+                            feature = row[AnomalyDfColumns.Feature]
+                            prediction = row[AnomalyDfColumns.Prediction]
+                            df_no_anomalies.at[idx, feature] = prediction
+
+                    else:
+                        df_no_anomalies.drop(labels=detected_anomalies.index, axis=0, inplace=True)
 
             else:
                 self.logger.info("No anomalies detected in current iteration")

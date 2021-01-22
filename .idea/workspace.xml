@@ -7,11 +7,9 @@
     <list default="true" id="27da9a7e-1324-4c59-8a3a-c97de520e9de" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AnomalyDetectors/ad.py" beforeDir="false" afterPath="$PROJECT_DIR$/AnomalyDetectors/ad.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Helpers/data_creator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helpers/data_creator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Lstm/LstmAeUncertainty/lstm_ae_uncertainty.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Lstm/LstmAeUncertainty/lstm_ae_uncertainty.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Lstm/LstmUncertainty/lstm_uncertainty.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Lstm/LstmUncertainty/lstm_uncertainty.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Models/Lstm/lstmdetector.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Lstm/lstmdetector.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lstm_ts.pth" beforeDir="false" afterPath="$PROJECT_DIR$/lstm_ts.pth" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/params.yml" beforeDir="false" afterPath="$PROJECT_DIR$/params.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -300,12 +298,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/AnomalyDetectors/ad.py</url>
-          <line>80</line>
-          <option name="timeStamp" value="965" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/AnomalyDetectors/ad.py</url>
-          <line>110</line>
+          <line>119</line>
           <option name="timeStamp" value="966" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -320,7 +313,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/AnomalyDetectors/ad.py</url>
-          <line>68</line>
+          <line>69</line>
           <option name="timeStamp" value="1049" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -335,13 +328,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/AnomalyDetectors/ad.py</url>
-          <line>51</line>
+          <line>52</line>
           <option name="timeStamp" value="1144" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Models/Lstm/LstmUncertainty/lstm_uncertainty.py</url>
-          <line>164</line>
-          <option name="timeStamp" value="1152" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Helpers/data_plotter.py</url>
@@ -354,19 +342,14 @@
           <option name="timeStamp" value="1162" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/main.py</url>
-          <line>129</line>
-          <option name="timeStamp" value="1176" />
+          <url>file://$PROJECT_DIR$/AnomalyDetectors/ad.py</url>
+          <line>82</line>
+          <option name="timeStamp" value="1183" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Models/Lstm/LstmUncertainty/lstm_uncertainty.py</url>
-          <line>117</line>
-          <option name="timeStamp" value="1177" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Models/Lstm/lstmdetector.py</url>
-          <line>77</line>
-          <option name="timeStamp" value="1178" />
+          <url>file://$PROJECT_DIR$/AnomalyDetectors/ad.py</url>
+          <line>94</line>
+          <option name="timeStamp" value="1186" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>

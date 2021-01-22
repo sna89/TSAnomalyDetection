@@ -33,12 +33,12 @@ experiment_hyperparameters:
     days: 0
     weeks: 3
   train_freq:
-    hours: 3
+    hours: 12
     days: 0
     weeks: 0
   forecast_period_hours: 0.12
   include_train_time: False
-  remove_outliers: False
+  remove_outliers: True
   scale: True
 
 
