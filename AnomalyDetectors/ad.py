@@ -84,7 +84,8 @@ class AnomalyDetector():
                         for idx, row in actual_detected_anomalies.iterrows():
                             feature = row[AnomalyDfColumns.Feature]
                             prediction = row[AnomalyDfColumns.Prediction]
-                            df_no_anomalies.at[idx, feature] = prediction
+                            actual = row[AnomalyDfColumns.Actual]
+                            df_no_anomalies.at[idx, feature] = (prediction + actual) / 2
 
                     else:
                         df_no_anomalies.drop(labels=detected_anomalies.index, axis=0, inplace=True)

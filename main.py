@@ -100,10 +100,10 @@ def output_results(params_helper, data, anomalies_pred_df, anomalies_true_df=pd.
                                    actual_anomaly_df=anomalies_true_df,
                                    features_to_plot=features_to_plot)
 
-    evaluate_experiment(data, anomalies_pred_df, anomalies_true_df)
+    evaluate_experiment(data, anomalies_pred_df, anomalies_true_df, params_helper)
 
 
-def evaluate_experiment(data, anomalies_pred_df, anomalies_true_df=pd.DataFrame()):
+def evaluate_experiment(data, anomalies_pred_df, anomalies_true_df=pd.DataFrame(), params_helper={}):
     if anomalies_true_df.empty:
         return
     else:
@@ -113,7 +113,7 @@ def evaluate_experiment(data, anomalies_pred_df, anomalies_true_df=pd.DataFrame(
         evaluator.output_classification_report()
         evaluator.output_auc()
         evaluator.calc_coverage()
-
+        evaluator.output_params(params_helper)
 
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")

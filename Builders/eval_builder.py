@@ -8,11 +8,11 @@ import numpy as np
 
 
 class EvalHelper:
-    def __init__(self, prediction_df, anomalies_true_df, anomalies_pred_df):
+    def __init__(self, data, anomalies_true_df, anomalies_pred_df):
         self.logger = get_logger(__class__.__name__)
 
-        self.prediction_df = prediction_df
-        self.eval_df = pd.DataFrame(index=prediction_df.index)
+        self.prediction_df = anomalies_pred_df
+        self.eval_df = pd.DataFrame(index=data.index)
         self.y_true_df = anomalies_true_df
 
         feature = anomalies_pred_df[AnomalyDfColumns.Feature].unique()[0]
@@ -43,7 +43,8 @@ class EvalHelper:
         self.logger.info("AUC: {}".format(auc))
 
     def calc_coverage(self):
-        feature_coverage_list =[]
+        feature_coverage_list = []
+        feature_in_bound_list = []
         columns = self.prediction_df.columns
         features = list(self.prediction_df[AnomalyDfColumns.Feature].unique())
 
@@ -52,15 +53,23 @@ class EvalHelper:
                 AnomalyDfColumns.Actual in columns:
 
             for feature in features:
-                feature_prediction_df = self.prediction_df[AnomalyDfColumns.Feature == feature]
-                feature_coverage_series = feature_prediction_df.apply(lambda row: 1 if row[AnomalyDfColumns.LowerBound] <=
+                feature_prediction_df = self.prediction_df[self.prediction_df[AnomalyDfColumns.Feature] == feature]
+                feature_in_bound = feature_prediction_df.apply(lambda row: 1 if row[AnomalyDfColumns.LowerBound] <=
                                                                      row[AnomalyDfColumns.Actual] <=
                                                                      row[AnomalyDfColumns.UpperBound]
-                else 0)
-
-                feature_coverage = feature_coverage_series.mean()
+                else 0, axis=1)
+                feature_in_bound_list.append(feature_in_bound)
+                feature_coverage = feature_in_bound.mean()
                 feature_coverage_list.append(feature_coverage)
                 self.logger.info("Feature {} Coverage: {}".format(feature, feature_coverage))
 
             avg_coverage = np.array(feature_coverage_list).mean()
             self.logger.info("Average Coverage: {}".format(avg_coverage))
+
+            feature_in_bound_df = pd.concat(feature_in_bound_list, axis=1)
+            union_coverage = feature_in_bound_df.all(axis=1).mean()
+            self.logger.info("Union Coverage: {}".format(union_coverage))
+
+    @staticmethod
+    def output_params(params_helper):
+        params_helper.print()

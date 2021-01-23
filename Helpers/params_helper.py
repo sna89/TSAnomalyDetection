@@ -55,6 +55,9 @@ class ParamsHelper:
         with open(params_path) as file:
             self.params_dict = yaml.load(file, Loader=yaml.FullLoader)
 
+    def print(self):
+        print(self.params_dict)
+
     def get_params(self, param_name):
         try:
             return self.params_dict[param_name]
