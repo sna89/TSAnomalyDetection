@@ -113,8 +113,9 @@ class LstmAeUncertainty(LstmDetector):
         val_dl = LstmDetector.get_dataloader(val_dataset, self.batch_size)
 
         test_dataset = LstmDetector.get_tensor_dataset(x_test, y_test)
-        inputs, _ = test_dataset.tensors[0], test_dataset.tensors[1]
+        inputs, labels = test_dataset.tensors[0], test_dataset.tensors[1]
         inputs = inputs.type(torch.FloatTensor).to(self.device)
+        labels = labels.type(torch.FloatTensor).to(self.device)
 
         self.model = self.get_lstm_model(num_features)
         self.model = LstmDetector.load_model(self.model, self.model_path)
@@ -125,7 +126,7 @@ class LstmAeUncertainty(LstmDetector):
         anomaly_df = self.create_anomaly_df(mc_mean,
                                             lower_bounds,
                                             upper_bounds,
-                                            inputs,
+                                            labels,
                                             test_df_raw.index,
                                             feature_names=test_df_raw.columns)
         return anomaly_df
@@ -134,7 +135,7 @@ class LstmAeUncertainty(LstmDetector):
                           seq_mean,
                           seq_lower_bound,
                           seq_upper_bound,
-                          seq_inputs,
+                          seq_labels,
                           index,
                           feature_names):
 
@@ -147,16 +148,16 @@ class LstmAeUncertainty(LstmDetector):
             data = {}
 
             for idx in range(seq_len):
-                y = self.scaler.inverse_transform(seq_inputs[0][idx].cpu().numpy())[feature]
+                y = self.scaler.inverse_transform(seq_labels[0][idx].cpu().numpy())[feature]
 
                 sample_mean = seq_mean[idx][feature]
                 sample_lower_bound = seq_lower_bound[idx][feature]
                 sample_upper_bound = seq_upper_bound[idx][feature]
 
-                index_idx = idx
+                index_idx = int(len(index) - self.horizon + idx)
                 dt_index = index[index_idx]
 
-                is_anomaly = True if (y <= sample_lower_bound) or (y >= sample_upper_bound) else False
+                is_anomaly = 1 if (y <= sample_lower_bound) or (y >= sample_upper_bound) else 0
 
                 data[dt_index] = {
                     AnomalyDfColumns.Feature: feature_names[feature],

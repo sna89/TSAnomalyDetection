@@ -10,7 +10,7 @@ import torch.nn as nn
 
 class LstmDetectorConst:
     BOOTSTRAP = 100
-    EPOCHS = 150
+    EPOCHS = 1
     N_99_PERCENTILE = 1.66
     EARLY_STOP_EPOCHS = 10
 

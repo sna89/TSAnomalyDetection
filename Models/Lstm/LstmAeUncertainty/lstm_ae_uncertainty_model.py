@@ -12,17 +12,28 @@ class Encoder(nn.Module):
         self.hidden_size = hidden_size
         self.num_layers = num_layers
 
-        self.lstm = nn.LSTM(input_size=input_size,
-                            hidden_size=hidden_size,
-                            num_layers=num_layers,
-                            batch_first=True)
+        self.lstm1 = nn.LSTM(input_size=input_size,
+                             hidden_size=hidden_size * 2,
+                             num_layers=num_layers,
+                             batch_first=True)
+
+        self.lstm2 = nn.LSTM(input_size=hidden_size * 2,
+                             hidden_size=hidden_size * 2,
+                             num_layers=num_layers,
+                             batch_first=True)
 
         self.activation = nn.ReLU()
-        self.dropout = nn.Dropout(dropout)
+        self.dropout1 = nn.Dropout(dropout)
+        self.dropout2 = nn.Dropout(dropout)
 
     def forward(self, x_input):
-        lstm_out, self.hidden = self.lstm(self.dropout(self.activation(x_input)))
-        return lstm_out, self.hidden
+        lstm_out, _ = self.lstm1(x_input)
+        lstm_out = self.dropout1(self.activation(lstm_out))
+
+        lstm_out, hidden = self.lstm2(lstm_out)
+        lstm_out = self.dropout2(self.activation(lstm_out))
+
+        return lstm_out, hidden
 
     def init_hidden(self, batch_size):
         return (torch.zeros(self.num_layers, batch_size, self.hidden_size),
@@ -36,21 +47,30 @@ class Decoder(nn.Module):
         self.hidden_size = hidden_size
         self.num_layers = num_layers
 
-        self.lstm = nn.LSTM(input_size=input_size,
-                            hidden_size=hidden_size,
-                            num_layers=num_layers,
-                            batch_first=True)
+        self.lstm1 = nn.LSTM(input_size=input_size,
+                             hidden_size=hidden_size * 2,
+                             num_layers=num_layers,
+                             batch_first=True)
+
+        self.lstm2 = nn.LSTM(input_size=hidden_size * 2,
+                             hidden_size=hidden_size,
+                             num_layers=num_layers,
+                             batch_first=True)
 
         self.activtion = nn.ReLU()
-        self.dropout = nn.Dropout(dropout)
+        self.dropout1 = nn.Dropout(dropout)
+        self.dropout2 = nn.Dropout(dropout)
 
         self.linear = nn.Linear(hidden_size, input_size)
 
     def forward(self, x_input, encoder_hidden_states):
-        lstm_out, self.hidden = self.lstm(x_input.unsqueeze(1), encoder_hidden_states)
-        output = self.linear(self.dropout(self.activtion(lstm_out.squeeze(1))))
+        lstm_out, _ = self.lstm1(x_input.unsqueeze(1), encoder_hidden_states)
+        lstm_out = self.dropout1(self.activtion(lstm_out))
 
-        return output, self.hidden
+        lstm_out, hidden = self.lstm2(lstm_out)
+        output = self.linear(self.dropout2(self.activtion(lstm_out.squeeze(1))))
+
+        return output, hidden
 
 
 class LstmAeUncertaintyModel(nn.Module):
@@ -74,13 +94,13 @@ class LstmAeUncertaintyModel(nn.Module):
 
         outputs = torch.zeros(self.batch_size, self.horizon, seq.shape[2])
 
-        decoder_input = seq[:, -1, :]
+        dec_input = seq[:, -1, :]
         decoder_hidden = encoder_hidden
 
         for t in range(self.horizon):
-            decoder_output, decoder_hidden = self.decoder(decoder_input, decoder_hidden)
+            decoder_output, decoder_hidden = self.decoder(dec_input, decoder_hidden)
             outputs[:, t, :] = decoder_output
-            decoder_input = decoder_output
+            dec_input = decoder_output
 
         return outputs
 
@@ -116,11 +136,17 @@ class LstmAeUncertaintyModel(nn.Module):
                 _, encoder_hidden = self.encoder(seq)
                 decoder_hidden = encoder_hidden
                 dec_input = seq[:, -1, :]
-                # teacher forcing
+                # # teacher forcing
+                # for t in range(self.horizon):
+                #     decoder_output, decoder_hidden = self.decoder(dec_input, decoder_hidden)
+                #     outputs[:, t, :] = decoder_output
+                #     dec_input = labels[:, t, :]
+
+                #Recursive
                 for t in range(self.horizon):
                     decoder_output, decoder_hidden = self.decoder(dec_input, decoder_hidden)
                     outputs[:, t, :] = decoder_output
-                    dec_input = labels[:, t, :]
+                    dec_input = decoder_output
 
                 loss = criterion(outputs, labels)
 
@@ -146,11 +172,17 @@ class LstmAeUncertaintyModel(nn.Module):
 
                     dec_input = seq[:, -1, :]
                     decoder_hidden = encoder_hidden
-                    # teacher forcing
+                    # # teacher forcing
+                    # for t in range(self.horizon):
+                    #     decoder_output, decoder_hidden = self.decoder(dec_input, decoder_hidden)
+                    #     outputs[:, t, :] = decoder_output
+                    #     dec_input = labels[:, t, :]
+
+                    # Recursive
                     for t in range(self.horizon):
                         decoder_output, decoder_hidden = self.decoder(dec_input, decoder_hidden)
                         outputs[:, t, :] = decoder_output
-                        dec_input = labels[:, t, :]
+                        dec_input = decoder_output
 
                     loss = criterion(outputs, labels)
                     running_val_loss += loss.item()
