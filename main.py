@@ -54,7 +54,11 @@ def contruct_data(params_helper):
 
 def get_data(params_helper):
     synthetic_data_params = params_helper.get_synthetic_data_params()
-    anomalies_file_path = os.path.join(Paths.output_path, params_helper.get_anomalies_file_path())
+
+    anomalies_file_path = None
+    anomalies_file_name = params_helper.get_anomalies_file_name()
+    if anomalies_file_name:
+        anomalies_file_path = os.path.join(Paths.output_path, anomalies_file_name)
 
     anomalies_true_df = pd.DataFrame()
     if synthetic_data_params.to_create:
@@ -114,6 +118,7 @@ def evaluate_experiment(data, anomalies_pred_df, anomalies_true_df=pd.DataFrame(
         evaluator.output_auc()
         evaluator.calc_coverage()
         evaluator.output_params(params_helper)
+
 
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")

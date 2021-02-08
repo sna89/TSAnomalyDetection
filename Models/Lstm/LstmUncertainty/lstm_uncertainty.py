@@ -9,7 +9,6 @@ import torch.nn as nn
 import os
 from Models.Lstm.lstmdetector import LstmDetectorConst
 from constants import AnomalyDfColumns
-import torch.nn as nn
 
 LSTM_UNCERTAINTY_HYPERPARAMETERS = ['hidden_layer',
                                     'batch_size',

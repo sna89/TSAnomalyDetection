@@ -85,7 +85,7 @@ class AnomalyDetector():
                             feature = row[AnomalyDfColumns.Feature]
                             prediction = row[AnomalyDfColumns.Prediction]
                             actual = row[AnomalyDfColumns.Actual]
-                            df_no_anomalies.at[idx, feature] = (prediction + actual) / 2
+                            df_no_anomalies.at[idx, feature] = prediction * 0.85 + actual * 0.15
 
                     else:
                         df_no_anomalies.drop(labels=detected_anomalies.index, axis=0, inplace=True)

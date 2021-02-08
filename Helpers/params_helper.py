@@ -64,7 +64,7 @@ class ParamsHelper:
         except Exception as e:
             raise ValueError("cannot find parameter {}".format(e))
 
-    def get_anomalies_file_path(self):
+    def get_anomalies_file_name(self):
         anomalies = self.get_params('anomalies')
         return anomalies['filename']
 

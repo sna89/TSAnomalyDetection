@@ -10,8 +10,7 @@ import os
 from constants import AnomalyDfColumns
 
 
-LSTM_UNCERTAINTY_HYPERPARAMETERS = ['hidden_layer',
-                                    'batch_size',
+LSTM_UNCERTAINTY_HYPERPARAMETERS = ['batch_size',
                                     'encoder_dim',
                                     'dropout',
                                     'forecast_period_hours',
@@ -24,7 +23,6 @@ class LstmAeUncertainty(LstmDetector):
         super(LstmAeUncertainty, self).__init__()
 
         AnomalyDetectionModel.validate_model_hyperpameters(LSTM_UNCERTAINTY_HYPERPARAMETERS, model_hyperparameters)
-        self.hidden_layer = model_hyperparameters['hidden_layer']
         self.encoder_dim = model_hyperparameters['encoder_dim']
         self.dropout = model_hyperparameters['dropout']
         self.batch_size = model_hyperparameters['batch_size']
@@ -33,6 +31,7 @@ class LstmAeUncertainty(LstmDetector):
         self.timesteps_hours = model_hyperparameters['timesteps_hours']
 
         self.forecast_period_hours = model_hyperparameters['forecast_period_hours']
+        self.horizon = max(1, int(self.forecast_period_hours * DataConst.SAMPLES_PER_HOUR))
 
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         self.model_path = os.path.join(os.getcwd(), 'lstm_ts.pth')
@@ -40,26 +39,32 @@ class LstmAeUncertainty(LstmDetector):
     @staticmethod
     def prepare_data(data, forecast_period_hours: float, horizon_hours: float = 0):
         forecast_samples = int(forecast_period_hours * DataConst.SAMPLES_PER_HOUR)
-        Xs = []
-        for i in range(data.shape[0] - forecast_samples + 1):
-            Xs.append(data[i:i + forecast_samples])
-        return np.array(Xs), np.array(Xs)
+        horizon_samples = max(1, int(horizon_hours * DataConst.SAMPLES_PER_HOUR))
+        num_samples = data.shape[0] - forecast_samples - horizon_samples + 1
+
+        X = []
+        y = []
+        for i in range(num_samples):
+            X.append(data[i:i + forecast_samples])
+            y.append(data[i + forecast_samples: i + forecast_samples + horizon_samples])
+
+        return np.array(X), np.array(y)
 
     def init_data(self, data):
         data = AnomalyDetectionModel.init_data(data)
 
         train_df_raw, val_df_raw, test_df_raw = LstmDetector.split_data(data,
                                                                         self.val_ratio,
-                                                                        self.timesteps_hours)
+                                                                        self.timesteps_hours + self.forecast_period_hours)
 
         self.scaler, \
             train_scaled, \
             val_scaled, \
             test_scaled = LstmDetector.scale_data(train_df_raw, val_df_raw, test_df_raw)
 
-        x_train, y_train, = self.prepare_data(train_scaled, self.forecast_period_hours)
-        x_val, y_val = self.prepare_data(val_scaled, self.forecast_period_hours)
-        x_test, y_test = self.prepare_data(test_scaled, self.forecast_period_hours)
+        x_train, y_train, = self.prepare_data(train_scaled, self.timesteps_hours, self.forecast_period_hours)
+        x_val, y_val = self.prepare_data(val_scaled, self.timesteps_hours, self.forecast_period_hours)
+        x_test, y_test = self.prepare_data(test_scaled, self.timesteps_hours, self.forecast_period_hours)
 
         return train_df_raw, val_df_raw, test_df_raw, \
                x_train, y_train, \
@@ -84,52 +89,16 @@ class LstmAeUncertainty(LstmDetector):
         return self
 
     def get_lstm_model(self, num_features):
-        model = LstmAeUncertaintyModel(num_features, self.hidden_layer, self.encoder_dim, self.dropout)
+        model = LstmAeUncertaintyModel(num_features, self.encoder_dim, self.dropout, self.batch_size, self.horizon, self.device)
         return model.to(self.device)
 
     def train(self, train_dl, val_dl):
-        loss_function = nn.MSELoss().to(self.device)
-        optimizer = torch.optim.Adam(self.model.parameters(), lr=self.lr)
+        epochs = LstmDetectorConst.EPOCHS
+        early_stop_epochs = LstmDetectorConst.EARLY_STOP_EPOCHS
+        lr = self.lr
+        model_path = self.model_path
 
-        best_val_loss = np.inf
-
-        early_stop_current_epochs = 0
-
-        for i in range(LstmDetectorConst.EPOCHS):
-            running_train_loss = 0
-            self.model.train()
-            for seq, _ in train_dl:
-                optimizer.zero_grad()
-
-                seq = seq.type(torch.FloatTensor).to(self.device)
-
-                y_pred = self.model(seq)
-                y_pred = y_pred.type(torch.FloatTensor).to(self.device)
-
-                loss = loss_function(y_pred, seq)
-                loss.backward()
-                optimizer.step()
-
-                running_train_loss += loss.item()
-
-            running_train_loss /= len(train_dl)
-
-            running_val_loss = self.get_inherent_noise(val_dl, use_hidden=False)
-            if i % 10 == 0:
-                print(f'epoch: {i:3} train loss: {running_train_loss:10.8f} val loss: {running_val_loss:10.8f}')
-
-            if running_val_loss <= best_val_loss:
-                torch.save(self.model.state_dict(), self.model_path)
-                best_val_loss = running_val_loss
-                early_stop_current_epochs = 0
-
-            else:
-                early_stop_current_epochs += 1
-
-            if early_stop_current_epochs == LstmDetectorConst.EARLY_STOP_EPOCHS:
-                break
-
-        return
+        self.model.train_(train_dl, val_dl, epochs, early_stop_epochs, lr, model_path)
 
     @validate_anomaly_df_schema
     def detect(self, data):
@@ -141,7 +110,7 @@ class LstmAeUncertainty(LstmDetector):
         num_features = x_train.shape[2]
 
         val_dataset = LstmDetector.get_tensor_dataset(x_val, y_val)
-        val_dl = LstmDetector.get_dataloader(val_dataset)
+        val_dl = LstmDetector.get_dataloader(val_dataset, self.batch_size)
 
         test_dataset = LstmDetector.get_tensor_dataset(x_test, y_test)
         inputs, _ = test_dataset.tensors[0], test_dataset.tensors[1]

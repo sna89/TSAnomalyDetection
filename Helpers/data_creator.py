@@ -113,12 +113,12 @@ class DataCreator:
 
         trend = DataCreator._create_trend(daily, days, daily_high_freq)
         noise = np.random.normal(loc=0, scale=float(1) / 10, size=T)
-        # bias = np.random.uniform(low=-0.2, high=0.2)
+        bias = np.random.uniform(low=-0.2, high=0.2)
 
         anomalies = DataCreator.create_anomaly_data(T, anomalies_indices)
         anomalies_df = DataCreator.create_anomaly_df(anomalies, dt_index, series_num)
 
-        y = trend + weekend_holyday_decrement + noise + anomalies
+        y = trend + weekend_holyday_decrement + noise + anomalies + bias
         df = pd.DataFrame(data={'Value_{}'.format(series_num): y}, index=dt_index)
 
         return df, anomalies_df

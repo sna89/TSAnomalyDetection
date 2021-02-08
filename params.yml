@@ -1,5 +1,5 @@
 ---
-detector_name: lstm_uncertainty
+detector_name: lstm_ae_uncertainty
 
 anomalies:
   filename: Anomalies_Synthetic_t.csv
@@ -11,7 +11,7 @@ output:
   features_to_plot:
 
 create_synthetic_data:
-  to_create: True
+  to_create: False
   num_of_series: 5
   higher_freq: False
   holiday: False
@@ -74,19 +74,19 @@ model_hyperparameters:
     timesteps_hours: 6
 
   lstm_ae_uncertainty:
-    hidden_layer: 64
     encoder_dim: 64
     dropout: 0.1
     batch_size: 32
     val_ratio: 0.1
-    lr: 0.00005
-    timesteps_hours: 1
+    lr: 0.0005
+    timesteps_hours: 6
 
 metadata:
 #  - source: csv
 #    filename: Sensor U106748.csv
 #    attribute_names:
 #      - internaltemp
+#      - internalrh
 #    time_column: Time
 #  - source: csv
 #    filename: 54863.csv
@@ -99,10 +99,16 @@ metadata:
 #      - internaltemp
 #    time_column: Time
 #  - source: csv
-#    filename: Sensor U116378.csv
+#    filename: Sensor U100310.csv
 #    attribute_names:
 #      - internalrh
 #      - internaltemp
+#    time_column: Time
+#  - source: csv
+#    filename: Sensor U100309.csv
+#    attribute_names:
+#     - internalrh
+#     - internaltemp
 #    time_column: Time
   - source: csv
     filename: Synthetic_t.csv

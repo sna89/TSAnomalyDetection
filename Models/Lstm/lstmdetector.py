@@ -12,7 +12,7 @@ class LstmDetectorConst:
     BOOTSTRAP = 100
     EPOCHS = 150
     N_99_PERCENTILE = 1.66
-    EARLY_STOP_EPOCHS = 5
+    EARLY_STOP_EPOCHS = 10
 
 
 class LstmDetector(AnomalyDetectionModel):
@@ -64,15 +64,16 @@ class LstmDetector(AnomalyDetectionModel):
                 seq = seq.type(torch.FloatTensor).to(self.device)
                 labels = labels.type(torch.FloatTensor).to(self.device)
 
+                # lstm_uncertainty
                 if h:
                     y_pred, h = self.model(seq, h)
+
+                # lstm_ae_uncertainty
                 else:
                     y_pred = self.model(seq)
 
                 y_pred = y_pred.type(torch.FloatTensor).to(self.device)
-
                 loss = loss_function(y_pred, labels)
-
                 running_val_loss += loss.item()
 
         running_val_loss /= len(val_dl)

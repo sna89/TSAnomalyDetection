@@ -67,12 +67,12 @@ class ParamsValidator:
                                       recommendation="scale applied to data.")
                 raise ValueError(msg)
 
-        if self.detector_name == 'lstm_ae_uncertainty':
-            if not self.experiment_hyperparameters.forecast_period_hours == \
-                   self.model_hyperparameters['timesteps_hours']:
-                    msg = base_msg.format(model=self.detector_name,
-                                          recommendation="timesteps_hours equal to forecast_period_hours.")
-                    raise ValueError(msg)
+        # if self.detector_name == 'lstm_ae_uncertainty':
+        #     if not self.experiment_hyperparameters.forecast_period_hours == \
+        #            self.model_hyperparameters['timesteps_hours']:
+        #             msg = base_msg.format(model=self.detector_name,
+        #                                   recommendation="timesteps_hours equal to forecast_period_hours.")
+        #             raise ValueError(msg)
 
     def validate_uni_multi_variate(self, univariate=True):
         num_files = len(self.metadata)
