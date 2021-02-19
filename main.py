@@ -81,9 +81,12 @@ def run_experiment(params_helper, data):
     detector_name = params_helper.get_detector_name()
     experiment_hyperparameters = params_helper.get_experiment_hyperparams()
     model_hyperparameters = params_helper.get_model_hyperparams()
+    freq = params_helper.get_freq_from_metadata()
+
     detector = AnomalyDetectionFactory(detector_name,
                                        experiment_hyperparameters,
-                                       model_hyperparameters).get_detector()
+                                       model_hyperparameters,
+                                       freq).get_detector()
 
     logger = get_logger('run_experiment')
     logger.info("Starting experiment for anomaly detector: {}".format(detector_name))

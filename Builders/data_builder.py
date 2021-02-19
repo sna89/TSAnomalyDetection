@@ -62,23 +62,25 @@ class SingleFileDataBuilder(AbstractDataBuilder):
         self.logger.info("Start processing data")
 
         dfs = []
-        data = self.preprocess_index(raw_data.copy())
+
+        data = DataHelper.drop_duplicated_rows(raw_data)
+        data = self._preprocess_index(data)
 
         if len(self.metadata_object.attribute_names) == 1 and self.metadata_object.attribute_names[0] == 'all':
             data_col_names = [col_name for col_name in data.columns
                               if col_name != self.metadata_object.time_column
                               and 'Unnamed:' not in col_name]
             for col_name in data_col_names:
-                self.add_column_to_df_list(col_name, data, dfs)
+                self._add_column_to_df_list(col_name, data, dfs)
         else:
             for attribute_name in self.metadata_object.attribute_names:
-                self.add_column_to_df_list(attribute_name, data, dfs)
+                self._add_column_to_df_list(attribute_name, data, dfs)
 
         data = pd.concat(dfs, axis=1)
         self.logger.info("Finished processing data successfully")
         return data
 
-    def add_column_to_df_list(self, column_name, data, dfs):
+    def _add_column_to_df_list(self, column_name, data, dfs):
         try:
             if column_name in data.columns:
                 attribute_df = pd.DataFrame(data[column_name])
@@ -90,12 +92,11 @@ class SingleFileDataBuilder(AbstractDataBuilder):
         except Exception as e:
             raise e
 
-        attribute_df = DataHelper.drop_duplicated_rows(attribute_df)
-        attribute_df = self.update_schema(attribute_df, column_name)
-        attribute_df = self.preprocess_data(attribute_df)
+        attribute_df = self._update_schema(attribute_df, column_name)
+        attribute_df = self._preprocess_attribute(attribute_df)
         dfs.append(attribute_df)
 
-    def update_schema(self, data, attribute_name):
+    def _update_schema(self, data, attribute_name):
         filename = self.metadata_object.filename. \
             replace('.csv', ''). \
             replace(' ', '_'). \
@@ -106,27 +107,52 @@ class SingleFileDataBuilder(AbstractDataBuilder):
         data.rename_axis(self.new_time_column, inplace=True)
         return data
 
-    def preprocess_index(self, data):
+    def _preprocess_index(self, data):
         data.index = pd.to_datetime(data[self.metadata_object.time_column],
                                     format="%d/%m/%y %H:%M",
                                     infer_datetime_format=True)
         data.sort_index(axis=1, ascending=True, inplace=True)
         return data
 
-    def preprocess_data(self, data):
+    def _preprocess_attribute(self, attribute_df):
         fill_method = self.preprocess_data_params.fill
 
-        data = DataHelper.fill_missing_time(data, method=fill_method)
+        attribute_df = self._reindex_attribute(attribute_df)
+        attribute_df = self._fill_missing_data(attribute_df, method=fill_method)
 
         if self.preprocess_data_params.test:
-            data = DataHelper.extract_first_period(data, self.test_period)
+            attribute_df = DataHelper.extract_first_period(attribute_df, self.test_period)
 
         skiprows = self.preprocess_data_params.skiprows
         if skiprows > 0:
-            indices_to_drop = [i for i in range(len(data)) if i % skiprows != 0]
-            data = data.drop(data.index[indices_to_drop])
+            indices_to_drop = [i for i in range(len(attribute_df)) if i % skiprows != 0]
+            attribute_df = attribute_df.drop(attribute_df.index[indices_to_drop])
 
-        return data
+        return attribute_df
+
+    def _reindex_attribute(self, attribute_df):
+        new_idx = pd.date_range(start=attribute_df.index.min(),
+                                end=attribute_df.index.max(),
+                                freq=self.metadata_object.freq)
+        attribute_df = attribute_df.reindex(index=new_idx, copy=False)
+        return attribute_df
+
+    @staticmethod
+    def _fill_missing_data(data, method='ignore'):
+        if method == 'ignore':
+            return data
+
+        else:
+            if method == 'bfill' or method == 'ffill':
+                data.fillna(method=method, inplace=True)
+
+            elif method == 'interpolate':
+                data.interpolate(inplace=True)
+
+            else:
+                raise ValueError('No such fill method')
+
+            return data
 
 
 class MultipleFilesDataBuilder(AbstractDataBuilder):

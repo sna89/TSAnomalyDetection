@@ -3,6 +3,7 @@ from Helpers.file_helper import FileHelper
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Dict, List, Union
+from Helpers.data_helper import Period
 
 
 @dataclass
@@ -18,6 +19,7 @@ class Metadata:
     filename: str
     attribute_names : List[str]
     time_column: str
+    freq: str
 
 
 @dataclass
@@ -42,9 +44,9 @@ class CreateSyntheticData:
 
 @dataclass
 class ExperimentHyperParameters:
-    train_period: Dict
-    train_freq: Dict
-    forecast_period_hours: int
+    train_period: Period
+    train_freq: Period
+    forecast_period: Period
     include_train_time: bool
     remove_outliers: bool
     scale: bool
@@ -121,3 +123,8 @@ class ParamsHelper:
 
     def get_synthetic_data_params(self):
         return CreateSyntheticData(**self.get_params('create_synthetic_data'))
+
+    def get_freq_from_metadata(self):
+        metadata = self.get_metadata()
+        freq = Metadata(**metadata[0]).freq
+        return freq

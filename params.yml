@@ -1,9 +1,9 @@
 ---
-detector_name: lstm_ae_uncertainty
+detector_name: lstm_uncertainty
 
 anomalies:
-  filename: Anomalies_Synthetic_t.csv
-  index: 'Unnamed: 0'
+  filename:
+  index:
 
 output:
   csv: True
@@ -11,9 +11,10 @@ output:
   features_to_plot:
 
 create_synthetic_data:
-  to_create: true
+  to_create: false
   num_of_series: 5
   period:
+    minutes: 0
     hours: 0
     days: 0
     weeks: 4
@@ -26,22 +27,29 @@ create_synthetic_data:
 preprocess_data_params:
   test: False
   test_period:
+    minutes: 0
     hours: 0
     days: 0
     weeks: 2
-  fill: ignore
+  fill: bfill #ignore, bfill, ffill, interpolate
   skiprows: 0
 
 experiment_hyperparameters:
   train_period:
-    hours: 0.5
+    minutes: 0
+    hours: 0
     days: 0
     weeks: 3
   train_freq:
+    minutes: 0
     hours: 12
     days: 0
     weeks: 0
-  forecast_period_hours: 0.12
+  forecast_period:
+    minutes: 10
+    hours: 0
+    days: 0
+    weeks: 0
   include_train_time: False
   remove_outliers: True
   scale: True
@@ -76,7 +84,11 @@ model_hyperparameters:
     batch_size: 32
     val_ratio: 0.1
     lr: 0.00005
-    timesteps_hours: 6
+    input_timesteps_period:
+      minutes: 0
+      hours: 6
+      days: 0
+      weeks: 0
 
   lstm_ae_uncertainty:
     encoder_dim: 64
@@ -84,7 +96,12 @@ model_hyperparameters:
     batch_size: 32
     val_ratio: 0.1
     lr: 0.0005
-    timesteps_hours: 6
+    input_timesteps_period:
+      minutes: 0
+      hours: 6
+      days: 0
+      weeks: 0
+
 
 metadata:
 #  - source: csv
@@ -104,19 +121,21 @@ metadata:
 #      - internaltemp
 #    time_column: Time
 #  - source: csv
-#    filename: Sensor U100310.csv
-#    attribute_names:
-#      - internalrh
-#      - internaltemp
-#    time_column: Time
-#  - source: csv
 #    filename: Sensor U100309.csv
 #    attribute_names:
 #     - internalrh
 #     - internaltemp
 #    time_column: Time
   - source: csv
-    filename: Synthetic_t.csv
+    filename: Sensor U100310.csv
     attribute_names:
-      - all
-    time_column: index
+      - internalrh
+      - internaltemp
+    time_column: Time
+    freq: 10min
+#  - source: csv
+#    filename: Synthetic_t.csv
+#    attribute_names:
+#      - all
+#    time_column: index
+#     freq: 10min

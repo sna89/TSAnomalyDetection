@@ -5,11 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="27da9a7e-1324-4c59-8a3a-c97de520e9de" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Helpers/time_freq_converter.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnomalyDetectors/ad.py" beforeDir="false" afterPath="$PROJECT_DIR$/AnomalyDetectors/ad.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AnomalyDetectors/ad_factory.py" beforeDir="false" afterPath="$PROJECT_DIR$/AnomalyDetectors/ad_factory.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Builders/data_builder.py" beforeDir="false" afterPath="$PROJECT_DIR$/Builders/data_builder.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Helpers/data_creator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helpers/data_creator.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Helpers/data_helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helpers/data_helper.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Helpers/params_helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helpers/params_helper.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Helpers/params_validator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Helpers/params_validator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Lstm/LstmAeUncertainty/lstm_ae_uncertainty.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Lstm/LstmAeUncertainty/lstm_ae_uncertainty.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Lstm/LstmUncertainty/lstm_uncertainty.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Lstm/LstmUncertainty/lstm_uncertainty.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Lstm/lstmdetector.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Lstm/lstmdetector.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Obsolete/arima_ad.py" beforeDir="false" afterPath="$PROJECT_DIR$/Obsolete/arima_ad.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Obsolete/lstm_ae_ad.py" beforeDir="false" afterPath="$PROJECT_DIR$/Obsolete/lstm_ae_ad.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Obsolete/prophet_ad.py" beforeDir="false" afterPath="$PROJECT_DIR$/Obsolete/prophet_ad.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lstm_ts.pth" beforeDir="false" afterPath="$PROJECT_DIR$/lstm_ts.pth" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/params.yml" beforeDir="false" afterPath="$PROJECT_DIR$/params.yml" afterDir="false" />
     </list>
@@ -56,19 +66,19 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\Builders" />
-      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\Models\Lstm" />
-      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\Helpers" />
-      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\tests\Models\csv\lstm_ae" />
-      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\tests\Models\csv\arima" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\tests" />
       <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\tests\Models" />
       <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\tests\params" />
       <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\AnomalyDetectors" />
       <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\Builders" />
+      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\Models\Lstm" />
+      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\Helpers" />
+      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\tests\Models\csv\lstm_ae" />
+      <recent name="C:\Users\noamarbe\OneDrive - Intel Corporation\Desktop\Noam\Technion\Second Degree\Research\TSAnomalyDetection\TSAnomalyDetection\tests\Models\csv\arima" />
     </key>
   </component>
   <component name="RunManager" selected="Python.main">
@@ -299,11 +309,6 @@
           <option name="timeStamp" value="894" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/AnomalyDetectors/ad.py</url>
-          <line>120</line>
-          <option name="timeStamp" value="966" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Models/Lstm/LstmAE/lstmae.py</url>
           <line>84</line>
           <option name="timeStamp" value="974" />
@@ -312,21 +317,6 @@
           <url>file://$PROJECT_DIR$/Models/Lstm/LstmAE/lstmae.py</url>
           <line>57</line>
           <option name="timeStamp" value="979" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/AnomalyDetectors/ad.py</url>
-          <line>69</line>
-          <option name="timeStamp" value="1049" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Models/Lstm/LstmAeUncertainty/lstm_ae_uncertainty.py</url>
-          <line>178</line>
-          <option name="timeStamp" value="1112" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Models/Lstm/LstmAeUncertainty/lstm_ae_uncertainty.py</url>
-          <line>173</line>
-          <option name="timeStamp" value="1113" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Helpers/data_plotter.py</url>
@@ -339,44 +329,24 @@
           <option name="timeStamp" value="1162" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/AnomalyDetectors/ad.py</url>
-          <line>82</line>
-          <option name="timeStamp" value="1183" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/AnomalyDetectors/ad.py</url>
-          <line>95</line>
-          <option name="timeStamp" value="1186" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/main.py</url>
-          <line>136</line>
-          <option name="timeStamp" value="1215" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Models/Lstm/LstmAeUncertainty/lstm_ae_uncertainty.py</url>
-          <line>114</line>
-          <option name="timeStamp" value="1217" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Models/Lstm/LstmAeUncertainty/lstm_ae_uncertainty.py</url>
-          <line>156</line>
-          <option name="timeStamp" value="1219" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Models/Lstm/LstmAeUncertainty/lstm_ae_uncertainty.py</url>
-          <line>87</line>
-          <option name="timeStamp" value="1220" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Models/Lstm/LstmAeUncertainty/lstm_ae_uncertainty_model.py</url>
-          <line>69</line>
-          <option name="timeStamp" value="1226" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Helpers/data_creator.py</url>
           <line>91</line>
           <option name="timeStamp" value="1242" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/AnomalyDetectors/ad.py</url>
+          <line>37</line>
+          <option name="timeStamp" value="1288" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/AnomalyDetectors/ad.py</url>
+          <line>67</line>
+          <option name="timeStamp" value="1295" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/AnomalyDetectors/ad.py</url>
+          <line>98</line>
+          <option name="timeStamp" value="1296" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>

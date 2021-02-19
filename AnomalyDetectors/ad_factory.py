@@ -8,10 +8,11 @@ from AnomalyDetectors.ad import AnomalyDetector
 
 
 class AnomalyDetectionFactory:
-    def __init__(self, detector_name, experiment_hyperparameters, model_hyperparameters):
+    def __init__(self, detector_name, experiment_hyperparameters, model_hyperparameters, freq):
         self.detector_name = detector_name
         self.experiment_hyperparameters = experiment_hyperparameters
         self.model_hyperparameters = model_hyperparameters
+        self.freq = freq
 
     def get_detector(self):
         # if self.detector_name == 'esd':
@@ -24,17 +25,22 @@ class AnomalyDetectionFactory:
         #     return AnomalyDetector(FBProphet, self.experiment_hyperparameters, self.model_hyperparameters)
 
         if self.detector_name == 'lstm_ae':
-            return AnomalyDetector(LstmDetectorAE, self.experiment_hyperparameters, self.model_hyperparameters)
+            return AnomalyDetector(LstmDetectorAE,
+                                   self.experiment_hyperparameters,
+                                   self.model_hyperparameters,
+                                   self.freq)
 
         elif self.detector_name == 'lstm_uncertainty':
             return AnomalyDetector(LstmUncertainty,
                                    self.experiment_hyperparameters,
-                                   self.model_hyperparameters)
+                                   self.model_hyperparameters,
+                                   self.freq)
 
         elif self.detector_name == 'lstm_ae_uncertainty':
             return AnomalyDetector(LstmAeUncertainty,
                                    self.experiment_hyperparameters,
-                                   self.model_hyperparameters)
+                                   self.model_hyperparameters,
+                                   self.freq)
 
         else:
             msg = 'No such detector: {}'.format(self.detector_name)

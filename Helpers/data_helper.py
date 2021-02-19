@@ -4,7 +4,6 @@ from datetime import timedelta
 from sklearn import preprocessing
 from dateutil.relativedelta import relativedelta
 from dataclasses import dataclass
-import numpy as np
 from Logger.logger import get_logger
 from time import time
 import functools
@@ -12,6 +11,7 @@ import functools
 
 @dataclass
 class Period:
+    minutes: int
     hours: int
     days: int
     weeks: int
@@ -39,7 +39,7 @@ class DataHelper:
 
     @staticmethod
     def drop_duplicated_rows(df_):
-        df_['duplicated'] = df_.index.duplicated(keep='first')
+        df_['duplicated'] = df_.duplicated(keep='first')
         df_ = df_[df_['duplicated'] == False]
         return df_.drop(labels=['duplicated'], axis=1)
 
@@ -88,11 +88,13 @@ class DataHelper:
         return (start <= current.index) & (current.index <= end)
 
     @staticmethod
-    def scale(data, forecast_periods_hours=0):
+    def scale(data, forecast_periods=0):
         scaler = preprocessing.StandardScaler()
 
-        if forecast_periods_hours > 0:
-            train_df, test_df = DataHelper.split_train_test(data, forecast_periods_hours)
+        if forecast_periods > 0:
+            train_len = len(data) - forecast_periods
+
+            train_df, test_df = DataHelper.split_train_test(data, train_len)
             scaler = scaler.fit(train_df)
 
             train_df[data.columns] = scaler.transform(train_df)
@@ -127,45 +129,15 @@ class DataHelper:
                relativedelta(weeks=weeks)
 
     @staticmethod
-    def split_train_test(data, forecast_periods_hours):
-        last_sampletime = data.index.max()
+    def split_train_test(data, train_len):
+        train_df = pd.DataFrame(data=data.iloc[:train_len],
+                                index=data.iloc[:train_len].index)
 
-        train_end_time = DataHelper.relative_delta_time(last_sampletime,
-                                                        minutes=0,
-                                                        hours=-forecast_periods_hours,
-                                                        days=0,
-                                                        weeks=0)
-        train_end_time_idx = DataHelper.get_max_idx(data, train_end_time)
-        train_df = pd.DataFrame(data=data.loc[:train_end_time_idx],
-                                index=data.loc[:train_end_time_idx].index)
-
-        test_start_time_idx = DataHelper.relative_delta_time(train_end_time_idx,
-                                                            minutes=10,
-                                                            hours=0,
-                                                            days=0,
-                                                            weeks=0)
-        test_df = pd.DataFrame(data=data.loc[test_start_time_idx:],
-                               index=data.loc[test_start_time_idx:].index)
+        test_df = pd.DataFrame(data=data.iloc[train_len:],
+                               index=data.iloc[train_len:].index)
         return train_df, test_df
 
-    @staticmethod
-    def fill_missing_time(data, method='ignore'):
-        if method == 'ignore':
-            return data
 
-        else:
-            new_idx = pd.date_range(start=data.index.min(), end=data.index.max(), freq='10min')
-            data = data.reindex(index=new_idx)
-            if method == 'bfill' or method == 'ffill':
-                data.fillna(method=method, inplace=True)
-
-            elif method == 'interpolate':
-                data.interpolate(inplace=True)
-
-            else:
-                raise ValueError('No such fill method')
-
-            return data
 
     @staticmethod
     def is_constant_data(data):

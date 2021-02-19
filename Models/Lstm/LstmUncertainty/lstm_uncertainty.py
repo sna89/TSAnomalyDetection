@@ -1,7 +1,7 @@
 from Models.anomaly_detection_model import AnomalyDetectionModel, validate_anomaly_df_schema
 from Models.Lstm.LstmUncertainty.lstm_uncertainty_model import LstmUncertaintyModel
 from Models.Lstm.lstmdetector import LstmDetector
-from Helpers.data_helper import DataHelper, DataConst
+from Helpers.data_helper import DataConst, Period
 import numpy as np
 import pandas as pd
 import torch
@@ -9,14 +9,15 @@ import torch.nn as nn
 import os
 from Models.Lstm.lstmdetector import LstmDetectorConst
 from constants import AnomalyDfColumns
+from Helpers.time_freq_converter import TimeFreqConverter
 
 LSTM_UNCERTAINTY_HYPERPARAMETERS = ['hidden_layer',
                                     'batch_size',
                                     'dropout',
                                     'val_ratio',
                                     'lr',
-                                    'timesteps_hours',
-                                    'forecast_period_hours']
+                                    'input_timesteps_period',
+                                    'forecast_period']
 
 
 class LstmUncertainty(LstmDetector):
@@ -27,22 +28,24 @@ class LstmUncertainty(LstmDetector):
         self.hidden_layer = model_hyperparameters['hidden_layer']
         self.dropout = model_hyperparameters['dropout']
         self.batch_size = model_hyperparameters['batch_size']
-        self.forecast_period_hours = model_hyperparameters['forecast_period_hours']
+        self.horizon = model_hyperparameters['forecast_period']
         self.val_ratio = model_hyperparameters['val_ratio']
         self.lr = model_hyperparameters['lr']
-        self.timesteps_hours = model_hyperparameters['timesteps_hours']
+        self.freq = model_hyperparameters['freq']
+
+        input_timesteps_period = Period(**model_hyperparameters['input_timesteps_period'])
+        self.input_timesteps_period = TimeFreqConverter.convert_to_num_samples(period=input_timesteps_period,
+                                                                               freq=self.freq)
 
         self.model_path = os.path.join(os.getcwd(), 'lstm_ts.pth')
 
     @staticmethod
-    def prepare_data(data, forecast_period_hours: float, horizon_hours: float = 0):
-        forecast_samples = int(forecast_period_hours * DataConst.SAMPLES_PER_HOUR)
-        horizon_samples = 0 if horizon_hours == 0 else max(1, int(horizon_hours * DataConst.SAMPLES_PER_HOUR))
+    def prepare_data(data, input_timesteps: float, horizon: int = 0):
         Xs = []
         Ys = []
-        for i in range(data.shape[0] - forecast_samples - horizon_samples + 1):
-            Xs.append(data[i: i + forecast_samples])
-            Ys.append(data[i + forecast_samples: i + forecast_samples + horizon_samples])
+        for i in range(data.shape[0] - input_timesteps - horizon + 1):
+            Xs.append(data[i: i + input_timesteps])
+            Ys.append(data[i + input_timesteps: i + input_timesteps + horizon])
         return np.array(Xs), np.array(Ys)
 
     def init_data(self, data):
@@ -50,17 +53,17 @@ class LstmUncertainty(LstmDetector):
 
         train_df_raw, val_df_raw, test_df_raw = LstmDetector.split_data(data,
                                                                         self.val_ratio,
-                                                                        self.timesteps_hours +
-                                                                        self.forecast_period_hours)
+                                                                        self.input_timesteps_period +
+                                                                        self.horizon)
 
         self.scaler, \
             train_scaled, \
             val_scaled, \
             test_scaled = LstmDetector.scale_data(train_df_raw, val_df_raw, test_df_raw)
 
-        x_train, y_train = self.prepare_data(train_scaled, self.timesteps_hours, self.forecast_period_hours)
-        x_val, y_val = self.prepare_data(val_scaled, self.timesteps_hours, self.forecast_period_hours)
-        x_test, y_test = self.prepare_data(test_scaled, self.timesteps_hours, self.forecast_period_hours)
+        x_train, y_train = self.prepare_data(train_scaled, self.input_timesteps_period, self.horizon)
+        x_val, y_val = self.prepare_data(val_scaled, self.input_timesteps_period, self.horizon)
+        x_test, y_test = self.prepare_data(test_scaled, self.input_timesteps_period, self.horizon)
 
         return train_df_raw, val_df_raw, test_df_raw, \
                x_train, y_train, \
@@ -190,7 +193,7 @@ class LstmUncertainty(LstmDetector):
                 sample_lower_bound = batch_lower_bound[idx][0][feature]
                 sample_upper_bound = batch_upper_bound[idx][0][feature]
 
-                index_idx = int(len(index) - self.forecast_period_hours * DataConst.SAMPLES_PER_HOUR + idx)
+                index_idx = int(len(index) - self.horizon + idx)
                 dt_index = index[index_idx]
 
                 is_anomaly = 1 if (y < sample_lower_bound) or (y > sample_upper_bound) else 0

@@ -20,14 +20,14 @@ class LSTMAEAnomalyDetector(AnomalyDetector):
         scaler = None
 
         if self.experiment_hyperparameters.scale:
-            data, scaler = DataHelper.scale(data, self.experiment_hyperparameters.forecast_period_hours)
+            data, scaler = DataHelper.scale(data, self.experiment_hyperparameters.horizon)
 
         model = self.model(data,
                            self.lstm_ae_hyperparameters.hidden_layer,
                            self.lstm_ae_hyperparameters.dropout,
                            self.lstm_ae_hyperparameters.batch_size,
                            self.lstm_ae_hyperparameters.threshold,
-                           self.experiment_hyperparameters.forecast_period_hours)
+                           self.experiment_hyperparameters.horizon)
 
         anomalies = model.run()
 

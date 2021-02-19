@@ -15,6 +15,6 @@ class ArimaAnomalyDetector(AnomalyDetector):
     def detect_anomalies(self, df_):
         model = self.model(df_,
                            self.arima_hyperparameters.seasonality,
-                           self.experiment_hyperparameters.forecast_period_hours)
+                           self.experiment_hyperparameters.horizon)
         return model.run()
 

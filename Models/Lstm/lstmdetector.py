@@ -125,10 +125,12 @@ class LstmDetector(AnomalyDetectionModel):
         return model
 
     @staticmethod
-    def split_data(data, val_ratio, test_hours):
-        val_hours = int(data.shape[0] * val_ratio / DataConst.SAMPLES_PER_HOUR)
-        train_df_raw, val_df_raw = DataHelper.split_train_test(data, val_hours)
-        val_df_raw, test_df_raw = DataHelper.split_train_test(val_df_raw, test_hours)
+    def split_data(data, val_ratio, test_periods):
+        train_len = int(data.shape[0] * (1 - val_ratio))
+        train_df_raw, val_df_raw = DataHelper.split_train_test(data, train_len)
+
+        val_len = len(val_df_raw) - test_periods
+        val_df_raw, test_df_raw = DataHelper.split_train_test(val_df_raw, val_len)
 
         return train_df_raw, val_df_raw, test_df_raw
 

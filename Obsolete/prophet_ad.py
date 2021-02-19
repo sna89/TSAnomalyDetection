@@ -15,7 +15,7 @@ class ProphetAnomalyDetector(AnomalyDetector):
     def detect_anomalies(self, data):
         model = self.model(data,
                            self.prophet_hyperparameters.interval_width,
-                           self.experiment_hyperparameters.forecast_period_hours)
+                           self.experiment_hyperparameters.horizon)
 
         anomalies = model.run()
 

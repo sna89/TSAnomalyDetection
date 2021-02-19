@@ -93,7 +93,7 @@ class ParamsValidator:
     def validate_experiment_hyperparameters(self):
         experiment_hyperparameters_keys = list(self.experiment_hyperparameters.__annotations__.keys())
 
-        if 'forecast_period_hours' not in experiment_hyperparameters_keys \
+        if 'forecast_period' not in experiment_hyperparameters_keys \
                 or 'train_period' not in experiment_hyperparameters_keys \
                 or 'include_train_time' not in experiment_hyperparameters_keys \
                 or 'remove_outliers' not in experiment_hyperparameters_keys \

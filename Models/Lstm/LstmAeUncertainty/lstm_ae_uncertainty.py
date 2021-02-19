@@ -1,21 +1,22 @@
 from Models.anomaly_detection_model import AnomalyDetectionModel, validate_anomaly_df_schema
 from Models.Lstm.LstmAeUncertainty.lstm_ae_uncertainty_model import LstmAeUncertaintyModel
 from Models.Lstm.lstmdetector import LstmDetector, LstmDetectorConst
-from Helpers.data_helper import DataHelper, DataConst
+from Helpers.data_helper import Period
 import numpy as np
 import pandas as pd
 import torch
-import torch.nn as nn
 import os
 from constants import AnomalyDfColumns
+from Helpers.time_freq_converter import TimeFreqConverter
 
 
 LSTM_UNCERTAINTY_HYPERPARAMETERS = ['batch_size',
                                     'encoder_dim',
                                     'dropout',
-                                    'forecast_period_hours',
+                                    'forecast_period',
                                     'val_ratio',
-                                    'lr']
+                                    'lr',
+                                    'input_timesteps_period']
 
 
 class LstmAeUncertainty(LstmDetector):
@@ -28,25 +29,26 @@ class LstmAeUncertainty(LstmDetector):
         self.batch_size = model_hyperparameters['batch_size']
         self.val_ratio = model_hyperparameters['val_ratio']
         self.lr = model_hyperparameters['lr']
-        self.timesteps_hours = model_hyperparameters['timesteps_hours']
+        self.freq = model_hyperparameters['freq']
 
-        self.forecast_period_hours = model_hyperparameters['forecast_period_hours']
-        self.horizon = max(1, int(self.forecast_period_hours * DataConst.SAMPLES_PER_HOUR))
+        input_timesteps_period = Period(**model_hyperparameters['input_timesteps_period'])
+        self.input_timesteps_period = TimeFreqConverter.convert_to_num_samples(period=input_timesteps_period,
+                                                                               freq=self.freq)
+
+        self.horizon = model_hyperparameters['forecast_period']
 
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         self.model_path = os.path.join(os.getcwd(), 'lstm_ts.pth')
 
     @staticmethod
-    def prepare_data(data, forecast_period_hours: float, horizon_hours: float = 0):
-        forecast_samples = int(forecast_period_hours * DataConst.SAMPLES_PER_HOUR)
-        horizon_samples = max(1, int(horizon_hours * DataConst.SAMPLES_PER_HOUR))
-        num_samples = data.shape[0] - forecast_samples - horizon_samples + 1
+    def prepare_data(data, input_timesteps: int, horizon: int = 0):
+        num_samples = data.shape[0] - input_timesteps - horizon + 1
 
         X = []
         y = []
         for i in range(num_samples):
-            X.append(data[i:i + forecast_samples])
-            y.append(data[i + forecast_samples: i + forecast_samples + horizon_samples])
+            X.append(data[i:i + input_timesteps])
+            y.append(data[i + input_timesteps: i + input_timesteps + horizon])
 
         return np.array(X), np.array(y)
 
@@ -55,16 +57,16 @@ class LstmAeUncertainty(LstmDetector):
 
         train_df_raw, val_df_raw, test_df_raw = LstmDetector.split_data(data,
                                                                         self.val_ratio,
-                                                                        self.timesteps_hours + self.forecast_period_hours)
+                                                                        self.input_timesteps_period + self.horizon)
 
         self.scaler, \
             train_scaled, \
             val_scaled, \
             test_scaled = LstmDetector.scale_data(train_df_raw, val_df_raw, test_df_raw)
 
-        x_train, y_train, = self.prepare_data(train_scaled, self.timesteps_hours, self.forecast_period_hours)
-        x_val, y_val = self.prepare_data(val_scaled, self.timesteps_hours, self.forecast_period_hours)
-        x_test, y_test = self.prepare_data(test_scaled, self.timesteps_hours, self.forecast_period_hours)
+        x_train, y_train, = self.prepare_data(train_scaled, self.input_timesteps_period, self.horizon)
+        x_val, y_val = self.prepare_data(val_scaled, self.input_timesteps_period, self.horizon)
+        x_test, y_test = self.prepare_data(test_scaled, self.input_timesteps_period, self.horizon)
 
         return train_df_raw, val_df_raw, test_df_raw, \
                x_train, y_train, \
