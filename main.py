@@ -9,10 +9,11 @@ from Builders.data_builder import DataConstructor
 from Builders.eval_builder import EvalHelper
 from Helpers.data_plotter import DataPlotter
 from Helpers.data_creator import DataCreator, DataCreatorMetadata
+from Helpers.data_helper import DataHelper, Period
 import warnings
 from Helpers.file_helper import FileHelper
 import os
-from constants import Paths, AnomalyDfColumns
+from constants import Paths
 
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
@@ -31,11 +32,13 @@ def create_synthetic_data(synthetic_data_params, output_path):
     higher_freq = synthetic_data_params.higher_freq
     weekend = synthetic_data_params.weekend
     holiday = synthetic_data_params.holiday
+    period = Period(**synthetic_data_params.period)
+    freq = synthetic_data_params.freq
 
     data_creator = DataCreator()
-    df, anomalies_df = data_creator.create_dataset(DataCreatorMetadata.START_DATE,
-                                                   DataCreatorMetadata.END_DATE,
-                                                   DataCreatorMetadata.GRANULARITY,
+
+    df, anomalies_df = data_creator.create_dataset(period,
+                                                   freq,
                                                    higher_freq,
                                                    weekend,
                                                    holiday,
@@ -55,10 +58,8 @@ def contruct_data(params_helper):
 def get_data(params_helper):
     synthetic_data_params = params_helper.get_synthetic_data_params()
 
-    anomalies_file_path = None
     anomalies_file_name = params_helper.get_anomalies_file_name()
-    if anomalies_file_name:
-        anomalies_file_path = os.path.join(Paths.output_path, anomalies_file_name)
+    anomalies_file_path = os.path.join(Paths.output_path, anomalies_file_name) if anomalies_file_name else None
 
     anomalies_true_df = pd.DataFrame()
     if synthetic_data_params.to_create:

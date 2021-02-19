@@ -153,55 +153,19 @@ class DataHelper:
         if method == 'ignore':
             return data
 
-        elif method == 'bfill' or method == 'ffill' or method == 'interpolate':
-            raw_data = copy.deepcopy(data)
-            columns = list(raw_data.columns)
-
-            data['time'] = data.index
-            data['date_diff'] = (data.time.shift(-1) - data.time).fillna(pd.Timedelta(seconds=0))
-
-            for loc_idx, (idx, row) in enumerate(data.iterrows()):
-                if row['date_diff'] > timedelta(minutes=20):
-                    days = row['date_diff'].days % 7
-                    weeks = int(row['date_diff'].days / 7)
-                    hours = row['date_diff'].seconds // 3600
-                    minutes = (row['date_diff'].seconds // 60) % 60
-
-                    start = DataHelper.relative_delta_time(row['time'],
-                                                         minutes=10,
-                                                         hours=0,
-                                                         days=0,
-                                                         weeks=0)
-                    end = DataHelper.relative_delta_time(row['time'],
-                                                         minutes=minutes - 10,
-                                                         hours=hours,
-                                                         days=days,
-                                                         weeks=weeks)
-                    range_to_fill = pd.date_range(start=start,
-                                                  end=end,
-                                                  freq='10min')
-                    periods = len(range_to_fill)
-
-                    value = None
-                    if method == 'bfill':
-                        value = row.iloc[0]
-                    elif method == 'ffill':
-                        value = raw_data.iloc[loc_idx+1].iloc[0]
-                    elif method == 'interpolate':
-                        b_val = row.iloc[0]
-                        f_val = raw_data.iloc[loc_idx+1].iloc[0]
-                        new = pd.DataFrame(index=range_to_fill, columns=columns, dtype='float')
-                        new.iloc[0] = b_val
-                        new.iloc[-1] = f_val
-                        new.interpolate(inplace=True)
-                        raw_data = pd.concat([raw_data, new], axis=0).sort_index()
-                        continue
-
-                    new = pd.DataFrame(data=np.full((periods, 1), value), index=range_to_fill, columns=columns)
-                    raw_data = pd.concat([raw_data, new], axis=0).sort_index()
-            return raw_data
         else:
-            raise ValueError('No such fill method')
+            new_idx = pd.date_range(start=data.index.min(), end=data.index.max(), freq='10min')
+            data = data.reindex(index=new_idx)
+            if method == 'bfill' or method == 'ffill':
+                data.fillna(method=method, inplace=True)
+
+            elif method == 'interpolate':
+                data.interpolate(inplace=True)
+
+            else:
+                raise ValueError('No such fill method')
+
+            return data
 
     @staticmethod
     def is_constant_data(data):

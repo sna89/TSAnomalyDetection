@@ -13,8 +13,6 @@ class DataCreatorGeneratorConst:
 
 class DataCreatorMetadata:
     START_DATE = '2016-01-01 08:00'
-    END_DATE = '2016-01-31 08:00'
-    GRANULARITY = '10min'
 
 
 class DataCreatorAnomalyMetadata:
@@ -40,24 +38,28 @@ class DataCreator:
 
     @classmethod
     def create_dataset(cls,
-                       start,
-                       end,
-                       granularity,
+                       period,
+                       freq,
                        higher_freq=False,
                        weekend=False,
                        holiday=False,
                        number_of_series=1):
 
+        start = DataCreatorMetadata.START_DATE
+        end = DataHelper.relative_delta_time(pd.to_datetime(DataCreatorMetadata.START_DATE),
+                                             minutes=0,
+                                             hours=period.hours,
+                                             days=period.days,
+                                             weeks=period.weeks)
         cls.logger.info("Start creating synthetic dataset for {} series:"
                         "start date: {},"
                         "end date: {},"
-                        "freq: {}".format(number_of_series, start, end, granularity))
-
-        dt_index = DataCreator.create_index(start, end, granularity)
+                        "freq: {}".format(number_of_series, start, end, freq))
 
         anomalies_dfs = []
         dfs = []
 
+        dt_index = DataCreator.create_index(start, end, freq)
         anomaly_indices = DataCreator._get_anomaly_indices(dt_index)
 
         for series_num in range(number_of_series):
@@ -106,14 +108,14 @@ class DataCreator:
                                                                     0,
                                                                     2 * np.pi)
 
+        trend = DataCreator._create_trend(daily, days, daily_high_freq)
+        noise = np.random.normal(loc=0, scale=float(1) / 10, size=T)
+        bias = np.random.uniform(low=-0.2, high=0.2)
+
         weekend_holyday_decrement = np.zeros(T)
         if weekend or holiday:
             weekend_holyday_decrement = cls._decrease_value(dt_index, weekend, holiday)
             # cls.output_holidays(weekend_holyday_decrement, dt_index)
-
-        trend = DataCreator._create_trend(daily, days, daily_high_freq)
-        noise = np.random.normal(loc=0, scale=float(1) / 10, size=T)
-        bias = np.random.uniform(low=-0.2, high=0.2)
 
         anomalies = DataCreator.create_anomaly_data(T, anomalies_indices)
         anomalies_df = DataCreator.create_anomaly_df(anomalies, dt_index, series_num)

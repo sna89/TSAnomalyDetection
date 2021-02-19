@@ -11,8 +11,13 @@ output:
   features_to_plot:
 
 create_synthetic_data:
-  to_create: False
+  to_create: true
   num_of_series: 5
+  period:
+    hours: 0
+    days: 0
+    weeks: 4
+  freq: 10min
   higher_freq: False
   holiday: False
   weekend: False

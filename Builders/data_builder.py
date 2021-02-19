@@ -5,7 +5,6 @@ from abc import ABC, abstractmethod
 from Helpers.params_helper import Metadata, PreprocessDataParams
 from Logger.logger import get_logger
 from Helpers.data_reader import DataReaderFactory
-from Helpers.data_plotter import DataPlotter
 
 
 class DataConstructor:
@@ -116,6 +115,7 @@ class SingleFileDataBuilder(AbstractDataBuilder):
 
     def preprocess_data(self, data):
         fill_method = self.preprocess_data_params.fill
+
         data = DataHelper.fill_missing_time(data, method=fill_method)
 
         if self.preprocess_data_params.test:

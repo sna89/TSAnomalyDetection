@@ -36,6 +36,8 @@ class CreateSyntheticData:
     higher_freq: bool
     holiday: bool
     weekend: bool
+    period: Dict
+    freq: bool
 
 
 @dataclass
@@ -58,19 +60,24 @@ class ParamsHelper:
     def print(self):
         print(self.params_dict)
 
-    def get_params(self, param_name):
-        try:
-            return self.params_dict[param_name]
-        except Exception as e:
-            raise ValueError("cannot find parameter {}".format(e))
+    def get_params(self, param_name, default_value=None, to_raise=True):
+        return_value = self.params_dict.get(param_name, default_value)
+        if return_value == default_value and to_raise:
+            raise ValueError("cannot find parameter {}".format(param_name))
+        else:
+            return return_value
 
     def get_anomalies_file_name(self):
         anomalies = self.get_params('anomalies')
-        return anomalies['filename']
+        return anomalies.get('filename', None)
 
     def get_anomalies_index(self):
         anomalies = self.get_params('anomalies')
-        return anomalies['index']
+        index_col = anomalies.get('index', None)
+        if index_col:
+            return index_col
+        else:
+            raise ValueError("cannot find index columns in anomalies parameters")
 
     def get_experiment_hyperparams(self):
         return self.get_params('experiment_hyperparameters')
