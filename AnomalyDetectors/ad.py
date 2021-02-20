@@ -41,7 +41,10 @@ class AnomalyDetector():
         elapsed_time = timedelta(hours=0)
         to_fit = True
 
-        for epoch, idx in enumerate(range(0, len(data), self.forecast_period_num_samples), start=1):
+        for epoch, idx in enumerate(range(0,
+                                          len(data) - (self.train_period_num_samples + self.forecast_period_num_samples),
+                                          self.forecast_period_num_samples),
+                                    start=1):
             df_curr_epoch = data.iloc[idx: idx + self.train_period_num_samples + self.forecast_period_num_samples]
 
             detection_start_time = df_curr_epoch.iloc[-self.forecast_period_num_samples:].index.min()
