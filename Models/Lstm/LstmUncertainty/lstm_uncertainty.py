@@ -32,11 +32,7 @@ class LstmUncertainty(LstmDetector):
         self.val_ratio = model_hyperparameters['val_ratio']
         self.lr = model_hyperparameters['lr']
         self.freq = model_hyperparameters['freq']
-
-        input_timesteps_period = Period(**model_hyperparameters['input_timesteps_period'])
-        self.input_timesteps_period = TimeFreqConverter.convert_to_num_samples(period=input_timesteps_period,
-                                                                               freq=self.freq)
-
+        self.input_timesteps_period = model_hyperparameters['input_timesteps_period']
         self.model_path = os.path.join(os.getcwd(), 'lstm_ts.pth')
 
     @staticmethod

@@ -38,29 +38,30 @@ class DataCreator:
 
     @classmethod
     def create_dataset(cls,
-                       period,
+                       data_period,
+                       train_period,
                        freq,
                        higher_freq=False,
                        weekend=False,
                        holiday=False,
                        number_of_series=1):
 
-        start = DataCreatorMetadata.START_DATE
-        end = DataHelper.relative_delta_time(pd.to_datetime(DataCreatorMetadata.START_DATE),
-                                             minutes=period.minutes,
-                                             hours=period.hours,
-                                             days=period.days,
-                                             weeks=period.weeks)
+        start_dt = DataCreatorMetadata.START_DATE
+        end_dt = DataHelper.relative_delta_time(pd.to_datetime(DataCreatorMetadata.START_DATE),
+                                                minutes=data_period.minutes,
+                                                hours=data_period.hours,
+                                                days=data_period.days,
+                                                weeks=data_period.weeks)
         cls.logger.info("Start creating synthetic dataset for {} time series: \n"
                         "start date: {},"
                         "end date: {},"
-                        "freq: {}".format(number_of_series, start, end, freq))
+                        "freq: {}".format(number_of_series, start_dt, end_dt, freq))
 
         anomalies_dfs = []
         dfs = []
 
-        dt_index = DataCreator.create_index(start, end, freq)
-        anomaly_indices = DataCreator._get_anomaly_indices(dt_index)
+        dt_index = DataCreator.create_index(start_dt, end_dt, freq)
+        anomaly_indices = DataCreator._get_anomaly_indices(dt_index, train_period)
 
         for series_num in range(number_of_series):
             df, anomalies_df = DataCreator.create_series(dt_index,
@@ -132,19 +133,19 @@ class DataCreator:
         return int(T / days)
 
     @staticmethod
-    def _get_num_of_anomalies(dt_index):
-        anomalies_start_idx = DataCreator._get_anomalies_start_idx(dt_index)
+    def _get_num_of_anomalies(dt_index, train_period):
+        anomalies_start_idx = DataCreator._get_anomalies_start_idx(dt_index, train_period)
         num_anomalies = int(((len(dt_index) - anomalies_start_idx) * DataCreatorAnomalyMetadata.ANOMALY_RATIO) / 2) + 1
         return num_anomalies
 
     @staticmethod
-    def _get_anomalies_start_idx(dt_index):
-        max_idx = dt_index.max()
-        anomalies_start_time = DataHelper.relative_delta_time(max_idx,
-                                                              minutes=0,
-                                                              hours=0,
-                                                              days=-7,
-                                                              weeks=0)
+    def _get_anomalies_start_idx(dt_index, train_period):
+        start_dt = dt_index.min()
+        anomalies_start_time = DataHelper.relative_delta_time(start_dt,
+                                                              minutes=train_period.minutes,
+                                                              hours=train_period.hours,
+                                                              days=-train_period.days,
+                                                              weeks=train_period.weeks)
         anomalies_start_idx = dt_index.slice_indexer(start=dt_index.min(), end=anomalies_start_time, step=1).stop
         return anomalies_start_idx
 
@@ -333,9 +334,9 @@ class DataCreator:
         return anomalies_df
 
     @staticmethod
-    def _get_anomaly_indices(dt_index):
-        num_anomalies = DataCreator._get_num_of_anomalies(dt_index)
-        anoamly_start_idx = DataCreator._get_anomalies_start_idx(dt_index)
+    def _get_anomaly_indices(dt_index, train_period):
+        num_anomalies = DataCreator._get_num_of_anomalies(dt_index, train_period)
+        anoamly_start_idx = DataCreator._get_anomalies_start_idx(dt_index, train_period)
         anomalies_indices = np.random.randint(low=anoamly_start_idx,
                                               high=len(dt_index) - 1,
                                               size=num_anomalies)

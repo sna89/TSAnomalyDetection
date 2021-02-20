@@ -17,6 +17,7 @@ class AnomalyDetector():
         self.model = model
 
         self.experiment_hyperparameters = ExperimentHyperParameters(**experiment_hyperparameters)
+
         self.train_period = Period(**self.experiment_hyperparameters.train_period)
         self.train_period_num_samples = TimeFreqConverter.convert_to_num_samples(self.train_period, freq=freq)
 
@@ -32,6 +33,9 @@ class AnomalyDetector():
         self.model_hyperparameters = model_hyperparameters
         self.model_hyperparameters['forecast_period'] = self.forecast_period_num_samples
         self.model_hyperparameters['freq'] = freq
+        self.model_hyperparameters['input_timesteps_period'] = TimeFreqConverter.convert_to_num_samples(
+            Period(**model_hyperparameters['input_timesteps_period']), freq=freq
+        )
 
     @timer
     def run_anomaly_detection_experiment(self, data):

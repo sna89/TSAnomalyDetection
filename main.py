@@ -3,7 +3,7 @@ import pandas as pd
 import sys
 import numpy as np
 from Logger.logger import get_logger
-from Helpers.params_helper import ParamsHelper
+from Helpers.params_helper import ParamsHelper, ExperimentHyperParameters
 from Helpers.params_validator import ParamsValidator
 from Builders.data_builder import DataConstructor
 from Builders.eval_builder import EvalHelper
@@ -26,18 +26,19 @@ def get_and_validate_parameters(filename='params.yml'):
     return params_helper
 
 
-def create_synthetic_data(synthetic_data_params, output_path):
+def create_synthetic_data(synthetic_data_params, train_period, output_path):
     filename = synthetic_data_params.filename
     num_of_series = synthetic_data_params.num_of_series
     higher_freq = synthetic_data_params.higher_freq
     weekend = synthetic_data_params.weekend
     holiday = synthetic_data_params.holiday
-    period = Period(**synthetic_data_params.period)
+    synthetic_data_period = Period(**synthetic_data_params.period)
     freq = synthetic_data_params.freq
 
     data_creator = DataCreator()
 
-    df, anomalies_df = data_creator.create_dataset(period,
+    df, anomalies_df = data_creator.create_dataset(synthetic_data_period,
+                                                   train_period,
                                                    freq,
                                                    higher_freq,
                                                    weekend,
@@ -58,12 +59,15 @@ def contruct_data(params_helper):
 def get_data(params_helper):
     synthetic_data_params = params_helper.get_synthetic_data_params()
 
+    experiment_hyperparams = ExperimentHyperParameters(**params_helper.get_experiment_hyperparams())
+    train_period = Period(**experiment_hyperparams.train_period)
+
     anomalies_file_name = params_helper.get_anomalies_file_name()
     anomalies_file_path = os.path.join(Paths.output_path, anomalies_file_name) if anomalies_file_name else None
 
     anomalies_true_df = pd.DataFrame()
     if synthetic_data_params.to_create:
-        _, anomalies_true_df = create_synthetic_data(synthetic_data_params, Paths.output_path)
+        _, anomalies_true_df = create_synthetic_data(synthetic_data_params, train_period, Paths.output_path)
         if anomalies_file_path:
             anomalies_true_df.to_csv(anomalies_file_path)
 
