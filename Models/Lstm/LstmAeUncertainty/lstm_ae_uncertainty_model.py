@@ -12,26 +12,26 @@ class Encoder(nn.Module):
         self.hidden_size = hidden_size
         self.num_layers = num_layers
 
-        self.lstm1 = nn.LSTM(input_size=input_size,
-                             hidden_size=hidden_size * 2,
-                             num_layers=num_layers,
-                             batch_first=True)
+        self.lstm = nn.LSTM(input_size=input_size,
+                            hidden_size=hidden_size,
+                            num_layers=num_layers,
+                            batch_first=True)
 
-        self.lstm2 = nn.LSTM(input_size=hidden_size * 2,
-                             hidden_size=hidden_size * 2,
-                             num_layers=num_layers,
-                             batch_first=True)
+        # self.lstm2 = nn.LSTM(input_size=hidden_size * 2,
+        #                      hidden_size=hidden_size * 2,
+        #                      num_layers=num_layers,
+        #                      batch_first=True)
 
         self.activation = nn.ReLU()
         self.dropout1 = nn.Dropout(dropout)
-        self.dropout2 = nn.Dropout(dropout)
+        # self.dropout2 = nn.Dropout(dropout)
 
     def forward(self, x_input):
-        lstm_out, _ = self.lstm1(x_input)
+        lstm_out, hidden = self.lstm(x_input)
         lstm_out = self.dropout1(self.activation(lstm_out))
 
-        lstm_out, hidden = self.lstm2(lstm_out)
-        lstm_out = self.dropout2(self.activation(lstm_out))
+        # lstm_out, hidden = self.lstm2(lstm_out)
+        # lstm_out = self.dropout2(self.activation(lstm_out))
 
         return lstm_out, hidden
 
@@ -48,43 +48,43 @@ class Decoder(nn.Module):
         self.num_layers = num_layers
 
         self.lstm1 = nn.LSTM(input_size=input_size,
-                             hidden_size=hidden_size * 2,
-                             num_layers=num_layers,
-                             batch_first=True)
-
-        self.lstm2 = nn.LSTM(input_size=hidden_size * 2,
                              hidden_size=hidden_size,
                              num_layers=num_layers,
                              batch_first=True)
 
+        # self.lstm2 = nn.LSTM(input_size=hidden_size * 2,
+        #                      hidden_size=hidden_size * 2,
+        #                      num_layers=num_layers,
+        #                      batch_first=True)
+
         self.activtion = nn.ReLU()
         self.dropout1 = nn.Dropout(dropout)
-        self.dropout2 = nn.Dropout(dropout)
+        # self.dropout2 = nn.Dropout(dropout)
 
         self.linear = nn.Linear(hidden_size, input_size)
 
     def forward(self, x_input, encoder_hidden_states):
-        lstm_out, _ = self.lstm1(x_input.unsqueeze(1), encoder_hidden_states)
+        lstm_out, hidden = self.lstm1(x_input.unsqueeze(1), encoder_hidden_states)
         lstm_out = self.dropout1(self.activtion(lstm_out))
 
-        lstm_out, hidden = self.lstm2(lstm_out)
-        output = self.linear(self.dropout2(self.activtion(lstm_out.squeeze(1))))
+        # lstm_out, hidden = self.lstm2(lstm_out)
+        output = self.linear(lstm_out.squeeze(1))
 
         return output, hidden
 
 
 class LstmAeUncertaintyModel(nn.Module):
-    def __init__(self, input_size, hidden_size, dropout, batch_size, horizon, device):
+    def __init__(self, input_size, hidden_dim, dropout, batch_size, horizon, device):
         super(LstmAeUncertaintyModel, self).__init__()
 
         self.input_size = input_size
-        self.hidden_size = hidden_size
+        self.hidden_dim = hidden_dim
         self.device = device
         self.batch_size = batch_size
         self.horizon = horizon
 
-        self.encoder = Encoder(input_size, hidden_size, dropout)
-        self.decoder = Decoder(input_size, hidden_size, dropout)
+        self.encoder = Encoder(input_size, hidden_dim, dropout)
+        self.decoder = Decoder(input_size, hidden_dim, dropout)
 
         self.encoder = self.encoder.to(self.device)
         self.decoder = self.decoder.to(self.device)
@@ -136,17 +136,17 @@ class LstmAeUncertaintyModel(nn.Module):
                 _, encoder_hidden = self.encoder(seq)
                 decoder_hidden = encoder_hidden
                 dec_input = seq[:, -1, :]
-                # # teacher forcing
-                # for t in range(self.horizon):
-                #     decoder_output, decoder_hidden = self.decoder(dec_input, decoder_hidden)
-                #     outputs[:, t, :] = decoder_output
-                #     dec_input = labels[:, t, :]
-
-                #Recursive
+                # teacher forcing
                 for t in range(self.horizon):
                     decoder_output, decoder_hidden = self.decoder(dec_input, decoder_hidden)
                     outputs[:, t, :] = decoder_output
-                    dec_input = decoder_output
+                    dec_input = labels[:, t, :]
+
+                #Recursive
+                # for t in range(self.horizon):
+                #     decoder_output, decoder_hidden = self.decoder(dec_input, decoder_hidden)
+                #     outputs[:, t, :] = decoder_output
+                #     dec_input = decoder_output
 
                 loss = criterion(outputs, labels)
 

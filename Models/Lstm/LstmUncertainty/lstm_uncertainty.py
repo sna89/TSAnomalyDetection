@@ -154,9 +154,9 @@ class LstmUncertainty(LstmDetector):
         inherent_noise = self.get_inherent_noise(val_dl, use_hidden=True)
         mc_mean, lower_bounds, upper_bounds = self.predict(test_inputs, LstmDetectorConst.BOOTSTRAP, inherent_noise, True)
 
-        anomaly_df = self.create_anomaly_df(mc_mean,
-                                            lower_bounds,
-                                            upper_bounds,
+        anomaly_df = self.create_anomaly_df(mc_mean[0],
+                                            lower_bounds[0],
+                                            upper_bounds[0],
                                             test_labels,
                                             test_df_raw.index,
                                             feature_names=test_df_raw.columns)
@@ -171,53 +171,7 @@ class LstmUncertainty(LstmDetector):
                                      self.device)
         return model.to(self.device)
 
-    def create_anomaly_df(self,
-                          mean,
-                          lower_bound,
-                          upper_bound,
-                          labels,
-                          index,
-                          feature_names):
 
-        seq_len = lower_bound.shape[1]
-        num_features = lower_bound.shape[2]
-
-        dfs = []
-
-        for feature in range(num_features):
-            data = {}
-
-            for idx in range(seq_len):
-                y = self.scaler.inverse_transform(labels[0][idx].cpu().numpy())[feature]
-
-                sample_mean = mean[0][idx][feature]
-                sample_lower_bound = lower_bound[0][idx][feature]
-                sample_upper_bound = upper_bound[0][idx][feature]
-
-                index_idx = int(len(index) - self.horizon + idx)
-                dt_index = index[index_idx]
-
-                is_anomaly = 1 if (y < sample_lower_bound) or (y > sample_upper_bound) else 0
-
-                data[dt_index] = {
-                    AnomalyDfColumns.Feature: feature_names[feature],
-                    AnomalyDfColumns.Prediction: sample_mean,
-                    AnomalyDfColumns.LowerBound: sample_lower_bound,
-                    AnomalyDfColumns.UpperBound: sample_upper_bound,
-                    AnomalyDfColumns.Actual: y,
-                    AnomalyDfColumns.IsAnomaly: is_anomaly
-                }
-
-            df = pd.DataFrame.from_dict(data, orient='index')
-            dfs.append(df)
-
-        anomaly_df = pd.concat(dfs, axis=0)
-        anomaly_df = anomaly_df.astype({AnomalyDfColumns.IsAnomaly: 'int32'})
-        # pd.set_option('display.max_columns', 999)
-        # print(anomaly_df)
-
-        anomaly_df = LstmDetector.identify_anomalies(anomaly_df, num_features)
-        return anomaly_df
 
 
 

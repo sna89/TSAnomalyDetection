@@ -6,6 +6,7 @@ from abc import abstractmethod
 from torch.utils.data import TensorDataset, DataLoader
 from constants import AnomalyDfColumns
 import torch.nn as nn
+import pandas as pd
 
 
 class LstmDetectorConst:
@@ -22,6 +23,7 @@ class LstmDetector(AnomalyDetectionModel):
         self.model = None
         self.scaler = None
         self.batch_size = None
+        self.horizon = None
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     @abstractmethod
@@ -41,15 +43,53 @@ class LstmDetector(AnomalyDetectionModel):
     def get_lstm_model(self, num_features):
         pass
 
-    @abstractmethod
     def create_anomaly_df(self,
                           seq_mean,
                           seq_lower_bound,
                           seq_upper_bound,
-                          seq_inputs,
+                          seq_labels,
                           index,
                           feature_names):
-        pass
+
+        seq_len = len(seq_lower_bound)
+        num_features = seq_lower_bound.shape[1]
+
+        dfs = []
+
+        for feature in range(num_features):
+            data = {}
+
+            for idx in range(seq_len):
+                y = self.scaler.inverse_transform(seq_labels[0][idx].cpu().numpy())[feature]
+
+                sample_mean = seq_mean[idx][feature]
+                sample_lower_bound = seq_lower_bound[idx][feature]
+                sample_upper_bound = seq_upper_bound[idx][feature]
+
+                index_idx = int(len(index) - self.horizon + idx)
+                dt_index = index[index_idx]
+
+                is_anomaly = 1 if (y <= sample_lower_bound) or (y >= sample_upper_bound) else 0
+
+                data[dt_index] = {
+                    AnomalyDfColumns.Feature: feature_names[feature],
+                    AnomalyDfColumns.Prediction: sample_mean,
+                    AnomalyDfColumns.LowerBound: sample_lower_bound,
+                    AnomalyDfColumns.UpperBound: sample_upper_bound,
+                    AnomalyDfColumns.Actual: y,
+                    AnomalyDfColumns.IsAnomaly: is_anomaly
+                }
+
+            df = pd.DataFrame.from_dict(data, orient='index')
+            dfs.append(df)
+
+        anomaly_df = pd.concat(dfs, axis=0)
+
+        # pd.set_option('display.max_columns', 999)
+        # print(anomaly_df)
+
+        anomaly_df = LstmDetector.identify_anomalies(anomaly_df, num_features)
+        return anomaly_df
 
     def get_inherent_noise(self, val_dl, h=None, use_hidden=False):
         self.model.eval()

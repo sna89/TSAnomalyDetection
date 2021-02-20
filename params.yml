@@ -80,7 +80,7 @@ model_hyperparameters:
     val_ratio: 0.2
 
   lstm_uncertainty:
-    hidden_layer: 256
+    hidden_layer: 128
     dropout: 0.1
     batch_size: 32
     val_ratio: 0.2
