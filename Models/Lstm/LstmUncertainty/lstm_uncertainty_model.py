@@ -2,7 +2,7 @@ import torch.nn as nn
 
 
 class LstmUncertaintyModel(nn.Module):
-    def __init__(self, num_features, hidden_layer, batch_size, dropout_p, device, batch_first=True):
+    def __init__(self, num_features, hidden_layer, batch_size, dropout_p, horizon, device, batch_first=True):
         super(LstmUncertaintyModel, self).__init__()
 
         self.num_features = num_features
@@ -10,6 +10,7 @@ class LstmUncertaintyModel(nn.Module):
         self.batch_size = batch_size
         self.n_layers = 2
         self.device = device
+        self.horizon = horizon
 
         self.dropout = nn.Dropout(dropout_p)
         self.lstm = nn.LSTM(self.num_features,
@@ -29,7 +30,7 @@ class LstmUncertaintyModel(nn.Module):
             predictions = predictions.view(self.batch_size, -1, self.num_features)
         else:
             predictions = predictions.view(*input_seq.size())
-        predictions = predictions[:, -1:, :]
+        predictions = predictions[:, -self.horizon:, :]
         return predictions, h
 
     def init_hidden(self, batch_size=None):

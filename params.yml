@@ -2,8 +2,8 @@
 detector_name: lstm_uncertainty
 
 anomalies:
-  filename:
-  index:
+  filename: Anomalies_Synthetic_t.csv
+  index: "Unnamed: 0"
 
 output:
   csv: True
@@ -12,7 +12,7 @@ output:
 
 create_synthetic_data:
   to_create: false
-  num_of_series: 5
+  num_of_series: 10
   period:
     minutes: 0
     hours: 0
@@ -31,7 +31,8 @@ preprocess_data_params:
     hours: 0
     days: 0
     weeks: 2
-  fill: bfill #ignore, bfill, ffill, interpolate
+  fill: ignore
+  #ignore, bfill, ffill, interpolate
   skiprows: 0
 
 experiment_hyperparameters:
@@ -46,8 +47,8 @@ experiment_hyperparameters:
     days: 0
     weeks: 0
   forecast_period:
-    minutes: 10
-    hours: 0
+    minutes: 0
+    hours: 1
     days: 0
     weeks: 0
   include_train_time: False
@@ -91,7 +92,7 @@ model_hyperparameters:
       weeks: 0
 
   lstm_ae_uncertainty:
-    encoder_dim: 64
+    encoder_dim: 256
     dropout: 0.1
     batch_size: 32
     val_ratio: 0.1
@@ -126,16 +127,16 @@ metadata:
 #     - internalrh
 #     - internaltemp
 #    time_column: Time
-  - source: csv
-    filename: Sensor U100310.csv
-    attribute_names:
-      - internalrh
-      - internaltemp
-    time_column: Time
-    freq: 10min
 #  - source: csv
-#    filename: Synthetic_t.csv
+#    filename: Sensor U100310.csv
 #    attribute_names:
-#      - all
-#    time_column: index
-#     freq: 10min
+#      - internalrh
+#      - internaltemp
+#    time_column: Time
+#    freq: 10min
+  - source: csv
+    filename: Synthetic_t.csv
+    attribute_names:
+      - all
+    time_column: index
+    freq: 10min

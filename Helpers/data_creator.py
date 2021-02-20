@@ -47,11 +47,11 @@ class DataCreator:
 
         start = DataCreatorMetadata.START_DATE
         end = DataHelper.relative_delta_time(pd.to_datetime(DataCreatorMetadata.START_DATE),
-                                             minutes=0,
+                                             minutes=period.minutes,
                                              hours=period.hours,
                                              days=period.days,
                                              weeks=period.weeks)
-        cls.logger.info("Start creating synthetic dataset for {} series:"
+        cls.logger.info("Start creating synthetic dataset for {} time series: \n"
                         "start date: {},"
                         "end date: {},"
                         "freq: {}".format(number_of_series, start, end, freq))

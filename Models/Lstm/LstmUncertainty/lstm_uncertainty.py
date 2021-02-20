@@ -167,31 +167,36 @@ class LstmUncertainty(LstmDetector):
         return anomaly_df
 
     def get_lstm_model(self, num_features):
-        model = LstmUncertaintyModel(num_features, self.hidden_layer, self.batch_size, self.dropout, self.device)
+        model = LstmUncertaintyModel(num_features,
+                                     self.hidden_layer,
+                                     self.batch_size,
+                                     self.dropout,
+                                     self.horizon,
+                                     self.device)
         return model.to(self.device)
 
     def create_anomaly_df(self,
-                          batch_mean,
-                          batch_lower_bound,
-                          batch_upper_bound,
-                          batch_labels,
+                          mean,
+                          lower_bound,
+                          upper_bound,
+                          labels,
                           index,
                           feature_names):
 
-        bs = len(batch_lower_bound)
-        num_features = batch_lower_bound.shape[2]
+        seq_len = lower_bound.shape[1]
+        num_features = lower_bound.shape[2]
 
         dfs = []
 
         for feature in range(num_features):
             data = {}
 
-            for idx in range(bs):
-                y = self.scaler.inverse_transform(batch_labels[idx][0].cpu().numpy())[feature]
+            for idx in range(seq_len):
+                y = self.scaler.inverse_transform(labels[0][idx].cpu().numpy())[feature]
 
-                sample_mean = batch_mean[idx][0][feature]
-                sample_lower_bound = batch_lower_bound[idx][0][feature]
-                sample_upper_bound = batch_upper_bound[idx][0][feature]
+                sample_mean = mean[0][idx][feature]
+                sample_lower_bound = lower_bound[0][idx][feature]
+                sample_upper_bound = upper_bound[0][idx][feature]
 
                 index_idx = int(len(index) - self.horizon + idx)
                 dt_index = index[index_idx]
