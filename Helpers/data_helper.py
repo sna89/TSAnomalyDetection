@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from Logger.logger import get_logger
 from time import time
 import functools
+from typing import List
 
 
 @dataclass
@@ -29,6 +30,11 @@ class DataHelper:
     @staticmethod
     def _validate_data(data):
         assert isinstance(data, pd.DataFrame), "Data must be a data frame"
+
+    @staticmethod
+    def split_df_by_columns(df, columns: List):
+        df_without_columns, df_with_columns = df.drop(columns, axis=1), df[columns]
+        return df_without_columns, df_with_columns
 
     @staticmethod
     def filter(df, type_column, value_column, attribute_name):

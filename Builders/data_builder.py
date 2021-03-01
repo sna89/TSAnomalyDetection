@@ -66,14 +66,15 @@ class SingleFileDataBuilder(AbstractDataBuilder):
         data = DataHelper.drop_duplicated_rows(raw_data)
         data = self._preprocess_index(data)
 
-        if len(self.metadata_object.attribute_names) == 1 and self.metadata_object.attribute_names[0] == 'all':
+        if len(self.metadata_object.attribute_columns) == 1 and self.metadata_object.attribute_columns[0] == 'all':
             data_col_names = [col_name for col_name in data.columns
                               if col_name != self.metadata_object.time_column
                               and 'Unnamed:' not in col_name]
             for col_name in data_col_names:
                 self._add_column_to_df_list(col_name, data, dfs)
         else:
-            for attribute_name in self.metadata_object.attribute_names:
+            columns = self.metadata_object.attribute_columns + self.metadata_object.categorical_columns
+            for attribute_name in columns:
                 self._add_column_to_df_list(attribute_name, data, dfs)
 
         data = pd.concat(dfs, axis=1)
@@ -81,6 +82,8 @@ class SingleFileDataBuilder(AbstractDataBuilder):
         return data
 
     def _add_column_to_df_list(self, column_name, data, dfs):
+        is_categorical = 1 if column_name in self.metadata_object.categorical_columns else 0
+
         try:
             if column_name in data.columns:
                 attribute_df = pd.DataFrame(data[column_name])
@@ -92,8 +95,9 @@ class SingleFileDataBuilder(AbstractDataBuilder):
         except Exception as e:
             raise e
 
-        attribute_df = self._update_schema(attribute_df, column_name)
-        attribute_df = self._preprocess_attribute(attribute_df)
+        if not is_categorical:
+            attribute_df = self._update_schema(attribute_df, column_name)
+        attribute_df = self._preprocess_attribute(attribute_df, is_categorical)
         dfs.append(attribute_df)
 
     def _update_schema(self, data, attribute_name):
@@ -114,11 +118,12 @@ class SingleFileDataBuilder(AbstractDataBuilder):
         data.sort_index(axis=1, ascending=True, inplace=True)
         return data
 
-    def _preprocess_attribute(self, attribute_df):
-        fill_method = self.preprocess_data_params.fill
-
+    def _preprocess_attribute(self, attribute_df, is_categorical):
         attribute_df = self._reindex_attribute(attribute_df)
-        attribute_df = self._fill_missing_data(attribute_df, method=fill_method)
+
+        if not is_categorical:
+            fill_method = self.preprocess_data_params.fill
+            attribute_df = self._fill_missing_data(attribute_df, method=fill_method)
 
         if self.preprocess_data_params.test:
             attribute_df = DataHelper.extract_first_period(attribute_df, self.test_period)

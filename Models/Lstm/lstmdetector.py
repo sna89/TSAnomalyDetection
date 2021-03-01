@@ -7,6 +7,7 @@ from torch.utils.data import TensorDataset, DataLoader
 from constants import AnomalyDfColumns
 import torch.nn as nn
 import pandas as pd
+import os
 
 
 class LstmDetectorConst:
@@ -17,7 +18,7 @@ class LstmDetectorConst:
 
 
 class LstmDetector(AnomalyDetectionModel):
-    def __init__(self):
+    def __init__(self, model_hyperparameters):
         super(LstmDetector, self).__init__()
 
         self.model = None
@@ -26,14 +27,83 @@ class LstmDetector(AnomalyDetectionModel):
         self.horizon = None
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-    @abstractmethod
-    def init_data(self, data):
-        pass
+        self.hidden_dim = model_hyperparameters['hidden_dim']
+        self.dropout = model_hyperparameters['dropout']
+        self.batch_size = model_hyperparameters['batch_size']
+        self.horizon = model_hyperparameters['forecast_period']
+        self.val_ratio = model_hyperparameters['val_ratio']
+        self.lr = model_hyperparameters['lr']
+        self.freq = model_hyperparameters['freq']
+        self.input_timesteps_period = model_hyperparameters['input_timesteps_period']
+        self.categorical_columns = model_hyperparameters['categorical_columns']
+        self.model_path = os.path.join(os.getcwd(), 'lstm_ts.pth')
 
-    @staticmethod
-    @abstractmethod
-    def prepare_data(data, forecast_period_hours: float, horizon_hours: float = 0):
-        pass
+    def fit(self, data):
+        train_df_raw, val_df_raw, test_df_raw, \
+        x_train, y_train, \
+        x_val, y_val, \
+        x_test, y_test = self.init_data(data)
+
+        train_dataset = LstmDetector.get_tensor_dataset(x_train, y_train)
+        val_dataset = LstmDetector.get_tensor_dataset(x_val, y_val)
+
+        train_dl = LstmDetector.get_dataloader(train_dataset, self.batch_size)
+        val_dl = LstmDetector.get_dataloader(val_dataset, self.batch_size)
+
+        num_features = self.get_num_features(x_train[0])
+        self.model = self.get_lstm_model(num_features)
+        self.train(train_dl, val_dl)
+        return self
+
+    def get_num_features(self, sample):
+        total_features = sample.shape[-1]
+        num_features = total_features - len(self.categorical_columns)
+        return num_features
+
+    def init_data(self, data):
+        data = AnomalyDetectionModel.init_data(data)
+
+        train_df_raw, val_df_raw, test_df_raw = LstmDetector.split_data(data,
+                                                                        self.val_ratio,
+                                                                        self.input_timesteps_period +
+                                                                        self.horizon)
+
+        self.scaler, \
+            train_scaled, \
+            val_scaled, \
+            test_scaled = LstmDetector.scale_data(train_df_raw,
+                                                  val_df_raw,
+                                                  test_df_raw,
+                                                  self.categorical_columns)
+
+        x_train, y_train = self.prepare_data(train_scaled,
+                                             self.input_timesteps_period,
+                                             self.horizon)
+
+        x_val, y_val = self.prepare_data(val_scaled,
+                                         self.input_timesteps_period,
+                                         self.horizon)
+
+        x_test, y_test = self.prepare_data(test_scaled,
+                                           self.input_timesteps_period,
+                                           self.horizon)
+
+        return train_df_raw, val_df_raw, test_df_raw, \
+               x_train, y_train, \
+               x_val, y_val, \
+               x_test, y_test
+
+    def prepare_data(self, data, input_timesteps: int, horizon: int = 0):
+        num_samples = data.shape[0] - input_timesteps - horizon + 1
+        num_features = self.get_num_features(data[0])
+
+        X = []
+        y = []
+        for i in range(num_samples):
+            X.append(data[i:i + input_timesteps])
+            y.append(data[i + input_timesteps: i + input_timesteps + horizon, : num_features])
+
+        return np.array(X), np.array(y)
 
     @abstractmethod
     def train(self, train_dl, val_dl):
@@ -52,7 +122,7 @@ class LstmDetector(AnomalyDetectionModel):
                           feature_names):
 
         seq_len = len(seq_lower_bound)
-        num_features = seq_lower_bound.shape[1]
+        num_features = self.get_num_features(seq_lower_bound)
 
         dfs = []
 
@@ -184,9 +254,17 @@ class LstmDetector(AnomalyDetectionModel):
         return DataLoader(dataset, shuffle=shuffle, drop_last=drop_last, batch_size=batch_size)
 
     @staticmethod
-    def scale_data(train_df_raw, val_df_raw, test_df_raw):
-        train_scaled, scaler = DataHelper.scale(train_df_raw)
-        val_scaled = scaler.transform(val_df_raw)
-        test_scaled = scaler.transform(test_df_raw)
+    def scale_data(train_df_raw, val_df_raw, test_df_raw, categorical_columns=[]):
+        train_df_to_scale, train_df_categorical = DataHelper.split_df_by_columns(train_df_raw, categorical_columns)
+        val_df_to_scale, val_df_categorical = DataHelper.split_df_by_columns(val_df_raw, categorical_columns)
+        test_df_to_scale, test_df_categorical = DataHelper.split_df_by_columns(test_df_raw, categorical_columns)
+
+        train_scaled, scaler = DataHelper.scale(train_df_to_scale)
+        val_scaled = scaler.transform(val_df_to_scale)
+        test_scaled = scaler.transform(test_df_to_scale)
+
+        train_scaled = np.append(train_scaled, train_df_categorical.values, axis=1)
+        val_scaled = np.append(val_scaled, val_df_categorical.values, axis=1)
+        test_scaled = np.append(test_scaled, test_df_categorical.values, axis=1)
 
         return scaler, train_scaled, val_scaled, test_scaled

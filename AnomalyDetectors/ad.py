@@ -9,7 +9,7 @@ from Helpers.time_freq_converter import TimeFreqConverter
 
 
 class AnomalyDetector():
-    def __init__(self, model, experiment_hyperparameters, model_hyperparameters, freq):
+    def __init__(self, model, experiment_hyperparameters, model_hyperparameters, freq, categorical_columns):
         assert model is not None, 'Need to pass a class model'
         self.logger = get_logger(__class__.__name__)
 
@@ -32,6 +32,7 @@ class AnomalyDetector():
 
         self.model_hyperparameters = model_hyperparameters
         self.model_hyperparameters['forecast_period'] = self.forecast_period_num_samples
+        self.model_hyperparameters['categorical_columns'] = categorical_columns
         self.model_hyperparameters['freq'] = freq
         self.model_hyperparameters['input_timesteps_period'] = TimeFreqConverter.convert_to_num_samples(
             Period(**model_hyperparameters['input_timesteps_period']), freq=freq

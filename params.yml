@@ -1,5 +1,5 @@
 ---
-detector_name: lstm_ae_uncertainty
+detector_name: lstm_uncertainty
 
 anomalies:
   filename: Anomalies_Synthetic_t.csv
@@ -17,11 +17,11 @@ create_synthetic_data:
     minutes: 0
     hours: 0
     days: 0
-    weeks: 4
+    weeks: 12
   freq: 10min
   higher_freq: False
-  holiday: False
-  weekend: False
+  holiday: True
+  weekend: True
   filename: Synthetic_t.csv
 
 preprocess_data_params:
@@ -80,7 +80,7 @@ model_hyperparameters:
     val_ratio: 0.2
 
   lstm_uncertainty:
-    hidden_layer: 128
+    hidden_dim: 128
     dropout: 0.1
     batch_size: 32
     val_ratio: 0.2
@@ -92,11 +92,24 @@ model_hyperparameters:
       weeks: 0
 
   lstm_ae_uncertainty:
-    encoder_dim: 256
+    hidden_dim: 256
     dropout: 0.1
     batch_size: 32
     val_ratio: 0.1
     lr: 0.0005
+    input_timesteps_period:
+      minutes: 0
+      hours: 6
+      days: 0
+      weeks: 0
+
+  lstm_ae_mlp_uncertainty:
+    hidden_dim: 256
+    dropout: 0.1
+    batch_size: 32
+    val_ratio: 0.1
+    lr: 0.0005
+    mlp_layers: [128, 64]
     input_timesteps_period:
       minutes: 0
       hours: 6
@@ -136,7 +149,10 @@ metadata:
 #    freq: 10min
   - source: csv
     filename: Synthetic_t.csv
-    attribute_names:
+    attribute_columns:
       - all
+    categorical_columns:
+      - is_weekend
+      - is_holiday
     time_column: index
     freq: 10min

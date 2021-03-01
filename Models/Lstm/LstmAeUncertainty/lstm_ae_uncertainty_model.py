@@ -17,21 +17,12 @@ class Encoder(nn.Module):
                             num_layers=num_layers,
                             batch_first=True)
 
-        # self.lstm2 = nn.LSTM(input_size=hidden_size * 2,
-        #                      hidden_size=hidden_size * 2,
-        #                      num_layers=num_layers,
-        #                      batch_first=True)
-
         self.activation = nn.ReLU()
-        self.dropout1 = nn.Dropout(dropout)
-        # self.dropout2 = nn.Dropout(dropout)
+        self.dropout = nn.Dropout(dropout)
 
     def forward(self, x_input):
         lstm_out, hidden = self.lstm(x_input)
-        lstm_out = self.dropout1(self.activation(lstm_out))
-
-        # lstm_out, hidden = self.lstm2(lstm_out)
-        # lstm_out = self.dropout2(self.activation(lstm_out))
+        lstm_out = self.dropout(self.activation(lstm_out))
 
         return lstm_out, hidden
 
@@ -47,27 +38,20 @@ class Decoder(nn.Module):
         self.hidden_size = hidden_size
         self.num_layers = num_layers
 
-        self.lstm1 = nn.LSTM(input_size=input_size,
-                             hidden_size=hidden_size,
-                             num_layers=num_layers,
-                             batch_first=True)
-
-        # self.lstm2 = nn.LSTM(input_size=hidden_size * 2,
-        #                      hidden_size=hidden_size * 2,
-        #                      num_layers=num_layers,
-        #                      batch_first=True)
+        self.lstm = nn.LSTM(input_size=input_size,
+                            hidden_size=hidden_size,
+                            num_layers=num_layers,
+                            batch_first=True)
 
         self.activtion = nn.ReLU()
-        self.dropout1 = nn.Dropout(dropout)
-        # self.dropout2 = nn.Dropout(dropout)
+        self.dropout = nn.Dropout(dropout)
 
         self.linear = nn.Linear(hidden_size, input_size)
 
     def forward(self, x_input, encoder_hidden_states):
-        lstm_out, hidden = self.lstm1(x_input.unsqueeze(1), encoder_hidden_states)
-        lstm_out = self.dropout1(self.activtion(lstm_out))
+        lstm_out, hidden = self.lstm(x_input.unsqueeze(1), encoder_hidden_states)
+        lstm_out = self.dropout(self.activtion(lstm_out))
 
-        # lstm_out, hidden = self.lstm2(lstm_out)
         output = self.linear(lstm_out.squeeze(1))
 
         return output, hidden
@@ -112,7 +96,7 @@ class LstmAeUncertaintyModel(nn.Module):
         embedding = enc_hidden[0]
         return embedding
 
-    def train_(self, train_dl, test_dl, epochs, early_stop_epochs, lr, model_path):
+    def train_ae(self, train_dl, test_dl, epochs, early_stop_epochs, lr, model_path):
         criterion = nn.MSELoss().to(self.device)
         encoder_optimizer = torch.optim.Adam(self.encoder.parameters(), lr=lr)
         decoder_optimizer = torch.optim.Adam(self.decoder.parameters(), lr=lr)
@@ -136,17 +120,12 @@ class LstmAeUncertaintyModel(nn.Module):
                 _, encoder_hidden = self.encoder(seq)
                 decoder_hidden = encoder_hidden
                 dec_input = seq[:, -1, :]
+
                 # teacher forcing
                 for t in range(self.horizon):
                     decoder_output, decoder_hidden = self.decoder(dec_input, decoder_hidden)
                     outputs[:, t, :] = decoder_output
                     dec_input = labels[:, t, :]
-
-                #Recursive
-                # for t in range(self.horizon):
-                #     decoder_output, decoder_hidden = self.decoder(dec_input, decoder_hidden)
-                #     outputs[:, t, :] = decoder_output
-                #     dec_input = decoder_output
 
                 loss = criterion(outputs, labels)
 
@@ -172,11 +151,6 @@ class LstmAeUncertaintyModel(nn.Module):
 
                     dec_input = seq[:, -1, :]
                     decoder_hidden = encoder_hidden
-                    # # teacher forcing
-                    # for t in range(self.horizon):
-                    #     decoder_output, decoder_hidden = self.decoder(dec_input, decoder_hidden)
-                    #     outputs[:, t, :] = decoder_output
-                    #     dec_input = labels[:, t, :]
 
                     # Recursive
                     for t in range(self.horizon):
@@ -202,51 +176,3 @@ class LstmAeUncertaintyModel(nn.Module):
 
             if early_stop_current_epochs == early_stop_epochs:
                 break
-
-
-# class LstmAeUncertaintyModel(nn.Module):
-#     def __init__(self, input_dim, hidden_layer, encoder_dim, dropout_p=0.2):
-#         super(LstmAeUncertaintyModel, self).__init__()
-#         self.input_dim = input_dim
-#         self.hidden_layer = hidden_layer
-#         self.encoder_dim = encoder_dim
-#         self.num_layers = 1
-#
-#         self.encoder = nn.LSTM(self.input_dim,
-#                                self.encoder_dim,
-#                                num_layers=self.num_layers,
-#                                dropout=dropout_p,
-#                                batch_first=True)
-#         self.decoder = nn.LSTM(self.encoder_dim,
-#                                self.hidden_layer,
-#                                dropout=dropout_p,
-#                                num_layers=self.num_layers,
-#                                batch_first=True)
-#         self.fc = nn.Linear(self.hidden_layer, self.input_dim)
-#
-#         self.dropout_1 = nn.Dropout(p=dropout_p)
-#         self.dropout_2 = nn.Dropout(p=dropout_p)
-#
-#         self.activation = nn.ReLU()
-#
-#     def forward(self, enc_input):
-#         bs = enc_input.size()[0]
-#         seq_len = enc_input.size()[1]
-#
-#         enc_out, (hidden_enc, _) = self.encoder(enc_input)
-#         enc_out = self.dropout_1(self.activation(hidden_enc))
-#         enc_out = enc_out.view(bs, self.num_layers, self.encoder_dim) # bs, num_layers, self.encoder_dim
-#
-#         dec_input = enc_out.repeat(1, seq_len, 1) # bs, seq_len * num_layers, self.encoder_dim
-#
-#         dec_out, (hidden_dec, _) = self.decoder(dec_input)
-#         dec_out = self.dropout_2(self.activation(dec_out))  # bs, seq_len * num_layers, self.hidden_layer
-#
-#         dec_out = dec_out.contiguous().view(-1, self.hidden_layer) # bs * seq_len * num_layers, self.hidden_layer
-#
-#         out = self.fc(dec_out) # bs * seq_len * num_layers, self.input_dim
-#
-#         out = out.view(bs, seq_len , self.input_dim)
-#
-#         return out
-#

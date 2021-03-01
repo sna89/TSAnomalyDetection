@@ -4,7 +4,7 @@ from datetime import datetime
 from Builders.data_builder import PreprocessDataParams
 from Logger.logger import get_logger
 
-UNI_MULTI_VARIATE_DETECTORS = ['lstm_ae', 'lstm_uncertainty', 'lstm_ae_uncertainty']
+UNI_MULTI_VARIATE_DETECTORS = ['lstm_ae', 'lstm_uncertainty', 'lstm_ae_uncertainty', 'lstm_ae_mlp_uncertainty']
 UNIVARIATE_DETECTORS = ['esd', 'arima', 'prophet'] + UNI_MULTI_VARIATE_DETECTORS
 MULTIVARIATE_DETECTORS = [] + UNI_MULTI_VARIATE_DETECTORS
 
@@ -119,16 +119,19 @@ class ParamsValidator:
             file_metadata_keys = list(file_metadata.keys())
 
             if 'time_column' not in file_metadata_keys \
-                    or 'attribute_names' not in file_metadata_keys \
+                    or 'attribute_columns' not in file_metadata_keys \
+                    or 'categorical_columns' not in file_metadata_keys \
                     or 'filename' not in file_metadata_keys \
                     or 'source' not in file_metadata_keys:
                 msg = 'Missing metadata fields for model {}'.format(self.detector_name)
                 raise Exception(msg)
 
-            if not isinstance(file_metadata['attribute_names'], list):
-                msg = 'attributes names must be a of list data type'
+            if not isinstance(file_metadata['attribute_columns'], list):
+                msg = 'attribute_columns must be a of list data type'
                 raise Exception(msg)
-
+            if not isinstance(file_metadata['categorical_columns'], list):
+                msg = 'categorical_columns must be a of list data type'
+                raise Exception(msg)
         return
 
     def get_filenames(self):

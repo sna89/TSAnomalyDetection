@@ -1,26 +1,37 @@
 from Models.anomaly_detection_model import AnomalyDetectionModel, validate_anomaly_df_schema
-from Models.Lstm.LstmAeUncertainty.lstm_ae_uncertainty_model import LstmAeUncertaintyModel
+from Models.Lstm.LstmAeUncertainty.lstm_ae_uncertainty import LstmAeUncertainty
 from Models.Lstm.lstmdetector import LstmDetector, LstmDetectorConst
-import numpy as np
+from Models.Lstm.LstmAeMlpUncertainty.lstm_ae_mlp_uncertainty_model import LstmAeMlpUncertaintyModel
 import torch
 
 
-LSTM_UNCERTAINTY_HYPERPARAMETERS = ['batch_size',
-                                    'hidden_dim',
-                                    'dropout',
-                                    'forecast_period',
-                                    'val_ratio',
-                                    'lr',
-                                    'input_timesteps_period']
+LSTM_AR_MLP_UNCERTAINTY_HYPERPARAMETERS = ['batch_size',
+                                           'encoder_dim',
+                                           'dropout',
+                                           'forecast_period',
+                                           'val_ratio',
+                                           'lr',
+                                           'input_timesteps_period',
+                                           'mlp_layers']
 
 
-class LstmAeUncertainty(LstmDetector):
+class LstmAeMlpUncertainty(LstmAeUncertainty):
     def __init__(self, model_hyperparameters):
-        super(LstmAeUncertainty, self).__init__(model_hyperparameters)
-        AnomalyDetectionModel.validate_model_hyperpameters(LSTM_UNCERTAINTY_HYPERPARAMETERS, model_hyperparameters)
+        super(LstmAeMlpUncertainty, self).__init__(model_hyperparameters)
+
+        AnomalyDetectionModel.validate_model_hyperpameters(LSTM_AR_MLP_UNCERTAINTY_HYPERPARAMETERS,
+                                                           model_hyperparameters)
+
+        self.mlp_layers = model_hyperparameters['mlp_layers']
 
     def get_lstm_model(self, num_features):
-        model = LstmAeUncertaintyModel(num_features, self.hidden_dim, self.dropout, self.batch_size, self.horizon, self.device)
+        model = LstmAeMlpUncertaintyModel(num_features,
+                                          self.hidden_dim,
+                                          self.dropout,
+                                          self.batch_size,
+                                          self.horizon,
+                                          self.device,
+                                          self.mlp_layers)
         return model.to(self.device)
 
     def train(self, train_dl, val_dl):
@@ -30,6 +41,7 @@ class LstmAeUncertainty(LstmDetector):
         model_path = self.model_path
 
         self.model.train_ae(train_dl, val_dl, epochs, early_stop_epochs, lr, model_path)
+        # train mlp
 
     @validate_anomaly_df_schema
     def detect(self, data):
@@ -50,6 +62,7 @@ class LstmAeUncertainty(LstmDetector):
 
         self.model = self.get_lstm_model(num_features)
         self.model = LstmDetector.load_model(self.model, self.model_path)
+        #need to load model with MLP
 
         inherent_noise = self.get_inherent_noise(val_dl, use_hidden=False)
         mc_mean, lower_bounds, upper_bounds = self.predict(inputs, LstmDetectorConst.BOOTSTRAP, inherent_noise, False)

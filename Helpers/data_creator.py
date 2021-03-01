@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from Logger.logger import get_logger
-# import holidays
+import holidays
 from sklearn.preprocessing import StandardScaler
 from Helpers.data_helper import DataHelper
 
@@ -33,6 +33,11 @@ class DataCreatorHolidayMetadata:
     DECREASE = 0.5
 
 
+class DataCreatorWeekendMetadata:
+    DECREASE = 0.5
+    FRIDAY_WEEKDAY = 4
+    SATURDAY_WEEKDAY = 5
+
 class DataCreator:
     logger = get_logger("DataCreator")
 
@@ -42,8 +47,8 @@ class DataCreator:
                        train_period,
                        freq,
                        higher_freq=False,
-                       weekend=False,
-                       holiday=False,
+                       is_weekends=False,
+                       is_holidays=False,
                        number_of_series=1):
 
         start_dt = DataCreatorMetadata.START_DATE
@@ -63,13 +68,21 @@ class DataCreator:
         dt_index = DataCreator.create_index(start_dt, end_dt, freq)
         anomaly_indices = DataCreator._get_anomaly_indices(dt_index, train_period)
 
+        weekends_series = np.zeros(len(dt_index)) if not is_weekends else DataCreator.get_weekend_series(dt_index)
+        weekends_ond_hot_df = DataCreator.get_weekend_one_hot_df(dt_index)
+        dfs.append(weekends_ond_hot_df)
+
+        holidays_series = np.zeros(len(dt_index)) if not is_holidays else DataCreator.get_holiday_series(dt_index)
+        holidays_ond_hot_df = DataCreator.get_holiday_one_hot_df(dt_index)
+        dfs.append(holidays_ond_hot_df)
+
         for series_num in range(number_of_series):
             df, anomalies_df = DataCreator.create_series(dt_index,
                                                          series_num,
                                                          anomaly_indices,
-                                                         higher_freq,
-                                                         weekend,
-                                                         holiday)
+                                                         weekends_series,
+                                                         holidays_series,
+                                                         higher_freq)
             dfs.append(df)
             anomalies_dfs.append(anomalies_df)
 
@@ -86,9 +99,9 @@ class DataCreator:
                       dt_index,
                       series_num,
                       anomalies_indices,
-                      higher_freq=False,
-                      weekend=False,
-                      holiday=False
+                      weekends_series,
+                      holidays_series,
+                      higher_freq=False
                       ):
         T = len(dt_index)
         days = DataCreator._calc_days(dt_index)
@@ -113,15 +126,10 @@ class DataCreator:
         noise = np.random.normal(loc=0, scale=float(1) / 10, size=T)
         bias = np.random.uniform(low=-0.2, high=0.2)
 
-        weekend_holyday_decrement = np.zeros(T)
-        if weekend or holiday:
-            weekend_holyday_decrement = cls._decrease_value(dt_index, weekend, holiday)
-            # cls.output_holidays(weekend_holyday_decrement, dt_index)
-
         anomalies = DataCreator.create_anomaly_data(T, anomalies_indices)
         anomalies_df = DataCreator.create_anomaly_df(anomalies, dt_index, series_num)
 
-        y = trend + weekend_holyday_decrement + noise + anomalies + bias
+        y = trend + noise + anomalies + bias + weekends_series + holidays_series
         df = pd.DataFrame(data={'Value_{}'.format(series_num): y}, index=dt_index)
 
         return df, anomalies_df
@@ -148,14 +156,6 @@ class DataCreator:
                                                               weeks=train_period.weeks)
         anomalies_start_idx = dt_index.slice_indexer(start=dt_index.min(), end=anomalies_start_time, step=1).stop
         return anomalies_start_idx
-
-    @staticmethod
-    def scale(y):
-        scaler = StandardScaler()
-        scaler.fit(y.reshape(-1, 1))
-        y = scaler.transform(y.reshape(-1, 1))
-        y = y.reshape(1, -1)[0]
-        return y
 
     @classmethod
     def save_to_csv(cls, df, csv_name):
@@ -203,32 +203,56 @@ class DataCreator:
 
         return daily_seasonality
 
-    @classmethod
-    def _decrease_value(cls, index, weekend=False, holiday=False):
-        decrement_dt_index = pd.DatetimeIndex([])
-        weekend_dt_index = pd.DatetimeIndex([])
-        holidays_dt_index = pd.DatetimeIndex([])
+    @staticmethod
+    def is_date_in_weekend(date):
+        return 1 \
+            if ((date.weekday() >= DataCreatorWeekendMetadata.FRIDAY_WEEKDAY) &
+                (date.weekday() <= DataCreatorWeekendMetadata.SATURDAY_WEEKDAY)) \
+            else 0
 
-        if weekend:
-            weekend_dt_index = pd.DatetimeIndex(date for date in index if (date.weekday() >= 4) & (date.weekday() <= 5))
+    @staticmethod
+    def get_weekend_series(index):
+        weekend_dt_index = DataCreator.get_weekend_index(index)
+        weekend_series = np.where([date in weekend_dt_index
+                            for date in index], -DataCreatorWeekendMetadata.DECREASE, 0)
+        return weekend_series
 
-        # if holiday:
-            # us_holidays_dt_index = holidays.UnitedStates()
-            # holidays_dt_index = pd.DatetimeIndex(date for date in index if date in us_holidays_dt_index)
+    @staticmethod
+    def get_weekend_index(index):
+        weekend_dt_index = pd.DatetimeIndex(date for date in index
+                                            if DataCreator.is_date_in_weekend(date))
+        return weekend_dt_index
 
-        if weekend and holiday:
-            decrement_dt_index = weekend_dt_index.union(holidays_dt_index)
-        elif weekend and not holiday:
-            decrement_dt_index = weekend_dt_index
-        elif not weekend and holiday:
-            decrement_dt_index = holidays_dt_index
+    @staticmethod
+    def get_weekend_one_hot_df(dt_index):
+        is_weekend_series = np.array([DataCreator.is_date_in_weekend(date) for date in dt_index])
+        weekend_one_hot_df = pd.DataFrame(is_weekend_series, index=dt_index, columns=["is_weekend"])
+        return weekend_one_hot_df
 
-        decrement_series = np.where([date in decrement_dt_index
-                                     for date in index],
-                                    -DataCreatorHolidayMetadata.DECREASE,
-                                    0)
+    @staticmethod
+    def get_holiday_series(dt_index):
+        holidays_dt_index = DataCreator.get_holiday_index(dt_index)
+        weekend_dt_index = DataCreator.get_weekend_index(dt_index)
+        only_holidays_index = pd.DatetimeIndex([date for date in dt_index
+                                                if date in holidays_dt_index
+                                                and date not in weekend_dt_index])
+        holiday_series = np.where([date in only_holidays_index for date in dt_index],
+                                  -DataCreatorHolidayMetadata.DECREASE, 0)
+        return holiday_series
 
-        return decrement_series
+    @staticmethod
+    def get_holiday_index(dt_index):
+        us_holidays_dt_index = holidays.UnitedStates()
+        holidays_dt_index = pd.DatetimeIndex(date for date in dt_index if date in us_holidays_dt_index)
+        return holidays_dt_index
+
+    @staticmethod
+    def get_holiday_one_hot_df(dt_index):
+        us_holidays_dt_index = holidays.UnitedStates()
+        is_holiday_series = np.array([1 if date in us_holidays_dt_index else 0
+                                      for date in dt_index])
+        holiday_one_hot_df = pd.DataFrame(is_holiday_series, index=dt_index, columns=["is_holiday"])
+        return holiday_one_hot_df
 
     # @classmethod
     # def output_holidays(cls, decrement_series, index):

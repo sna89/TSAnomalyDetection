@@ -17,7 +17,8 @@ class Output:
 class Metadata:
     source: str
     filename: str
-    attribute_names : List[str]
+    attribute_columns : List[str]
+    categorical_columns : List[str]
     time_column: str
     freq: str
 
@@ -128,3 +129,8 @@ class ParamsHelper:
         metadata = self.get_metadata()
         freq = Metadata(**metadata[0]).freq
         return freq
+
+    def get_categorical_columns(self):
+        metadata = self.get_metadata()
+        categorical_columns = Metadata(**metadata[0]).categorical_columns
+        return categorical_columns

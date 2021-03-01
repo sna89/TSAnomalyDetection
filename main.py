@@ -86,11 +86,13 @@ def run_experiment(params_helper, data):
     experiment_hyperparameters = params_helper.get_experiment_hyperparams()
     model_hyperparameters = params_helper.get_model_hyperparams()
     freq = params_helper.get_freq_from_metadata()
+    categorical_columns = params_helper.get_categorical_columns()
 
     detector = AnomalyDetectionFactory(detector_name,
                                        experiment_hyperparameters,
                                        model_hyperparameters,
-                                       freq).get_detector()
+                                       freq,
+                                       categorical_columns).get_detector()
 
     logger = get_logger('run_experiment')
     logger.info("Starting experiment for anomaly detector: {}".format(detector_name))
@@ -139,7 +141,7 @@ if __name__ == "__main__":
         params_helper = get_and_validate_parameters()
 
         data, anomalies_true_df = get_data(params_helper)
-        DataPlotter.plot_ts_data(data)
+        # DataPlotter.plot_ts_data(data)
 
         anomalies_pred_df = run_experiment(params_helper, data)
         output_results(params_helper, data, anomalies_pred_df, anomalies_true_df)
