@@ -7,14 +7,13 @@ class FileHelper:
         pass
 
     @staticmethod
-    def get_file_path(filename, file_regex='*.*'):
+    def get_file_path(filename, file_regex='*.*', directory=None):
         curr_path = Path(os.getcwd())
+        if directory:
+            curr_path = os.path.join(curr_path, directory)
         for path in Path(curr_path).rglob(file_regex):
             if path.name == filename:
                 return path
-
-        msg = "Can't find filename: {}".format(filename)
-        raise ValueError(msg)
 
     @staticmethod
     def get_logs_path():

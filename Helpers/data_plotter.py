@@ -76,11 +76,10 @@ class DataPlotter:
                                      ))
 
             if not predicted_anomaly_df.empty:
-                feature_anomaly_df = predicted_anomaly_df[predicted_anomaly_df[AnomalyDfColumns.Feature] == feature]
+                feature_pred_df = predicted_anomaly_df[predicted_anomaly_df[AnomalyDfColumns.Feature] == feature]
+                index = pd.DatetimeIndex(feature_pred_df.index)
 
-                index = pd.DatetimeIndex(feature_anomaly_df.index)
-
-                predictions = feature_anomaly_df[AnomalyDfColumns.Prediction]
+                predictions = feature_pred_df[AnomalyDfColumns.Prediction]
                 fig.add_trace(
                     go.Scatter(
                         x=index,
@@ -93,7 +92,7 @@ class DataPlotter:
                 if AnomalyDfColumns.LowerBound in predicted_anomaly_df.columns and \
                         AnomalyDfColumns.UpperBound in predicted_anomaly_df.columns:
 
-                    lower_bound = feature_anomaly_df[AnomalyDfColumns.LowerBound]
+                    lower_bound = feature_pred_df[AnomalyDfColumns.LowerBound]
                     fig.add_trace(
                         go.Scatter(
                             x=index,
@@ -103,7 +102,7 @@ class DataPlotter:
                             name='Lower bound')
                     )
 
-                    upper_bound = feature_anomaly_df[AnomalyDfColumns.UpperBound]
+                    upper_bound = feature_pred_df[AnomalyDfColumns.UpperBound]
                     fig.add_trace(
                         go.Scatter(
                             x=index,
@@ -121,7 +120,7 @@ class DataPlotter:
                     raise ValueError("Anomaly predictions dataframe does not"
                                      "contain lower/upper bound or distance metric")
 
-                feature_predicted_anomaly_df = feature_anomaly_df[feature_anomaly_df[AnomalyDfColumns.IsAnomaly] == 1]
+                feature_predicted_anomaly_df = feature_pred_df[feature_pred_df[AnomalyDfColumns.IsAnomaly] == 1]
                 feature_predicted_anomaly_df_index = pd.DatetimeIndex(feature_predicted_anomaly_df.index)
 
                 actual_values_for_anomaly_indices = data_df[feature].loc[feature_predicted_anomaly_df_index].values

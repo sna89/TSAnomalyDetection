@@ -55,7 +55,7 @@ class ExperimentHyperParameters:
 
 class ParamsHelper:
     def __init__(self, filename='params.yml'):
-        params_path = FileHelper.get_file_path(filename, '*.yml')
+        params_path = FileHelper.get_file_path(filename, '*.yml', directory='TSAnomalyDetection')
 
         with open(params_path) as file:
             self.params_dict = yaml.load(file, Loader=yaml.FullLoader)

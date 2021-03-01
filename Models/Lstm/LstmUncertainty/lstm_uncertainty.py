@@ -53,7 +53,7 @@ class LstmUncertainty(LstmDetector):
             running_val_loss = self.get_inherent_noise(val_dl, h, use_hidden=True)
 
             if i % 10 == 0:
-                print(f'epoch: {i:3} train loss: {running_train_loss:10.8f} val loss: {running_val_loss:10.8f}')
+                self.logger.info(f'epoch: {i:3} train loss: {running_train_loss:10.8f} val loss: {running_val_loss:10.8f}')
 
             if running_val_loss <= best_val_loss:
                 torch.save(self.model.state_dict(), self.model_path)

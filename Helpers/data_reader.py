@@ -41,7 +41,7 @@ class CsvDataReader(DataReader):
                 filename = metadata.filename
 
             logger.info("Reading data from csv file: {}".format(filename))
-            filename_path = FileHelper.get_file_path(filename)
+            filename_path = FileHelper.get_file_path(filename, directory='outputs')
             df = pd.read_csv(filename_path, dayfirst=True)
             logger.info("Reading data finished successfully")
             return df

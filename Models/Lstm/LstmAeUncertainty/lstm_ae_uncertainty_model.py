@@ -164,7 +164,7 @@ class LstmAeUncertaintyModel(nn.Module):
             running_val_loss /= len(test_dl)
 
             if epoch % 10 == 0:
-                print(f'epoch: {epoch:3} train loss: {running_train_loss:10.8f} val loss: {running_val_loss:10.8f}')
+                self.logger.info(f'epoch: {epoch:3} train loss: {running_train_loss:10.8f} val loss: {running_val_loss:10.8f}')
 
             if running_val_loss <= best_val_loss:
                 torch.save(self.state_dict(), model_path)

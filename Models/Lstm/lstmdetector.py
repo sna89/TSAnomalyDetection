@@ -122,7 +122,7 @@ class LstmDetector(AnomalyDetectionModel):
                           feature_names):
 
         seq_len = len(seq_lower_bound)
-        num_features = self.get_num_features(seq_lower_bound)
+        num_features = self.get_num_features(seq_labels.iloc[0])
 
         dfs = []
 
