@@ -130,14 +130,13 @@ class LstmDetector(AnomalyDetectionModel):
             data = {}
 
             for idx in range(seq_len):
-                y = self.scaler.inverse_transform(seq_labels[0][idx].cpu().numpy())[feature]
+                index_idx = int(len(index) - self.horizon + idx)
+                dt_index = index[index_idx]
+                y = seq_labels.iloc[index_idx][feature]
 
                 sample_mean = seq_mean[idx][feature]
                 sample_lower_bound = seq_lower_bound[idx][feature]
                 sample_upper_bound = seq_upper_bound[idx][feature]
-
-                index_idx = int(len(index) - self.horizon + idx)
-                dt_index = index[index_idx]
 
                 is_anomaly = 1 if (y <= sample_lower_bound) or (y >= sample_upper_bound) else 0
 

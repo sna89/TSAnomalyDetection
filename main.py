@@ -141,7 +141,7 @@ if __name__ == "__main__":
         params_helper = get_and_validate_parameters()
 
         data, anomalies_true_df = get_data(params_helper)
-        # DataPlotter.plot_ts_data(data)
+        DataPlotter.plot_ts_data(data)
 
         anomalies_pred_df = run_experiment(params_helper, data)
         output_results(params_helper, data, anomalies_pred_df, anomalies_true_df)

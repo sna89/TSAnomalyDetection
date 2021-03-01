@@ -93,7 +93,7 @@ class LstmUncertainty(LstmDetector):
         anomaly_df = self.create_anomaly_df(mc_mean[0],
                                             lower_bounds[0],
                                             upper_bounds[0],
-                                            test_labels,
+                                            test_df_raw,
                                             test_df_raw.index,
                                             feature_names=test_df_raw.columns)
         return anomaly_df

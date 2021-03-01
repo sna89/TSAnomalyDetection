@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 from Logger.logger import get_logger
 import holidays
-from sklearn.preprocessing import StandardScaler
 from Helpers.data_helper import DataHelper
 
 
@@ -37,6 +36,7 @@ class DataCreatorWeekendMetadata:
     DECREASE = 0.5
     FRIDAY_WEEKDAY = 4
     SATURDAY_WEEKDAY = 5
+
 
 class DataCreator:
     logger = get_logger("DataCreator")

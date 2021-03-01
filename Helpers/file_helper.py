@@ -7,10 +7,9 @@ class FileHelper:
         pass
 
     @staticmethod
-    def get_file_path(filename):
+    def get_file_path(filename, file_regex='*.*'):
         curr_path = Path(os.getcwd())
-
-        for path in Path(curr_path).rglob('*.*'):
+        for path in Path(curr_path).rglob(file_regex):
             if path.name == filename:
                 return path
 
