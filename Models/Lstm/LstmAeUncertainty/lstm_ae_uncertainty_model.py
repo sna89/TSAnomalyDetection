@@ -3,17 +3,16 @@
 import torch.nn as nn
 import torch
 import numpy as np
-
+from Logger.logger import get_logger
 
 class Encoder(nn.Module):
-    def __init__(self, input_size, num_cat_features, hidden_size, dropout=0.1, num_layers=1):
+    def __init__(self, input_size, hidden_size, dropout=0.1, num_layers=1):
         super(Encoder, self).__init__()
         self.input_size = input_size
-        self.num_cat_features = num_cat_features
         self.hidden_size = hidden_size
         self.num_layers = num_layers
 
-        self.lstm = nn.LSTM(input_size=input_size + num_cat_features,
+        self.lstm = nn.LSTM(input_size=input_size,
                             hidden_size=hidden_size,
                             num_layers=num_layers,
                             batch_first=True)
@@ -33,14 +32,13 @@ class Encoder(nn.Module):
 
 
 class Decoder(nn.Module):
-    def __init__(self, input_size, num_cat_features, hidden_size, dropout=0.1, num_layers=1):
+    def __init__(self, input_size, hidden_size, dropout=0.1, num_layers=1):
         super(Decoder, self).__init__()
         self.input_size = input_size
-        self.num_cat_features = num_cat_features
         self.hidden_size = hidden_size
         self.num_layers = num_layers
 
-        self.lstm = nn.LSTM(input_size=input_size + num_cat_features,
+        self.lstm = nn.LSTM(input_size=input_size,
                             hidden_size=hidden_size,
                             num_layers=num_layers,
                             batch_first=True)
@@ -60,18 +58,18 @@ class Decoder(nn.Module):
 
 
 class LstmAeUncertaintyModel(nn.Module):
-    def __init__(self, input_size, num_cat_features, hidden_dim, dropout, batch_size, horizon, device):
+    def __init__(self, input_size, hidden_dim, dropout, batch_size, horizon, device):
         super(LstmAeUncertaintyModel, self).__init__()
+        self.logger = get_logger(__class__.__name__)
 
         self.input_size = input_size
-        self.num_cat_features = num_cat_features
         self.hidden_dim = hidden_dim
         self.device = device
         self.batch_size = batch_size
         self.horizon = horizon
 
-        self.encoder = Encoder(input_size, num_cat_features, hidden_dim, dropout)
-        self.decoder = Decoder(input_size, num_cat_features, hidden_dim, dropout)
+        self.encoder = Encoder(input_size, hidden_dim, dropout)
+        self.decoder = Decoder(input_size, hidden_dim, dropout)
 
         self.encoder = self.encoder.to(self.device)
         self.decoder = self.decoder.to(self.device)

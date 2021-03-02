@@ -12,7 +12,7 @@ import os
 
 class LstmDetectorConst:
     BOOTSTRAP = 100
-    EPOCHS = 100
+    EPOCHS = 1
     N_99_PERCENTILE = 1.66
     EARLY_STOP_EPOCHS = 10
 
@@ -25,6 +25,7 @@ class LstmDetector(AnomalyDetectionModel):
         self.scaler = None
         self.batch_size = None
         self.horizon = None
+        self.use_categorical_columns = None
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
         self.hidden_dim = model_hyperparameters['hidden_dim']
@@ -50,7 +51,7 @@ class LstmDetector(AnomalyDetectionModel):
         train_dl = LstmDetector.get_dataloader(train_dataset, self.batch_size)
         val_dl = LstmDetector.get_dataloader(val_dataset, self.batch_size)
 
-        num_features = self.get_num_features(x_train[0])
+        num_features = self.get_num_features(train_df_raw.iloc[0])
         self.model = self.get_lstm_model(num_features)
         self.train(train_dl, val_dl)
         return self
@@ -100,9 +101,11 @@ class LstmDetector(AnomalyDetectionModel):
         X = []
         y = []
         for i in range(num_samples):
-            X.append(data[i:i + input_timesteps])
+            if self.use_categorical_columns:
+                X.append(data[i:i + input_timesteps])
+            else:
+                X.append(data[i:i + input_timesteps, : num_features])
             y.append(data[i + input_timesteps: i + input_timesteps + horizon, : num_features])
-
         return np.array(X), np.array(y)
 
     @abstractmethod
@@ -245,8 +248,8 @@ class LstmDetector(AnomalyDetectionModel):
 
     @staticmethod
     def get_tensor_dataset(inputs, labels):
-        dataset = TensorDataset(torch.from_numpy(inputs), torch.from_numpy(labels))
-        return dataset
+        return TensorDataset(torch.from_numpy(inputs), torch.from_numpy(labels))
+
 
     @staticmethod
     def get_dataloader(dataset, batch_size, shuffle=False, drop_last=True):

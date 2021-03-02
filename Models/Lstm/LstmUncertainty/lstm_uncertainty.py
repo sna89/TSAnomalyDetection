@@ -20,6 +20,8 @@ class LstmUncertainty(LstmDetector):
         super(LstmUncertainty, self).__init__(model_hyperparameters)
         AnomalyDetectionModel.validate_model_hyperpameters(LSTM_UNCERTAINTY_HYPERPARAMETERS, model_hyperparameters)
 
+        self.use_categorical_columns = True
+
     def train(self, train_dl, val_dl):
         loss_function = nn.MSELoss().to(self.device)
         optimizer = torch.optim.Adam(self.model.parameters(), lr=self.lr)
@@ -82,7 +84,7 @@ class LstmUncertainty(LstmDetector):
         test_inputs, test_labels = test_dataset.tensors[0].type(torch.FloatTensor).to(self.device), \
                                    test_dataset.tensors[1].type(torch.FloatTensor).to(self.device)
 
-        num_features = self.get_num_features(x_train[0])
+        num_features = self.get_num_features(train_df_raw.iloc[0])
         self.model = self.get_lstm_model(num_features)
         self.model = LstmDetector.load_model(self.model, self.model_path)
 

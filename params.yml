@@ -82,7 +82,7 @@ model_hyperparameters:
     val_ratio: 0.2
 
   lstm_uncertainty:
-    hidden_dim: 256
+    hidden_dim: 64
     dropout: 0.1
     batch_size: 32
     val_ratio: 0.2
@@ -94,7 +94,7 @@ model_hyperparameters:
       weeks: 0
 
   lstm_ae_uncertainty:
-    hidden_dim: 256
+    hidden_dim: 64
     dropout: 0.1
     batch_size: 32
     val_ratio: 0.1
