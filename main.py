@@ -3,7 +3,7 @@ import pandas as pd
 import sys
 import numpy as np
 from Logger.logger import get_logger
-from Helpers.params_helper import ParamsHelper, ExperimentHyperParameters
+from Helpers.params_helper import ParamsHelper, ExperimentHyperParameters, CategoricalFeatures
 from Helpers.params_validator import ParamsValidator
 from Builders.data_builder import DataConstructor
 from Builders.eval_builder import EvalHelper
@@ -30,8 +30,7 @@ def create_synthetic_data(synthetic_data_params, train_period, output_path):
     filename = synthetic_data_params.filename
     num_of_series = synthetic_data_params.num_of_series
     higher_freq = synthetic_data_params.higher_freq
-    weekend = synthetic_data_params.weekend
-    holiday = synthetic_data_params.holiday
+    categorical_features = CategoricalFeatures(**synthetic_data_params.categorical_features)
     synthetic_data_period = Period(**synthetic_data_params.period)
     freq = synthetic_data_params.freq
 
@@ -40,10 +39,9 @@ def create_synthetic_data(synthetic_data_params, train_period, output_path):
     df, anomalies_df = data_creator.create_dataset(synthetic_data_period,
                                                    train_period,
                                                    freq,
-                                                   higher_freq,
-                                                   weekend,
-                                                   holiday,
-                                                   num_of_series)
+                                                   num_of_series,
+                                                   categorical_features,
+                                                   higher_freq)
     data_path = os.path.join(output_path, filename)
     data_creator.save_to_csv(df, data_path)
     return df, anomalies_df

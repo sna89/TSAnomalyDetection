@@ -46,10 +46,9 @@ class DataCreator:
                        data_period,
                        train_period,
                        freq,
-                       higher_freq=False,
-                       is_weekends=False,
-                       is_holidays=False,
-                       number_of_series=1):
+                       number_of_series,
+                       categorical_features,
+                       higher_freq=False):
 
         start_dt = DataCreatorMetadata.START_DATE
         end_dt = DataHelper.relative_delta_time(pd.to_datetime(DataCreatorMetadata.START_DATE),
@@ -68,13 +67,18 @@ class DataCreator:
         dt_index = DataCreator.create_index(start_dt, end_dt, freq)
         anomaly_indices = DataCreator._get_anomaly_indices(dt_index, train_period)
 
-        weekends_series = np.zeros(len(dt_index)) if not is_weekends else DataCreator.get_weekend_series(dt_index)
+        weekends_series = np.zeros(len(dt_index)) if not categorical_features.is_weekend \
+            else DataCreator.get_weekend_series(dt_index)
         weekends_ond_hot_df = DataCreator.get_weekend_one_hot_df(dt_index)
         dfs.append(weekends_ond_hot_df)
 
-        holidays_series = np.zeros(len(dt_index)) if not is_holidays else DataCreator.get_holiday_series(dt_index)
+        holidays_series = np.zeros(len(dt_index)) if not categorical_features.is_holiday else DataCreator.get_holiday_series(dt_index)
         holidays_ond_hot_df = DataCreator.get_holiday_one_hot_df(dt_index)
         dfs.append(holidays_ond_hot_df)
+
+        if categorical_features.weekday:
+            weekday_one_hot_df = DataCreator.get_weekday_one_hot_df(dt_index)
+            dfs.append(weekday_one_hot_df)
 
         for series_num in range(number_of_series):
             df, anomalies_df = DataCreator.create_series(dt_index,
@@ -228,6 +232,12 @@ class DataCreator:
         is_weekend_series = np.array([DataCreator.is_date_in_weekend(date) for date in dt_index])
         weekend_one_hot_df = pd.DataFrame(is_weekend_series, index=dt_index, columns=["is_weekend"])
         return weekend_one_hot_df
+
+    @staticmethod
+    def get_weekday_one_hot_df(dt_index):
+        weekday_series = np.array([date.weekday() for date in dt_index])
+        weekday_one_hot_df = pd.DataFrame(weekday_series, index=dt_index, columns=["weekday"])
+        return weekday_one_hot_df
 
     @staticmethod
     def get_holiday_series(dt_index):

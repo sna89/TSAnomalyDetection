@@ -1,6 +1,6 @@
 from Models.anomaly_detection_model import AnomalyDetectionModel
 import numpy as np
-from Helpers.data_helper import DataConst, DataHelper
+from Helpers.data_helper import DataHelper
 import torch
 from abc import abstractmethod
 from torch.utils.data import TensorDataset, DataLoader
@@ -12,7 +12,7 @@ import os
 
 class LstmDetectorConst:
     BOOTSTRAP = 100
-    EPOCHS = 1
+    EPOCHS = 100
     N_99_PERCENTILE = 1.66
     EARLY_STOP_EPOCHS = 10
 
@@ -216,7 +216,7 @@ class LstmDetector(AnomalyDetectionModel):
 
     @staticmethod
     def identify_anomalies(anomaly_df, num_features):
-        for idx in anomaly_df.index:
+        for idx in anomaly_df.index.unique():
             idx_df = anomaly_df[anomaly_df.index == idx]
             anomaly_idx_df = idx_df[idx_df[AnomalyDfColumns.IsAnomaly] == 1]
             if not anomaly_idx_df.empty:

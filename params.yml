@@ -11,17 +11,19 @@ output:
   features_to_plot:
 
 create_synthetic_data:
-  to_create: false
+  to_create: true
   num_of_series: 10
   period:
     minutes: 0
     hours: 0
     days: 0
-    weeks: 12
+    weeks: 5
   freq: 10min
   higher_freq: False
-  holiday: True
-  weekend: True
+  categorical_features:
+    is_holiday: True
+    is_weekend: True
+    weekday: True
   filename: Synthetic_t.csv
 
 preprocess_data_params:
@@ -40,7 +42,7 @@ experiment_hyperparameters:
     minutes: 0
     hours: 0
     days: 0
-    weeks: 3
+    weeks: 4
   train_freq:
     minutes: 0
     hours: 12
@@ -80,7 +82,7 @@ model_hyperparameters:
     val_ratio: 0.2
 
   lstm_uncertainty:
-    hidden_dim: 128
+    hidden_dim: 256
     dropout: 0.1
     batch_size: 32
     val_ratio: 0.2
@@ -154,5 +156,6 @@ metadata:
     categorical_columns:
       - is_weekend
       - is_holiday
+      - weekday
     time_column: index
     freq: 10min

@@ -39,13 +39,14 @@ class AnomalyDetector():
         )
 
     @timer
-    def run_anomaly_detection_experiment(self, data):
+    def run_anomaly_detection_experiment(self, data_):
         self.logger.info("Start running anomaly detection experiment")
 
         model = self.model(self.model_hyperparameters)
         elapsed_time = timedelta(hours=0)
         to_fit = True
 
+        data = data_.copy()
         for epoch, idx in enumerate(range(0,
                                           len(data) - (self.train_period_num_samples + self.forecast_period_num_samples),
                                           self.forecast_period_num_samples),
@@ -88,7 +89,7 @@ class AnomalyDetector():
                             feature = row[AnomalyDfColumns.Feature]
                             prediction = row[AnomalyDfColumns.Prediction]
                             actual = row[AnomalyDfColumns.Actual]
-                            df_curr_epoch.at[idx, feature] = prediction * 0.85 + actual * 0.15
+                            df_curr_epoch.at[idx, feature] = prediction * 0.5 + actual * (1 - 0.5)
 
                     else:
                         df_curr_epoch.drop(labels=detected_anomalies.index, axis=0, inplace=True)

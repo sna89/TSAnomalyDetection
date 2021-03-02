@@ -32,13 +32,19 @@ class PreprocessDataParams:
 
 
 @dataclass
+class CategoricalFeatures:
+    is_holiday: bool
+    is_weekend: bool
+    weekday: bool
+
+
+@dataclass
 class CreateSyntheticData:
     to_create: bool
     num_of_series: int
     filename: str
     higher_freq: bool
-    holiday: bool
-    weekend: bool
+    categorical_features: CategoricalFeatures
     period: Dict
     freq: bool
 
@@ -55,7 +61,7 @@ class ExperimentHyperParameters:
 
 class ParamsHelper:
     def __init__(self, filename='params.yml'):
-        params_path = FileHelper.get_file_path(filename, '*.yml', directory='TSAnomalyDetection')
+        params_path = FileHelper.get_file_path(filename, '*.yml')
 
         with open(params_path) as file:
             self.params_dict = yaml.load(file, Loader=yaml.FullLoader)
