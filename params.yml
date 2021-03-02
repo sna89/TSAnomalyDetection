@@ -1,5 +1,5 @@
 ---
-detector_name: lstm_uncertainty
+detector_name: lstm_ae_uncertainty
 
 anomalies:
   filename: Anomalies_Synthetic_t.csv
@@ -11,7 +11,7 @@ output:
   features_to_plot:
 
 create_synthetic_data:
-  to_create: true
+  to_create: false
   num_of_series: 10
   period:
     minutes: 0

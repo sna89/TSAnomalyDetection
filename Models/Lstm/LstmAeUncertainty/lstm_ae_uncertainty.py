@@ -20,7 +20,13 @@ class LstmAeUncertainty(LstmDetector):
         AnomalyDetectionModel.validate_model_hyperpameters(LSTM_UNCERTAINTY_HYPERPARAMETERS, model_hyperparameters)
 
     def get_lstm_model(self, num_features):
-        model = LstmAeUncertaintyModel(num_features, self.hidden_dim, self.dropout, self.batch_size, self.horizon, self.device)
+        model = LstmAeUncertaintyModel(num_features,
+                                       len(self.categorical_columns),
+                                       self.hidden_dim,
+                                       self.dropout,
+                                       self.batch_size,
+                                       self.horizon,
+                                       self.device)
         return model.to(self.device)
 
     def train(self, train_dl, val_dl):
@@ -44,9 +50,8 @@ class LstmAeUncertainty(LstmDetector):
         val_dl = LstmDetector.get_dataloader(val_dataset, self.batch_size)
 
         test_dataset = LstmDetector.get_tensor_dataset(x_test, y_test)
-        inputs, labels = test_dataset.tensors[0], test_dataset.tensors[1]
-        inputs = inputs.type(torch.FloatTensor).to(self.device)
-        labels = labels.type(torch.FloatTensor).to(self.device)
+        inputs, labels = test_dataset.tensors[0].type(torch.FloatTensor).to(self.device),\
+                         test_dataset.tensors[1].type(torch.FloatTensor).to(self.device)
 
         self.model = self.get_lstm_model(num_features)
         self.model = LstmDetector.load_model(self.model, self.model_path)
