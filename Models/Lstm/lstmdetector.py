@@ -12,7 +12,7 @@ import os
 
 class LstmDetectorConst:
     BOOTSTRAP = 100
-    EPOCHS = 1
+    EPOCHS = 100
     N_99_PERCENTILE = 1.66
     EARLY_STOP_EPOCHS = 10
 

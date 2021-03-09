@@ -51,15 +51,14 @@ class LstmAeMlpUncertainty(LstmAeUncertainty):
         x_val, y_val, \
         x_test, y_test = self.init_data(data)
 
-        num_features = x_train.shape[2]
+        num_features = self.get_num_features(train_df_raw.iloc[0])
 
         val_dataset = LstmDetector.get_tensor_dataset(x_val, y_val)
         val_dl = LstmDetector.get_dataloader(val_dataset, self.batch_size)
 
         test_dataset = LstmDetector.get_tensor_dataset(x_test, y_test)
-        inputs, labels = test_dataset.tensors[0], test_dataset.tensors[1]
-        inputs = inputs.type(torch.FloatTensor).to(self.device)
-        labels = labels.type(torch.FloatTensor).to(self.device)
+        inputs, labels = test_dataset.tensors[0].type(torch.FloatTensor).to(self.device), \
+                         test_dataset.tensors[1].type(torch.FloatTensor).to(self.device)
 
         self.model = self.get_lstm_model(num_features)
         self.model = LstmDetector.load_model(self.model, self.model_path)
@@ -71,9 +70,9 @@ class LstmAeMlpUncertainty(LstmAeUncertainty):
         anomaly_df = self.create_anomaly_df(mc_mean,
                                             lower_bounds,
                                             upper_bounds,
-                                            labels,
+                                            test_df_raw,
                                             test_df_raw.index,
-                                            feature_names=test_df_raw.columns)
+                                            test_df_raw.columns)
         return anomaly_df
 
 

@@ -5,6 +5,7 @@ import torch
 import numpy as np
 from Logger.logger import get_logger
 
+
 class Encoder(nn.Module):
     def __init__(self, input_size, hidden_size, dropout=0.1, num_layers=1):
         super(Encoder, self).__init__()
@@ -97,7 +98,7 @@ class LstmAeUncertaintyModel(nn.Module):
         embedding = enc_hidden[0]
         return embedding
 
-    def train_ae(self, train_dl, test_dl, epochs, early_stop_epochs, lr, model_path, use_categorical_columns):
+    def train_ae(self, train_dl, val_dl, epochs, early_stop_epochs, lr, model_path, use_categorical_columns):
         criterion = nn.MSELoss().to(self.device)
         encoder_optimizer = torch.optim.Adam(self.encoder.parameters(), lr=lr)
         decoder_optimizer = torch.optim.Adam(self.decoder.parameters(), lr=lr)
@@ -145,7 +146,7 @@ class LstmAeUncertaintyModel(nn.Module):
             self.decoder.eval()
 
             with torch.no_grad():
-                for seq, labels in train_dl:
+                for seq, labels in val_dl:
                     if not use_categorical_columns:
                         seq = seq[:, :, : self.input_size]
 
@@ -167,7 +168,7 @@ class LstmAeUncertaintyModel(nn.Module):
                     loss = criterion(outputs, labels)
                     running_val_loss += loss.item()
 
-            running_val_loss /= len(test_dl)
+            running_val_loss /= len(val_dl)
 
             if epoch % 10 == 0:
                 self.logger.info(f'epoch: {epoch:3} train loss: {running_train_loss:10.8f} val loss: {running_val_loss:10.8f}')
