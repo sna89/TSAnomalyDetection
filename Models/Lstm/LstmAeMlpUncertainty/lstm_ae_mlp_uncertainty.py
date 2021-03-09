@@ -6,7 +6,7 @@ import torch
 
 
 LSTM_AR_MLP_UNCERTAINTY_HYPERPARAMETERS = ['batch_size',
-                                           'encoder_dim',
+                                           'hidden_dim',
                                            'dropout',
                                            'forecast_period',
                                            'val_ratio',
@@ -31,7 +31,8 @@ class LstmAeMlpUncertainty(LstmAeUncertainty):
                                           self.batch_size,
                                           self.horizon,
                                           self.device,
-                                          self.mlp_layers)
+                                          self.mlp_layers,
+                                          len(self.categorical_columns))
         return model.to(self.device)
 
     def train(self, train_dl, val_dl):
@@ -40,8 +41,8 @@ class LstmAeMlpUncertainty(LstmAeUncertainty):
         lr = self.lr
         model_path = self.model_path
 
-        self.model.train_ae(train_dl, val_dl, epochs, early_stop_epochs, lr, model_path)
-        # train mlp
+        self.model.train_ae(train_dl, val_dl, epochs, early_stop_epochs, lr, model_path, use_categorical_columns=False)
+        self.model.train_mlp(train_dl, val_dl, epochs, early_stop_epochs, lr, model_path)
 
     @validate_anomaly_df_schema
     def detect(self, data):

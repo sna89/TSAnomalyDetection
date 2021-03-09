@@ -5,13 +5,13 @@ from Models.Lstm.LstmAeUncertainty.lstm_ae_uncertainty_model import LstmAeUncert
 
 
 class Mlp(nn.Module):
-    def __init__(self, embedding_dim, features_dim, layers_dim, horizon, dropout):
+    def __init__(self, embedding_dim, cat_features_dim, layers_dim, horizon, dropout):
         super(Mlp, self).__init__()
 
-        self.layers = []
-        input_dim = embedding_dim + features_dim
+        self.layers = nn.ModuleList()
+        input_dim = embedding_dim + cat_features_dim
 
-        for num_layer, dim in enumerate(self.layers_dim):
+        for num_layer, dim in enumerate(layers_dim):
             if num_layer == 0:
                 in_dim = input_dim
             else:
@@ -32,10 +32,12 @@ class Mlp(nn.Module):
 
 
 class LstmAeMlpUncertaintyModel(LstmAeUncertaintyModel):
-    def __init__(self, input_size, hidden_dim, dropout, batch_size, horizon, device, mlp_layers):
+    def __init__(self, input_size, hidden_dim, dropout, batch_size, horizon, device, mlp_layers, cat_features_dim):
         super(LstmAeMlpUncertaintyModel, self).__init__(input_size, hidden_dim, dropout, batch_size, horizon, device)
 
         self.mlp_layers = mlp_layers
+        self.cat_features_dim = cat_features_dim
+        self.mlp = Mlp(hidden_dim, cat_features_dim, mlp_layers, horizon, dropout)
 
     def forward(self, seq):
         #predict seq using MLP
@@ -49,6 +51,27 @@ class LstmAeMlpUncertaintyModel(LstmAeUncertaintyModel):
         embedding = enc_hidden[0]
         return embedding
 
-    def train(self):
-        # train MLP after ae is pre-trained
-        pass
+    def train_mlp(self, train_dl, val_dl, epochs, early_stop_epochs, lr, model_path):
+        criterion = nn.MSELoss().to(self.device)
+        mlp_optimizer = torch.optim.Adam(self.mlp.parameters(), lr=lr)
+        best_val_loss = np.inf
+        early_stop_current_epochs = 0
+
+        for epoch in range(epochs):
+            running_train_loss = 0
+            self.mlp.train()
+
+            for seq, labels in train_dl:
+                mlp_optimizer.zero_grad()
+
+                seq = seq.type(torch.FloatTensor).to(self.device)
+                seq_enc = seq[:, :, :self.input_size]
+                seq_cat = seq[:, -1, self.input_size:].unsqueeze(1)
+
+                labels = labels.type(torch.FloatTensor).to(self.device)
+                outputs = torch.zeros(self.batch_size, self.horizon, self.input_size).to(self.device)
+
+                _, encoder_hidden = self.encoder(seq_enc)
+                embedding = encoder_hidden[0].view(self.batch_size, 1, -1)
+
+                in_mlp_seq = torch.cat((seq_cat, embedding), dim=2)

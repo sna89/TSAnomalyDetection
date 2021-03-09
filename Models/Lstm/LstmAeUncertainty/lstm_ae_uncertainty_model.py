@@ -97,7 +97,7 @@ class LstmAeUncertaintyModel(nn.Module):
         embedding = enc_hidden[0]
         return embedding
 
-    def train_ae(self, train_dl, test_dl, epochs, early_stop_epochs, lr, model_path):
+    def train_ae(self, train_dl, test_dl, epochs, early_stop_epochs, lr, model_path, use_categorical_columns):
         criterion = nn.MSELoss().to(self.device)
         encoder_optimizer = torch.optim.Adam(self.encoder.parameters(), lr=lr)
         decoder_optimizer = torch.optim.Adam(self.decoder.parameters(), lr=lr)
@@ -114,6 +114,8 @@ class LstmAeUncertaintyModel(nn.Module):
                 encoder_optimizer.zero_grad()
                 decoder_optimizer.zero_grad()
 
+                if not use_categorical_columns:
+                    seq = seq[:, :, : self.input_size]
                 seq = seq.type(torch.FloatTensor).to(self.device)
                 labels = labels.type(torch.FloatTensor).to(self.device)
                 outputs = torch.zeros(self.batch_size, self.horizon, self.input_size).to(self.device)
@@ -144,6 +146,9 @@ class LstmAeUncertaintyModel(nn.Module):
 
             with torch.no_grad():
                 for seq, labels in train_dl:
+                    if not use_categorical_columns:
+                        seq = seq[:, :, : self.input_size]
+
                     seq = seq.type(torch.FloatTensor).to(self.device)
                     labels = labels.type(torch.FloatTensor).to(self.device)
 

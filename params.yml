@@ -1,5 +1,5 @@
 ---
-detector_name: lstm_ae_uncertainty
+detector_name: lstm_ae_mlp_uncertainty
 
 anomalies:
   filename: Anomalies_Synthetic_t.csv

@@ -101,10 +101,7 @@ class LstmDetector(AnomalyDetectionModel):
         X = []
         y = []
         for i in range(num_samples):
-            if self.use_categorical_columns:
-                X.append(data[i:i + input_timesteps])
-            else:
-                X.append(data[i:i + input_timesteps, : num_features])
+            X.append(data[i:i + input_timesteps])
             y.append(data[i + input_timesteps: i + input_timesteps + horizon, : num_features])
         return np.array(X), np.array(y)
 

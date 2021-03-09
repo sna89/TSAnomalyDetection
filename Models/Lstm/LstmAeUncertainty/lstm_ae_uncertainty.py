@@ -31,7 +31,7 @@ class LstmAeUncertainty(LstmDetector):
         lr = self.lr
         model_path = self.model_path
 
-        self.model.train_ae(train_dl, val_dl, epochs, early_stop_epochs, lr, model_path)
+        self.model.train_ae(train_dl, val_dl, epochs, early_stop_epochs, lr, model_path, self.use_categorical_columns)
 
     @validate_anomaly_df_schema
     def detect(self, data):
