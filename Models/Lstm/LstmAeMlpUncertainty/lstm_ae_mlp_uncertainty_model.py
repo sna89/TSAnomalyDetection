@@ -5,30 +5,31 @@ from Models.Lstm.LstmAeUncertainty.lstm_ae_uncertainty_model import LstmAeUncert
 
 
 class Mlp(nn.Module):
-    def __init__(self, embedding_dim, cat_features_dim, layers_dim, horizon, input_size, dropout):
+    def __init__(self, embedding_dim, cat_features_dim, layers_dim, horizon, output_size, dropout):
         super(Mlp, self).__init__()
 
         self.horizon = horizon
+        self.output_size = output_size
         self.layers = nn.ModuleList()
         input_dim = embedding_dim + cat_features_dim
 
         for num_layer, dim in enumerate(layers_dim):
             if num_layer == 0:
-                in_dim = input_dim * self.horizon
+                in_dim = input_dim
             else:
                 in_dim = layers_dim[num_layer - 1]
 
             out_dim = layers_dim[num_layer]
             self.layers.append(nn.Linear(in_dim, out_dim))
-        self.layers.append(nn.Linear(layers_dim[-1], input_size))
+        self.layers.append(nn.Linear(layers_dim[-1], output_size * horizon))
 
         self.dropout = nn.Dropout(dropout)
         self.activation = nn.ReLU()
 
-    def prepare_input(self, encoder_hidden, features, batch_size):
+    @staticmethod
+    def prepare_input(encoder_hidden, features, batch_size):
         embedding = encoder_hidden[0].view(batch_size, 1, -1)
         out = torch.cat((embedding, features), dim=2)
-        out = out.repeat(1, self.horizon, 1)
         return out
 
     def forward(self, encoder_hidden, features):
@@ -36,6 +37,7 @@ class Mlp(nn.Module):
         out = self.prepare_input(encoder_hidden, features, batch_size)
         for layer in self.layers:
             out = self.dropout(self.activation(layer(out)))
+        out = out.view(batch_size, self.horizon, self.output_size)
         return out
 
 
