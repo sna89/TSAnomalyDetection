@@ -28,8 +28,9 @@ class Mlp(nn.Module):
 
     @staticmethod
     def prepare_input(encoder_hidden, features, batch_size):
-        embedding = encoder_hidden[0].view(batch_size, 1, -1)
-        out = torch.cat((embedding, features), dim=2)
+        embedding = encoder_hidden[0].view(batch_size, -1)
+        features = features.view(batch_size, -1)
+        out = torch.cat((embedding, features), dim=1)
         return out
 
     def forward(self, encoder_hidden, features):
