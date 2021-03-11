@@ -129,8 +129,8 @@ class ParamsValidator:
             if not isinstance(file_metadata['attribute_columns'], list):
                 msg = 'attribute_columns must be a of list data type'
                 raise Exception(msg)
-            if not isinstance(file_metadata['categorical_columns'], list):
-                msg = 'categorical_columns must be a of list data type'
+            if not isinstance(file_metadata['categorical_columns'], dict):
+                msg = 'categorical_columns must be a dict data type'
                 raise Exception(msg)
         return
 

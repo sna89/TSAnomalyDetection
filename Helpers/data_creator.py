@@ -77,8 +77,12 @@ class DataCreator:
         dfs.append(holidays_ond_hot_df)
 
         if categorical_features.weekday:
-            weekday_one_hot_df = DataCreator.get_weekday_one_hot_df(dt_index)
-            dfs.append(weekday_one_hot_df)
+            weekday_cat_df = DataCreator.get_weekday_cat_df(dt_index)
+            dfs.append(weekday_cat_df)
+
+        if categorical_features.hour:
+            hour_cat_df = DataCreator.get_hour_cat_df(dt_index)
+            dfs.append(hour_cat_df)
 
         for series_num in range(number_of_series):
             df, anomalies_df = DataCreator.create_series(dt_index,
@@ -234,10 +238,16 @@ class DataCreator:
         return weekend_one_hot_df
 
     @staticmethod
-    def get_weekday_one_hot_df(dt_index):
+    def get_weekday_cat_df(dt_index):
         weekday_series = np.array([date.weekday() for date in dt_index])
-        weekday_one_hot_df = pd.DataFrame(weekday_series, index=dt_index, columns=["weekday"])
-        return weekday_one_hot_df
+        weekday_cat_df = pd.DataFrame(weekday_series, index=dt_index, columns=["weekday"])
+        return weekday_cat_df
+
+    @staticmethod
+    def get_hour_cat_df(dt_index):
+        hour_cat_series = np.array([date.hour for date in dt_index])
+        hour_cat_df = pd.DataFrame(hour_cat_series, index=dt_index, columns=["hour"])
+        return hour_cat_df
 
     @staticmethod
     def get_holiday_series(dt_index):

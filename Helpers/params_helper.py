@@ -36,6 +36,7 @@ class CategoricalFeatures:
     is_holiday: bool
     is_weekend: bool
     weekday: bool
+    hour: bool
 
 
 @dataclass

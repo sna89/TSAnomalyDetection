@@ -24,6 +24,7 @@ create_synthetic_data:
     is_holiday: True
     is_weekend: True
     weekday: True
+    hour: True
   filename: Synthetic_t.csv
 
 preprocess_data_params:
@@ -94,7 +95,7 @@ model_hyperparameters:
       weeks: 0
 
   lstm_ae_uncertainty:
-    hidden_dim: 64
+    hidden_dim: 256
     dropout: 0.1
     batch_size: 32
     val_ratio: 0.1
@@ -154,8 +155,9 @@ metadata:
     attribute_columns:
       - all
     categorical_columns:
-      - is_weekend
-      - is_holiday
-      - weekday
+      is_weekend: False
+      is_holiday: False
+      weekday: False
+      hour: False
     time_column: index
     freq: 10min

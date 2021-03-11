@@ -52,7 +52,8 @@ class LstmUncertainty(LstmDetector):
 
             running_train_loss /= len(train_dl)
 
-            running_val_loss = self.get_inherent_noise(val_dl, h, use_hidden=True)
+            num_features = self.get_num_features(seq[0])
+            running_val_loss = self.get_inherent_noise(val_dl, h, num_features, use_hidden=True)
 
             if i % 10 == 0:
                 self.logger.info(f'epoch: {i:3} train loss: {running_train_loss:10.8f} val loss: {running_val_loss:10.8f}')
@@ -88,7 +89,7 @@ class LstmUncertainty(LstmDetector):
         self.model = self.get_lstm_model(num_features)
         self.model = LstmDetector.load_model(self.model, self.model_path)
 
-        inherent_noise = self.get_inherent_noise(val_dl, use_hidden=True)
+        inherent_noise = self.get_inherent_noise(val_dl, num_features, use_hidden=True)
         mc_mean, lower_bounds, upper_bounds = self.predict(test_inputs, LstmDetectorConst.BOOTSTRAP, inherent_noise,
                                                            True)
 

@@ -52,7 +52,7 @@ class LstmAeUncertainty(LstmDetector):
         self.model = self.get_lstm_model(num_features)
         self.model = LstmDetector.load_model(self.model, self.model_path)
 
-        inherent_noise = self.get_inherent_noise(val_dl, use_hidden=False)
+        inherent_noise = self.get_inherent_noise(val_dl, num_features, use_hidden=False)
         mc_mean, lower_bounds, upper_bounds = self.predict(inputs, LstmDetectorConst.BOOTSTRAP, inherent_noise, False)
 
         anomaly_df = self.create_anomaly_df(mc_mean,

@@ -69,7 +69,9 @@ class SingleFileDataBuilder(AbstractDataBuilder):
         if len(self.metadata_object.attribute_columns) == 1 and self.metadata_object.attribute_columns[0] == 'all':
             data_col_names = [col_name for col_name in data.columns
                               if col_name != self.metadata_object.time_column
-                              and 'Unnamed:' not in col_name]
+                              and 'Unnamed:' not in col_name
+                              and (col_name not in list(self.metadata_object.categorical_columns.keys())
+                                   or self.metadata_object.categorical_columns[col_name] is True)]
             for col_name in data_col_names:
                 self._add_column_to_df_list(col_name, data, dfs)
         else:

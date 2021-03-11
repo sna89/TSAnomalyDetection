@@ -10,12 +10,13 @@ class Mlp(nn.Module):
 
         self.horizon = horizon
         self.output_size = output_size
+        self.last_layer_out_dim = output_size * horizon
         self.layers = nn.ModuleList()
-        input_dim = embedding_dim + cat_features_dim
+        self.input_dim = embedding_dim + cat_features_dim
 
         for num_layer, dim in enumerate(layers_dim):
             if num_layer == 0:
-                in_dim = input_dim
+                in_dim = self.input_dim
             else:
                 in_dim = layers_dim[num_layer - 1]
 
@@ -24,7 +25,7 @@ class Mlp(nn.Module):
         self.layers.append(nn.Linear(layers_dim[-1], output_size * horizon))
 
         self.dropout = nn.Dropout(dropout)
-        self.activation = nn.ReLU()
+        self.activation = nn.Tanh()
 
     @staticmethod
     def prepare_input(encoder_hidden, features, batch_size):
@@ -33,11 +34,17 @@ class Mlp(nn.Module):
         out = torch.cat((embedding, features), dim=1)
         return out
 
+    def is_last_layer(self, layer):
+        return layer.out_features == self.last_layer_out_dim
+
     def forward(self, encoder_hidden, features):
         batch_size = encoder_hidden[0].shape[1]
         out = self.prepare_input(encoder_hidden, features, batch_size)
         for layer in self.layers:
-            out = self.dropout(self.activation(layer(out)))
+            if not self.is_last_layer(layer):
+                out = self.dropout(self.activation(layer(out)))
+            else:
+                out = layer(out)
         out = out.view(batch_size, self.horizon, self.output_size)
         return out
 
@@ -50,8 +57,9 @@ class LstmAeMlpUncertaintyModel(LstmAeUncertaintyModel):
         self.cat_features_dim = cat_features_dim
         self.mlp = Mlp(hidden_dim, cat_features_dim, mlp_layers, horizon, input_size, dropout)
 
-    def get_encoder(self):
-        return self.encoder
+    def freeze_encoder(self):
+        for param in self.encoder.parameters():
+            param.requires_grad = False
 
     def get_batch_seq_embedding(self, seq):
         enc_out, enc_hidden = self.encoder(seq)
@@ -76,7 +84,6 @@ class LstmAeMlpUncertaintyModel(LstmAeUncertaintyModel):
         for epoch in range(epochs):
             running_train_loss = 0
             self.mlp.train()
-            self.encoder.train()
 
             for seq, labels in train_dl:
                 mlp_optimizer.zero_grad()
@@ -96,7 +103,6 @@ class LstmAeMlpUncertaintyModel(LstmAeUncertaintyModel):
 
             running_val_loss = 0
             self.mlp.eval()
-            self.encoder.eval()
 
             with torch.no_grad():
                 for seq, labels in val_dl:

@@ -12,7 +12,7 @@ import os
 
 class LstmDetectorConst:
     BOOTSTRAP = 100
-    EPOCHS = 1
+    EPOCHS = 100
     N_99_PERCENTILE = 1.66
     EARLY_STOP_EPOCHS = 10
 
@@ -25,7 +25,6 @@ class LstmDetector(AnomalyDetectionModel):
         self.scaler = None
         self.batch_size = None
         self.horizon = None
-        self.use_categorical_columns = None
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
         self.hidden_dim = model_hyperparameters['hidden_dim']
@@ -38,6 +37,13 @@ class LstmDetector(AnomalyDetectionModel):
         self.input_timesteps_period = model_hyperparameters['input_timesteps_period']
         self.categorical_columns = model_hyperparameters['categorical_columns']
         self.model_path = os.path.join(os.getcwd(), 'lstm_ts.pth')
+
+        self.use_categorical_columns = None
+        self.used_categorical_columns = [cat_col
+                                         for cat_col, exists
+                                         in self.categorical_columns.items()
+                                         if exists is True]
+        self.num_used_categorical_columns = len(self.used_categorical_columns)
 
     def fit(self, data):
         train_df_raw, val_df_raw, test_df_raw, \
@@ -58,7 +64,7 @@ class LstmDetector(AnomalyDetectionModel):
 
     def get_num_features(self, sample):
         total_features = sample.shape[-1]
-        num_features = total_features - len(self.categorical_columns)
+        num_features = total_features - self.num_used_categorical_columns
         return num_features
 
     def init_data(self, data):
@@ -72,10 +78,9 @@ class LstmDetector(AnomalyDetectionModel):
         self.scaler, \
             train_scaled, \
             val_scaled, \
-            test_scaled = LstmDetector.scale_data(train_df_raw,
-                                                  val_df_raw,
-                                                  test_df_raw,
-                                                  self.categorical_columns)
+            test_scaled = self.scale_data(train_df_raw,
+                                          val_df_raw,
+                                          test_df_raw)
 
         x_train, y_train = self.prepare_data(train_scaled,
                                              self.input_timesteps_period,
@@ -160,7 +165,7 @@ class LstmDetector(AnomalyDetectionModel):
         anomaly_df = LstmDetector.identify_anomalies(anomaly_df, num_features)
         return anomaly_df
 
-    def get_inherent_noise(self, val_dl, h=None, use_hidden=False):
+    def get_inherent_noise(self, val_dl, num_features, h=None, use_hidden=False):
         self.model.eval()
 
         if use_hidden and h is None:
@@ -170,6 +175,8 @@ class LstmDetector(AnomalyDetectionModel):
         running_val_loss = 0
         for seq, labels in val_dl:
             with torch.no_grad():
+                if not self.use_categorical_columns:
+                    seq = seq[:, :, : num_features]
                 seq = seq.type(torch.FloatTensor).to(self.device)
                 labels = labels.type(torch.FloatTensor).to(self.device)
 
@@ -191,6 +198,10 @@ class LstmDetector(AnomalyDetectionModel):
 
     def predict(self, inputs, bootstrap_iter, inherent_noise, use_hidden):
         self.model.train()
+
+        num_features = self.get_num_features(inputs[0])
+        if not self.use_categorical_columns:
+            inputs = inputs[:, :, :num_features]
 
         if use_hidden:
             h = self.model.init_hidden(inputs.size()[0])
@@ -247,16 +258,17 @@ class LstmDetector(AnomalyDetectionModel):
     def get_tensor_dataset(inputs, labels):
         return TensorDataset(torch.from_numpy(inputs), torch.from_numpy(labels))
 
-
     @staticmethod
     def get_dataloader(dataset, batch_size, shuffle=False, drop_last=True):
         return DataLoader(dataset, shuffle=shuffle, drop_last=drop_last, batch_size=batch_size)
 
-    @staticmethod
-    def scale_data(train_df_raw, val_df_raw, test_df_raw, categorical_columns=[]):
-        train_df_to_scale, train_df_categorical = DataHelper.split_df_by_columns(train_df_raw, categorical_columns)
-        val_df_to_scale, val_df_categorical = DataHelper.split_df_by_columns(val_df_raw, categorical_columns)
-        test_df_to_scale, test_df_categorical = DataHelper.split_df_by_columns(test_df_raw, categorical_columns)
+    def scale_data(self, train_df_raw, val_df_raw, test_df_raw):
+        train_df_to_scale, train_df_categorical = DataHelper.split_df_by_columns(train_df_raw,
+                                                                                 self.used_categorical_columns)
+        val_df_to_scale, val_df_categorical = DataHelper.split_df_by_columns(val_df_raw,
+                                                                             self.used_categorical_columns)
+        test_df_to_scale, test_df_categorical = DataHelper.split_df_by_columns(test_df_raw,
+                                                                               self.used_categorical_columns)
 
         train_scaled, scaler = DataHelper.scale(train_df_to_scale)
         val_scaled = scaler.transform(val_df_to_scale)

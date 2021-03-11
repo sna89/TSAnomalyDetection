@@ -32,7 +32,7 @@ class LstmAeMlpUncertainty(LstmAeUncertainty):
                                           self.horizon,
                                           self.device,
                                           self.mlp_layers,
-                                          len(self.categorical_columns))
+                                          self.num_used_categorical_columns)
         return model.to(self.device)
 
     def train(self, train_dl, val_dl):
@@ -42,6 +42,7 @@ class LstmAeMlpUncertainty(LstmAeUncertainty):
         model_path = self.model_path
 
         self.model.train_ae(train_dl, val_dl, epochs, early_stop_epochs, lr, model_path, use_categorical_columns=False)
+        self.model.freeze_encoder()
         self.model.train_mlp(train_dl, val_dl, epochs, early_stop_epochs, lr, model_path)
 
     @validate_anomaly_df_schema
@@ -64,7 +65,7 @@ class LstmAeMlpUncertainty(LstmAeUncertainty):
         self.model = LstmDetector.load_model(self.model, self.model_path)
         #need to load model with MLP
 
-        inherent_noise = self.get_inherent_noise(val_dl, use_hidden=False)
+        inherent_noise = self.get_inherent_noise(val_dl, num_features, use_hidden=False)
         mc_mean, lower_bounds, upper_bounds = self.predict(inputs, LstmDetectorConst.BOOTSTRAP, inherent_noise, False)
 
         anomaly_df = self.create_anomaly_df(mc_mean,
