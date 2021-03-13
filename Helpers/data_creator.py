@@ -214,10 +214,10 @@ class DataCreator:
 
     @staticmethod
     def is_date_in_weekend(date):
-        return True \
+        return 1 \
             if ((date.weekday() >= DataCreatorWeekendMetadata.FRIDAY_WEEKDAY) &
                 (date.weekday() <= DataCreatorWeekendMetadata.SATURDAY_WEEKDAY)) \
-            else False
+            else 0
 
     @staticmethod
     def get_weekend_index(index):
