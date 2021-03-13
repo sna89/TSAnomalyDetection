@@ -23,6 +23,7 @@ class LstmAeMlpUncertainty(LstmAeUncertainty):
                                                            model_hyperparameters)
 
         self.mlp_layers = model_hyperparameters['mlp_layers']
+        self.use_categorical_columns = True
 
     def get_lstm_model(self, num_features):
         model = LstmAeMlpUncertaintyModel(num_features,

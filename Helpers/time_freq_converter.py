@@ -1,4 +1,12 @@
-from Helpers.data_helper import Period
+from dataclasses import dataclass
+
+
+@dataclass
+class Period:
+    minutes: int
+    hours: int
+    days: int
+    weeks: int
 
 
 class TenMinConverterConst:

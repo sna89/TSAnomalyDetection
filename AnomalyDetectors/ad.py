@@ -1,11 +1,11 @@
 import pandas as pd
-from Helpers.data_helper import DataHelper, Period, timer
+from Helpers.data_helper import DataHelper, timer
 from Logger.logger import get_logger
 from Helpers.params_helper import ExperimentHyperParameters
 from dateutil.relativedelta import relativedelta
 from datetime import timedelta
 from constants import AnomalyDfColumns
-from Helpers.time_freq_converter import TimeFreqConverter
+from Helpers.time_freq_converter import TimeFreqConverter, Period
 
 
 class AnomalyDetector():
@@ -89,7 +89,7 @@ class AnomalyDetector():
                             feature = row[AnomalyDfColumns.Feature]
                             prediction = row[AnomalyDfColumns.Prediction]
                             actual = row[AnomalyDfColumns.Actual]
-                            df_curr_epoch.at[idx, feature] = prediction * 0.5 + actual * (1 - 0.5)
+                            df_curr_epoch.at[idx, feature] = prediction * 0.85 + actual * (1 - 0.85)
 
                     else:
                         df_curr_epoch.drop(labels=detected_anomalies.index, axis=0, inplace=True)

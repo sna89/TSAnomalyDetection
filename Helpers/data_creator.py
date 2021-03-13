@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from Logger.logger import get_logger
 import holidays
-from Helpers.data_helper import DataHelper
+from Helpers.data_helper import DataHelper, Period
 
 
 class DataCreatorGeneratorConst:
@@ -72,7 +72,8 @@ class DataCreator:
         weekends_ond_hot_df = DataCreator.get_weekend_one_hot_df(dt_index)
         dfs.append(weekends_ond_hot_df)
 
-        holidays_series = np.zeros(len(dt_index)) if not categorical_features.is_holiday else DataCreator.get_holiday_series(dt_index)
+        holidays_series = np.zeros(
+            len(dt_index)) if not categorical_features.is_holiday else DataCreator.get_holiday_series(dt_index)
         holidays_ond_hot_df = DataCreator.get_holiday_one_hot_df(dt_index)
         dfs.append(holidays_ond_hot_df)
 
@@ -190,14 +191,14 @@ class DataCreator:
     def _create_yearly_seasonality(periods):
         jan_march_series = pd.Series(DataCreator.create_sin_wave(amplitude=DataCreatorGeneratorConst.A,
                                                                  freq=DataCreatorGeneratorConst.W,
-                                                                 start=float(3)/2*np.pi,
-                                                                 end=2*np.pi,
-                                                                 periods=int(periods/4)))
+                                                                 start=float(3) / 2 * np.pi,
+                                                                 end=2 * np.pi,
+                                                                 periods=int(periods / 4)))
 
         april_dec_series = pd.Series(DataCreator.create_sin_wave(amplitude=DataCreatorGeneratorConst.A,
                                                                  freq=DataCreatorGeneratorConst.W,
                                                                  start=0,
-                                                                 end=float(3)/2*np.pi,
+                                                                 end=float(3) / 2 * np.pi,
                                                                  periods=int(3 * periods / 4)))
         return pd.concat([jan_march_series, april_dec_series], axis=0)
 
@@ -213,23 +214,55 @@ class DataCreator:
 
     @staticmethod
     def is_date_in_weekend(date):
-        return 1 \
+        return True \
             if ((date.weekday() >= DataCreatorWeekendMetadata.FRIDAY_WEEKDAY) &
                 (date.weekday() <= DataCreatorWeekendMetadata.SATURDAY_WEEKDAY)) \
-            else 0
-
-    @staticmethod
-    def get_weekend_series(index):
-        weekend_dt_index = DataCreator.get_weekend_index(index)
-        weekend_series = np.where([date in weekend_dt_index
-                            for date in index], -DataCreatorWeekendMetadata.DECREASE, 0)
-        return weekend_series
+            else False
 
     @staticmethod
     def get_weekend_index(index):
         weekend_dt_index = pd.DatetimeIndex(date for date in index
                                             if DataCreator.is_date_in_weekend(date))
         return weekend_dt_index
+
+    @staticmethod
+    def get_beginning_index(index):
+        beginning_dt_index = pd.DatetimeIndex(date for date in index
+                                              if date.hour <= 4)
+        return beginning_dt_index
+
+    @staticmethod
+    def get_ending_index(index):
+        ending_dt_index = pd.DatetimeIndex(date for date in index
+                                           if date.hour >= 20)
+        return ending_dt_index
+
+    @staticmethod
+    def update_weekend_value(row, weekend_dt_index):
+        val = -DataCreatorWeekendMetadata.DECREASE if row.name in weekend_dt_index else 0
+        return val
+
+    @staticmethod
+    def update_weekend_begin_end_value(row, weekend_beginning_dt_index, weekend_ending_dt_index):
+        val = None if row.name in weekend_beginning_dt_index or row.name in weekend_ending_dt_index else row['value']
+        return val
+
+    @staticmethod
+    def get_weekend_series(dt_index):
+        weekend_dt_index = DataCreator.get_weekend_index(dt_index)
+        weekend_beginning_dt_index = DataCreator.get_beginning_index(weekend_dt_index)
+        weekend_ending_dt_index = DataCreator.get_ending_index(weekend_dt_index)
+
+        weekend_df = pd.DataFrame(data=[0 for _ in range(len(dt_index))], index=dt_index, columns=['value'])
+        weekend_df['value'] = weekend_df.apply(lambda row: DataCreator.update_weekend_value(row, weekend_dt_index),
+                                               axis=1)
+        weekend_df['value'] = weekend_df.apply(lambda row:
+                                               DataCreator.update_weekend_begin_end_value(row,
+                                                                                          weekend_beginning_dt_index,
+                                                                                          weekend_ending_dt_index),
+                                               axis=1)
+        weekend_df['value'] = weekend_df.interpolate()
+        return weekend_df['value'].values
 
     @staticmethod
     def get_weekend_one_hot_df(dt_index):
@@ -251,14 +284,26 @@ class DataCreator:
 
     @staticmethod
     def get_holiday_series(dt_index):
+        holidays_df = pd.DataFrame(data=[0 for _ in range(len(dt_index))],
+                                   index=dt_index,
+                                   columns=['value'])
+
         holidays_dt_index = DataCreator.get_holiday_index(dt_index)
         weekend_dt_index = DataCreator.get_weekend_index(dt_index)
         only_holidays_index = pd.DatetimeIndex([date for date in dt_index
                                                 if date in holidays_dt_index
                                                 and date not in weekend_dt_index])
-        holiday_series = np.where([date in only_holidays_index for date in dt_index],
-                                  -DataCreatorHolidayMetadata.DECREASE, 0)
-        return holiday_series
+        holidays_beginning_dt_index = DataCreator.get_beginning_index(only_holidays_index)
+        holidays_ending_dt_index = DataCreator.get_ending_index(only_holidays_index)
+        holidays_df['value'] = holidays_df.apply(lambda row: DataCreator.update_weekend_value(row, only_holidays_index),
+                                                 axis=1)
+        holidays_df['value'] = holidays_df.apply(lambda row:
+                                                 DataCreator.update_weekend_begin_end_value(row,
+                                                                                            holidays_beginning_dt_index,
+                                                                                            holidays_ending_dt_index),
+                                                 axis=1)
+        holidays_df['value'] = holidays_df.interpolate()
+        return holidays_df['value'].values
 
     @staticmethod
     def get_holiday_index(dt_index):
@@ -316,7 +361,8 @@ class DataCreator:
 
     @staticmethod
     def _multiply_arr_and_combine(daily, mulitplier, daily_high_freq):
-        days_with_high_freq = sorted(np.random.randint(1, mulitplier, DataCreatorHighFreqMetadata.NUM_HIGH_FREQ_PERIODS))
+        days_with_high_freq = sorted(
+            np.random.randint(1, mulitplier, DataCreatorHighFreqMetadata.NUM_HIGH_FREQ_PERIODS))
         intersection_days = 0
 
         trend = np.array([])

@@ -1,10 +1,11 @@
 from typing import List, Dict
 import pandas as pd
-from Helpers.data_helper import DataHelper, Period
+from Helpers.data_helper import DataHelper
 from abc import ABC, abstractmethod
 from Helpers.params_helper import Metadata, PreprocessDataParams
 from Logger.logger import get_logger
 from Helpers.data_reader import DataReaderFactory
+from Helpers.time_freq_converter import Period
 
 
 class DataConstructor:

@@ -3,19 +3,12 @@ import copy
 from datetime import timedelta
 from sklearn import preprocessing
 from dateutil.relativedelta import relativedelta
-from dataclasses import dataclass
 from Logger.logger import get_logger
 from time import time
 import functools
 from typing import List
-
-
-@dataclass
-class Period:
-    minutes: int
-    hours: int
-    days: int
-    weeks: int
+import numpy as np
+from Helpers.time_freq_converter import Period, TimeFreqConverter
 
 
 class DataConst:
@@ -143,12 +136,19 @@ class DataHelper:
                                index=data.iloc[train_len:].index)
         return train_df, test_df
 
-
-
     @staticmethod
     def is_constant_data(data):
         unique_values = data.nunique().values[0]
         return True if unique_values == 1 else False
+
+    @staticmethod
+    def interpolate(period: Period, start_val: float, end_val: float):
+        periods = TimeFreqConverter.convert_to_num_samples(period, "10min")
+        x = np.linspace(1, periods - 1, periods - 1)
+        xp = [0, periods]
+        fp = [start_val, end_val]
+        interp = np.interp(x, xp, fp)
+        return interp
 
 
 def timer(func):
