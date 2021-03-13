@@ -11,7 +11,7 @@ output:
   features_to_plot:
 
 create_synthetic_data:
-  to_create: false
+  to_create: true
   num_of_series: 10
   period:
     minutes: 0
@@ -155,9 +155,9 @@ metadata:
     attribute_columns:
       - all
     categorical_columns:
-      is_weekend: False
-      is_holiday: False
-      weekday: False
-      hour: False
+      is_weekend: True
+      is_holiday: True
+      weekday: True
+      hour: True
     time_column: index
     freq: 10min

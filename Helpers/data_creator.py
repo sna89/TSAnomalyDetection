@@ -29,11 +29,11 @@ class DataCreatorHighFreqMetadata:
 
 
 class DataCreatorHolidayMetadata:
-    DECREASE = 0.5
+    DECREASE = 0.25
 
 
 class DataCreatorWeekendMetadata:
-    DECREASE = 0.5
+    DECREASE = 0.25
     FRIDAY_WEEKDAY = 4
     SATURDAY_WEEKDAY = 5
 

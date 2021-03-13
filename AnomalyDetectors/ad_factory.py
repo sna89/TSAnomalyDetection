@@ -1,6 +1,5 @@
 # from Models.SeasonalESD.seasonal_esd import SeasonalESD
 # from Models.Arima.arima import Arima
-# from Models.Lstm.LstmAE.lstmae import LstmDetectorAE
 from Models.Lstm.LstmUncertainty.lstm_uncertainty import LstmUncertainty
 from Models.Lstm.LstmAeUncertainty.lstm_ae_uncertainty import LstmAeUncertainty
 from Models.Lstm.LstmAeMlpUncertainty.lstm_ae_mlp_uncertainty import LstmAeMlpUncertainty
@@ -25,12 +24,6 @@ class AnomalyDetectionFactory:
 
         # elif self.detector_name == 'prophet':
         #     return AnomalyDetector(FBProphet, self.experiment_hyperparameters, self.model_hyperparameters)
-
-        # if self.detector_name == 'lstm_ae':
-        #     return AnomalyDetector(LstmDetectorAE,
-        #                            self.experiment_hyperparameters,
-        #                            self.model_hyperparameters,
-        #                            self.freq)
 
         if self.detector_name == 'lstm_uncertainty':
             return AnomalyDetector(LstmUncertainty,

@@ -1,5 +1,5 @@
 import unittest
-from Models.Lstm.LstmAE.lstmae import LstmDetectorAE
+from Obsolete.LstmAE.lstmae import LstmDetectorAE
 import pandas as pd
 from pandas.testing import assert_frame_equal
 from Helpers.file_helper import FileHelper

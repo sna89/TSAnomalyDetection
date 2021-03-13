@@ -1,7 +1,6 @@
 from Models.anomaly_detection_model import AnomalyDetectionModel, validate_anomaly_df_schema
 from Models.Lstm.LstmAeUncertainty.lstm_ae_uncertainty_model import LstmAeUncertaintyModel
 from Models.Lstm.lstmdetector import LstmDetector, LstmDetectorConst
-import numpy as np
 import torch
 
 
