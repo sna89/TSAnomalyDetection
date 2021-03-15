@@ -10,13 +10,6 @@ import pandas as pd
 import os
 
 
-class LstmDetectorConst:
-    BOOTSTRAP = 100
-    EPOCHS = 1
-    N_99_PERCENTILE = 1.66
-    EARLY_STOP_EPOCHS = 10
-
-
 class LstmDetector(AnomalyDetectionModel):
     def __init__(self, model_hyperparameters):
         super(LstmDetector, self).__init__()
@@ -28,12 +21,16 @@ class LstmDetector(AnomalyDetectionModel):
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
         self.hidden_dim = model_hyperparameters['hidden_dim']
-        self.dropout = model_hyperparameters['dropout']
         self.batch_size = model_hyperparameters['batch_size']
         self.horizon = model_hyperparameters['forecast_period']
         self.val_ratio = model_hyperparameters['val_ratio']
         self.lr = model_hyperparameters['lr']
         self.freq = model_hyperparameters['freq']
+        self.dropout = model_hyperparameters['dropout']
+        self.bootstrap = model_hyperparameters['bootstrap']
+        self.percentile_value = model_hyperparameters['percentile_value']
+        self.epochs = model_hyperparameters['epochs']
+        self.early_stop = model_hyperparameters['early_stop']
         self.input_timesteps_period = model_hyperparameters['input_timesteps_period']
         self.categorical_columns = model_hyperparameters['categorical_columns']
         self.model_path = os.path.join(os.getcwd(), 'lstm_ts.pth')
@@ -120,14 +117,17 @@ class LstmDetector(AnomalyDetectionModel):
 
     def create_anomaly_df(self,
                           seq_mean,
+                          inherent_noise,
+                          seq_mc_var,
+                          seq_uncertainty,
                           seq_lower_bound,
                           seq_upper_bound,
-                          seq_labels,
-                          index,
-                          feature_names):
+                          test_df_raw):
 
         seq_len = len(seq_lower_bound)
-        num_features = self.get_num_features(seq_labels.iloc[0])
+        num_features = self.get_num_features(test_df_raw.iloc[0])
+        index = test_df_raw.index
+        feature_names = test_df_raw.columns
 
         dfs = []
 
@@ -137,21 +137,29 @@ class LstmDetector(AnomalyDetectionModel):
             for idx in range(seq_len):
                 index_idx = int(len(index) - self.horizon + idx)
                 dt_index = index[index_idx]
-                y = seq_labels.iloc[index_idx][feature]
+                y = test_df_raw.iloc[index_idx][feature]
 
                 sample_mean = seq_mean[idx][feature]
                 sample_lower_bound = seq_lower_bound[idx][feature]
                 sample_upper_bound = seq_upper_bound[idx][feature]
+                sample_mc_var = seq_mc_var[idx][feature]
+                sample_uncertainty = seq_uncertainty[idx][feature]
 
                 is_anomaly = 1 if (y <= sample_lower_bound) or (y >= sample_upper_bound) else 0
 
                 data[dt_index] = {
                     AnomalyDfColumns.Feature: feature_names[feature],
+                    AnomalyDfColumns.IsAnomaly: is_anomaly,
                     AnomalyDfColumns.Prediction: sample_mean,
                     AnomalyDfColumns.LowerBound: sample_lower_bound,
                     AnomalyDfColumns.UpperBound: sample_upper_bound,
                     AnomalyDfColumns.Actual: y,
-                    AnomalyDfColumns.IsAnomaly: is_anomaly
+                    AnomalyDfColumns.McVar: sample_mc_var,
+                    AnomalyDfColumns.InherentNoise: inherent_noise,
+                    AnomalyDfColumns.Uncertainty: sample_uncertainty,
+                    AnomalyDfColumns.Bootstrap: self.bootstrap,
+                    AnomalyDfColumns.PercentileValue: self.percentile_value,
+                    AnomalyDfColumns.Dropout: self.dropout
                 }
 
             df = pd.DataFrame.from_dict(data, orient='index')
@@ -196,7 +204,7 @@ class LstmDetector(AnomalyDetectionModel):
         inherent_noise = running_val_loss
         return inherent_noise
 
-    def predict(self, inputs, bootstrap_iter, inherent_noise, use_hidden):
+    def predict(self, inputs, inherent_noise, use_hidden):
         self.model.train()
 
         num_features = self.get_num_features(inputs[0])
@@ -208,22 +216,22 @@ class LstmDetector(AnomalyDetectionModel):
 
             predictions = np.array(
                 [self.scaler.inverse_transform(self.model(inputs, h, True)[0].cpu().detach().numpy()) for _ in
-                 range(bootstrap_iter)])
+                 range(self.bootstrap)])
 
         else:
             predictions = np.array(
                 [self.scaler.inverse_transform(self.model(inputs)[0].cpu().detach().numpy()) for _ in
-                 range(bootstrap_iter)])
+                 range(self.bootstrap)])
 
         mc_mean = predictions.mean(axis=0)
         mc_var = predictions.var(axis=0)
         uncertainty = np.sqrt(mc_var + inherent_noise)
 
-        lower_bound = mc_mean - LstmDetectorConst.N_99_PERCENTILE * uncertainty
-        upper_bound = mc_mean + LstmDetectorConst.N_99_PERCENTILE * uncertainty
+        lower_bounds = mc_mean - self.percentile_value * uncertainty
+        upper_bounds = mc_mean + self.percentile_value * uncertainty
 
         self.model.eval()
-        return mc_mean, lower_bound, upper_bound
+        return mc_mean, mc_var, uncertainty, lower_bounds, upper_bounds
 
     @staticmethod
     def identify_anomalies(anomaly_df, num_features):

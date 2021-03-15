@@ -51,12 +51,17 @@ class CreateSyntheticData:
 
 
 @dataclass
+class Outliers:
+    remove: bool
+    prediction_ratio: int
+
+@dataclass
 class ExperimentHyperParameters:
     train_period: Period
     train_freq: Period
     forecast_period: Period
     include_train_time: bool
-    remove_outliers: bool
+    outliers: Outliers
     scale: bool
 
 

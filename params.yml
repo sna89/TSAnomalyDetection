@@ -11,7 +11,7 @@ output:
   features_to_plot:
 
 create_synthetic_data:
-  to_create: true
+  to_create: false
   num_of_series: 10
   period:
     minutes: 0
@@ -55,7 +55,9 @@ experiment_hyperparameters:
     days: 0
     weeks: 0
   include_train_time: False
-  remove_outliers: True
+  outliers:
+    remove: True
+    prediction_ratio: 0.85
   scale: True
 
 
@@ -96,10 +98,14 @@ model_hyperparameters:
 
   lstm_ae_uncertainty:
     hidden_dim: 256
-    dropout: 0.1
     batch_size: 32
     val_ratio: 0.1
     lr: 0.0005
+    bootstrap: 100
+    percentile_value: 1.66
+    dropout: 0.1
+    epochs: 100
+    early_stop: 10
     input_timesteps_period:
       minutes: 0
       hours: 6
@@ -108,11 +114,15 @@ model_hyperparameters:
 
   lstm_ae_mlp_uncertainty:
     hidden_dim: 256
-    dropout: 0.1
     batch_size: 32
     val_ratio: 0.1
     lr: 0.0005
     mlp_layers: [128, 64]
+    bootstrap: 100
+    percentile_value: 1.66
+    dropout: 0.5
+    epochs: 100
+    early_stop: 10
     input_timesteps_period:
       minutes: 0
       hours: 6

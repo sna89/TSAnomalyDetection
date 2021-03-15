@@ -1,7 +1,7 @@
 import pandas as pd
 from Helpers.data_helper import DataHelper, timer
 from Logger.logger import get_logger
-from Helpers.params_helper import ExperimentHyperParameters
+from Helpers.params_helper import ExperimentHyperParameters, Outliers
 from dateutil.relativedelta import relativedelta
 from datetime import timedelta
 from constants import AnomalyDfColumns
@@ -17,6 +17,9 @@ class AnomalyDetector():
         self.model = model
 
         self.experiment_hyperparameters = ExperimentHyperParameters(**experiment_hyperparameters)
+        self.outliers = Outliers(**self.experiment_hyperparameters.outliers)
+        self.remove_outliers = self.outliers.remove
+        self.prediction_ratio = self.outliers.prediction_ratio
 
         self.train_period = Period(**self.experiment_hyperparameters.train_period)
         self.train_period_num_samples = TimeFreqConverter.convert_to_num_samples(self.train_period, freq=freq)
@@ -48,7 +51,8 @@ class AnomalyDetector():
 
         data = data_.copy()
         for epoch, idx in enumerate(range(0,
-                                          len(data) - (self.train_period_num_samples + self.forecast_period_num_samples),
+                                          len(data) - (
+                                                  self.train_period_num_samples + self.forecast_period_num_samples),
                                           self.forecast_period_num_samples),
                                     start=1):
             df_curr_epoch = data.iloc[idx: idx + self.train_period_num_samples + self.forecast_period_num_samples]
@@ -74,7 +78,8 @@ class AnomalyDetector():
                 filtered_anomalies = detected_anomalies
 
                 if epoch > 1 or not self.experiment_hyperparameters.include_train_time:
-                    filtered_anomalies = self.filter_anomalies_in_forecast(detected_anomalies, df_curr_epoch.index.max())
+                    filtered_anomalies = self.filter_anomalies_in_forecast(detected_anomalies,
+                                                                           df_curr_epoch.index.max())
 
                 if not filtered_anomalies.empty:
                     self.df_anomalies = pd.concat([self.df_anomalies, filtered_anomalies], axis=0)
@@ -82,14 +87,16 @@ class AnomalyDetector():
                 else:
                     self.logger.info("No anomalies detected in current iteration")
 
-                if self.experiment_hyperparameters.remove_outliers:
+                if self.remove_outliers:
                     if AnomalyDfColumns.Prediction in detected_anomalies.columns:
-                        actual_detected_anomalies = detected_anomalies[detected_anomalies[AnomalyDfColumns.IsAnomaly] == 1]
+                        actual_detected_anomalies = detected_anomalies[
+                            detected_anomalies[AnomalyDfColumns.IsAnomaly] == 1]
                         for idx, row in actual_detected_anomalies.iterrows():
                             feature = row[AnomalyDfColumns.Feature]
                             prediction = row[AnomalyDfColumns.Prediction]
                             actual = row[AnomalyDfColumns.Actual]
-                            df_curr_epoch.at[idx, feature] = prediction * 0.85 + actual * (1 - 0.85)
+                            df_curr_epoch.at[idx, feature] = prediction * self.prediction_ratio + \
+                                                             actual * (1 - self.prediction_ratio)
 
                     else:
                         df_curr_epoch.drop(labels=detected_anomalies.index, axis=0, inplace=True)
@@ -117,5 +124,3 @@ class AnomalyDetector():
         filtered = filtered[filtered['is_filtered'] == True]
         filtered.drop(columns=['is_filtered'], axis=1, inplace=True)
         return filtered
-
-

@@ -10,9 +10,17 @@ class AnomalyDfColumns:
     Feature = 'Feature'
     IsAnomaly = 'IsAnomaly'
     Actual = 'Actual'
-    Distance = 'Distance'
-    Threshold = 'Threshold'
     Prediction = 'Prediction'
     LowerBound = 'LowerBound'
     UpperBound = 'UpperBound'
+    McVar = 'MCVariance'
+    InherentNoise = 'InherentNoise'
+    Uncertainty = 'Uncertainty'
+    Bootstrap = 'Bootstrap'
+    PercentileValue = 'PercentileValue'
+    Dropout = 'Dropout'
+
+
+
+
 

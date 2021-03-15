@@ -4,7 +4,6 @@ from Models.Lstm.lstmdetector import LstmDetector
 import numpy as np
 import torch
 import torch.nn as nn
-from Models.Lstm.lstmdetector import LstmDetectorConst
 
 LSTM_UNCERTAINTY_HYPERPARAMETERS = ['hidden_dim',
                                     'batch_size',
@@ -30,7 +29,7 @@ class LstmUncertainty(LstmDetector):
 
         early_stop_current_epochs = 0
 
-        for i in range(LstmDetectorConst.EPOCHS):
+        for i in range(self.epochs):
             h = self.model.init_hidden()
 
             running_train_loss = 0
@@ -66,7 +65,7 @@ class LstmUncertainty(LstmDetector):
             else:
                 early_stop_current_epochs += 1
 
-            if early_stop_current_epochs == LstmDetectorConst.EARLY_STOP_EPOCHS:
+            if early_stop_current_epochs == self.early_stop:
                 break
 
         return
@@ -90,15 +89,15 @@ class LstmUncertainty(LstmDetector):
         self.model = LstmDetector.load_model(self.model, self.model_path)
 
         inherent_noise = self.get_inherent_noise(val_dl, num_features, use_hidden=True)
-        mc_mean, lower_bounds, upper_bounds = self.predict(test_inputs, LstmDetectorConst.BOOTSTRAP, inherent_noise,
-                                                           True)
+        mc_mean, mc_var, uncertainty, lower_bounds, upper_bounds = self.predict(test_inputs, inherent_noise, True)
 
         anomaly_df = self.create_anomaly_df(mc_mean[0],
+                                            inherent_noise,
+                                            mc_var,
+                                            uncertainty,
                                             lower_bounds[0],
                                             upper_bounds[0],
-                                            test_df_raw,
-                                            test_df_raw.index,
-                                            feature_names=test_df_raw.columns)
+                                            test_df_raw)
         return anomaly_df
 
     def get_lstm_model(self, num_features):

@@ -96,14 +96,14 @@ class ParamsValidator:
         if 'forecast_period' not in experiment_hyperparameters_keys \
                 or 'train_period' not in experiment_hyperparameters_keys \
                 or 'include_train_time' not in experiment_hyperparameters_keys \
-                or 'remove_outliers' not in experiment_hyperparameters_keys \
+                or 'outliers' not in experiment_hyperparameters_keys \
                 or 'scale' not in experiment_hyperparameters_keys \
                 or 'train_freq' not in experiment_hyperparameters_keys:
             msg = 'experiment hyperparamaters need to include: ' \
-                  'forecast_period_hours, ' \
+                  'forecast_period, ' \
                   'train_period, ' \
                   'include_train_time,' \
-                  'remove_outliers,' \
+                  'outliers,' \
                   'scale, ' \
                   'train_freq'
             raise Exception(msg)

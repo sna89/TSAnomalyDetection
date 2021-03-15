@@ -50,8 +50,28 @@ class Mlp(nn.Module):
 
 
 class LstmAeMlpUncertaintyModel(LstmAeUncertaintyModel):
-    def __init__(self, input_size, hidden_dim, dropout, batch_size, horizon, device, mlp_layers, cat_features_dim):
-        super(LstmAeMlpUncertaintyModel, self).__init__(input_size, hidden_dim, dropout, batch_size, horizon, device)
+    def __init__(self, input_size,
+                 hidden_dim,
+                 dropout,
+                 lr,
+                 epochs,
+                 early_stop,
+                 batch_size,
+                 horizon,
+                 mlp_layers,
+                 cat_features_dim,
+                 device,
+                 model_path):
+        super(LstmAeMlpUncertaintyModel, self).__init__(input_size,
+                                                        hidden_dim,
+                                                        dropout,
+                                                        lr,
+                                                        epochs,
+                                                        early_stop,
+                                                        batch_size,
+                                                        horizon,
+                                                        device,
+                                                        model_path)
 
         self.mlp_layers = mlp_layers
         self.cat_features_dim = cat_features_dim
@@ -75,13 +95,13 @@ class LstmAeMlpUncertaintyModel(LstmAeUncertaintyModel):
 
         return outputs
 
-    def train_mlp(self, train_dl, val_dl, epochs, early_stop_epochs, lr, model_path):
+    def train_mlp(self, train_dl, val_dl):
         criterion = nn.MSELoss().to(self.device)
-        mlp_optimizer = torch.optim.Adam(self.mlp.parameters(), lr=lr)
+        mlp_optimizer = torch.optim.Adam(self.mlp.parameters(), lr=self.lr)
         best_val_loss = np.inf
         early_stop_current_epochs = 0
 
-        for epoch in range(epochs):
+        for epoch in range(self.epochs):
             running_train_loss = 0
             self.mlp.train()
 
@@ -119,12 +139,12 @@ class LstmAeMlpUncertaintyModel(LstmAeUncertaintyModel):
                 self.logger.info(f'epoch: {epoch:3} train loss: {running_train_loss:10.8f} val loss: {running_val_loss:10.8f}')
 
             if running_val_loss <= best_val_loss:
-                torch.save(self.state_dict(), model_path)
+                torch.save(self.state_dict(), self.model_path)
                 best_val_loss = running_val_loss
                 early_stop_current_epochs = 0
 
             else:
                 early_stop_current_epochs += 1
 
-            if early_stop_current_epochs == early_stop_epochs:
+            if early_stop_current_epochs == self.early_stop:
                 break

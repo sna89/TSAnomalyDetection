@@ -59,15 +59,19 @@ class Decoder(nn.Module):
 
 
 class LstmAeUncertaintyModel(nn.Module):
-    def __init__(self, input_size, hidden_dim, dropout, batch_size, horizon, device):
+    def __init__(self, input_size, hidden_dim, dropout, lr, epochs, early_stop, batch_size, horizon, device, model_path):
         super(LstmAeUncertaintyModel, self).__init__()
         self.logger = get_logger(__class__.__name__)
 
         self.input_size = input_size
         self.hidden_dim = hidden_dim
-        self.device = device
         self.batch_size = batch_size
         self.horizon = horizon
+        self.lr = lr
+        self.epochs = epochs
+        self.early_stop = early_stop
+        self.device = device
+        self.model_path = model_path
 
         self.encoder = Encoder(input_size, hidden_dim, dropout)
         self.decoder = Decoder(input_size, hidden_dim, dropout)
@@ -98,15 +102,15 @@ class LstmAeUncertaintyModel(nn.Module):
         embedding = enc_hidden[0]
         return embedding
 
-    def train_ae(self, train_dl, val_dl, epochs, early_stop_epochs, lr, model_path, use_categorical_columns):
+    def train_ae(self, train_dl, val_dl, use_categorical_columns):
         criterion = nn.MSELoss().to(self.device)
-        encoder_optimizer = torch.optim.Adam(self.encoder.parameters(), lr=lr)
-        decoder_optimizer = torch.optim.Adam(self.decoder.parameters(), lr=lr)
+        encoder_optimizer = torch.optim.Adam(self.encoder.parameters(), lr=self.lr)
+        decoder_optimizer = torch.optim.Adam(self.decoder.parameters(), lr=self.lr)
 
         best_val_loss = np.inf
         early_stop_current_epochs = 0
 
-        for epoch in range(epochs):
+        for epoch in range(self.epochs):
             running_train_loss = 0
             self.encoder.train()
             self.decoder.train()
@@ -174,12 +178,12 @@ class LstmAeUncertaintyModel(nn.Module):
                 self.logger.info(f'epoch: {epoch:3} train loss: {running_train_loss:10.8f} val loss: {running_val_loss:10.8f}')
 
             if running_val_loss <= best_val_loss:
-                torch.save(self.state_dict(), model_path)
+                torch.save(self.state_dict(), self.model_path)
                 best_val_loss = running_val_loss
                 early_stop_current_epochs = 0
 
             else:
                 early_stop_current_epochs += 1
 
-            if early_stop_current_epochs == early_stop_epochs:
+            if early_stop_current_epochs == self.early_stop:
                 break
