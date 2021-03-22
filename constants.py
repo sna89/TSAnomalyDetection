@@ -19,6 +19,7 @@ class AnomalyDfColumns:
     Bootstrap = 'Bootstrap'
     PercentileValue = 'PercentileValue'
     Dropout = 'Dropout'
+    NumOfSeries = 'NumOfSeries'
 
 
 

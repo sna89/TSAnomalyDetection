@@ -159,7 +159,8 @@ class LstmDetector(AnomalyDetectionModel):
                     AnomalyDfColumns.Uncertainty: sample_uncertainty,
                     AnomalyDfColumns.Bootstrap: self.bootstrap,
                     AnomalyDfColumns.PercentileValue: self.percentile_value,
-                    AnomalyDfColumns.Dropout: self.dropout
+                    AnomalyDfColumns.Dropout: self.dropout,
+                    AnomalyDfColumns.NumOfSeries: 0
                 }
 
             df = pd.DataFrame.from_dict(data, orient='index')
@@ -234,16 +235,35 @@ class LstmDetector(AnomalyDetectionModel):
         return mc_mean, mc_var, uncertainty, lower_bounds, upper_bounds
 
     @staticmethod
-    def identify_anomalies(anomaly_df, num_features):
+    def add_num_anomalies_in_sample(anomaly_df):
         for idx in anomaly_df.index.unique():
             idx_df = anomaly_df[anomaly_df.index == idx]
             anomaly_idx_df = idx_df[idx_df[AnomalyDfColumns.IsAnomaly] == 1]
-            if not anomaly_idx_df.empty:
-                num_anomalies_in_sample = anomaly_idx_df.shape[0]
-                if num_anomalies_in_sample >= np.floor(np.sqrt(num_features)):
-                    anomaly_df.loc[idx, AnomalyDfColumns.IsAnomaly] = 1
-                else:
-                    anomaly_df.loc[idx, AnomalyDfColumns.IsAnomaly] = 0
+            num_anomalies_in_sample = anomaly_idx_df.shape[0]
+            anomaly_df.at[idx, AnomalyDfColumns.NumOfSeries] = num_anomalies_in_sample
+
+    @staticmethod
+    def assign_is_anomaly_to_row(row, num_features):
+        if row[AnomalyDfColumns.NumOfSeries] >= np.floor(np.sqrt(num_features)):
+            return 1
+        else:
+            return 0
+
+    @staticmethod
+    def identify_anomalies(anomaly_df, num_features):
+        LstmDetector.add_num_anomalies_in_sample(anomaly_df)
+        anomaly_df[AnomalyDfColumns.IsAnomaly] =\
+            anomaly_df.apply(lambda row: LstmDetector.assign_is_anomaly_to_row(row, num_features), axis=1)
+
+        # for idx in anomaly_df.index.unique():
+        #     idx_df = anomaly_df[anomaly_df.index == idx]
+        #     anomaly_idx_df = idx_df[idx_df[AnomalyDfColumns.IsAnomaly] == 1]
+        #     if not anomaly_idx_df.empty:
+        #         num_anomalies_in_sample = anomaly_idx_df.shape[0]
+        #         if num_anomalies_in_sample >= np.floor(np.sqrt(num_features)):
+        #             anomaly_df.loc[idx, AnomalyDfColumns.IsAnomaly] = 1
+        #         else:
+        #             anomaly_df.loc[idx, AnomalyDfColumns.IsAnomaly] = 0
         return anomaly_df
 
     @staticmethod

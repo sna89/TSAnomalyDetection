@@ -42,7 +42,7 @@ class EvalHelper:
         auc = roc_auc_score(self.eval_df['y_true'], self.eval_df['y_pred'])
         self.logger.info("AUC: {}".format(auc))
 
-    def calc_coverage(self):
+    def output_coverage(self):
         feature_coverage_list = []
         feature_in_bound_list = []
         columns = self.prediction_df.columns

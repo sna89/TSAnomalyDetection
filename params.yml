@@ -11,8 +11,8 @@ output:
   features_to_plot:
 
 create_synthetic_data:
-  to_create: false
-  num_of_series: 10
+  to_create: true
+  num_of_series: 50
   period:
     minutes: 0
     hours: 0
@@ -118,9 +118,9 @@ model_hyperparameters:
     val_ratio: 0.1
     lr: 0.0005
     mlp_layers: [128, 64]
-    bootstrap: 100
+    bootstrap: 250
     percentile_value: 1.66
-    dropout: 0.5
+    dropout: 0.1
     epochs: 100
     early_stop: 10
     input_timesteps_period:

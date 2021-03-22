@@ -103,6 +103,7 @@ def output_results(params_helper, data, anomalies_pred_df, anomalies_true_df=pd.
     experiment_name = params_helper.create_experiment_name()
 
     if output.csv:
+
         anomalies_pred_df.to_csv(os.path.join(Paths.output_path, '{}.csv'.format(experiment_name)))
 
     if output.plot:
@@ -124,7 +125,7 @@ def evaluate_experiment(data, anomalies_pred_df, anomalies_true_df=pd.DataFrame(
         evaluator.output_confusion_matrix()
         evaluator.output_classification_report()
         evaluator.output_auc()
-        evaluator.calc_coverage()
+        evaluator.output_coverage()
         evaluator.output_params(params_helper)
 
 
