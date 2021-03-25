@@ -16,7 +16,8 @@ LSTM_AR_MLP_UNCERTAINTY_HYPERPARAMETERS = ['batch_size',
                                            'bootstrap',
                                            'percentile_value',
                                            'epochs',
-                                           'early_stop']
+                                           'early_stop',
+                                           'anomaly_interval']
 
 
 class LstmAeMlpUncertainty(LstmAeUncertainty):

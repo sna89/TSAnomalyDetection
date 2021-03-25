@@ -11,8 +11,8 @@ output:
   features_to_plot:
 
 create_synthetic_data:
-  to_create: true
-  num_of_series: 50
+  to_create: false
+  num_of_series: 10
   period:
     minutes: 0
     hours: 0
@@ -123,6 +123,7 @@ model_hyperparameters:
     dropout: 0.1
     epochs: 100
     early_stop: 10
+    anomaly_interval: 3
     input_timesteps_period:
       minutes: 0
       hours: 6

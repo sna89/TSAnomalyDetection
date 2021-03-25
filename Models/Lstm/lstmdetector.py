@@ -34,6 +34,7 @@ class LstmDetector(AnomalyDetectionModel):
         self.input_timesteps_period = model_hyperparameters['input_timesteps_period']
         self.categorical_columns = model_hyperparameters['categorical_columns']
         self.model_path = os.path.join(os.getcwd(), 'lstm_ts.pth')
+        self.anomaly_interval = model_hyperparameters['anomaly_interval']
 
         self.use_categorical_columns = None
         self.used_categorical_columns = [cat_col
@@ -69,6 +70,7 @@ class LstmDetector(AnomalyDetectionModel):
 
         train_df_raw, val_df_raw, test_df_raw = LstmDetector.split_data(data,
                                                                         self.val_ratio,
+                                                                        (self.anomaly_interval - 1) +
                                                                         self.input_timesteps_period +
                                                                         self.horizon)
 
@@ -80,15 +82,15 @@ class LstmDetector(AnomalyDetectionModel):
                                           test_df_raw)
 
         x_train, y_train = self.prepare_data(train_scaled,
-                                             self.input_timesteps_period,
+                                             (self.anomaly_interval - 1) + self.input_timesteps_period,
                                              self.horizon)
 
         x_val, y_val = self.prepare_data(val_scaled,
-                                         self.input_timesteps_period,
+                                         (self.anomaly_interval - 1) + self.input_timesteps_period,
                                          self.horizon)
 
         x_test, y_test = self.prepare_data(test_scaled,
-                                           self.input_timesteps_period,
+                                           (self.anomaly_interval - 1) + self.input_timesteps_period,
                                            self.horizon)
 
         return train_df_raw, val_df_raw, test_df_raw, \
@@ -167,10 +169,6 @@ class LstmDetector(AnomalyDetectionModel):
             dfs.append(df)
 
         anomaly_df = pd.concat(dfs, axis=0)
-
-        # pd.set_option('display.max_columns', 999)
-        # print(anomaly_df)
-
         anomaly_df = LstmDetector.identify_anomalies(anomaly_df, num_features)
         return anomaly_df
 
@@ -254,16 +252,6 @@ class LstmDetector(AnomalyDetectionModel):
         LstmDetector.add_num_anomalies_in_sample(anomaly_df)
         anomaly_df[AnomalyDfColumns.IsAnomaly] =\
             anomaly_df.apply(lambda row: LstmDetector.assign_is_anomaly_to_row(row, num_features), axis=1)
-
-        # for idx in anomaly_df.index.unique():
-        #     idx_df = anomaly_df[anomaly_df.index == idx]
-        #     anomaly_idx_df = idx_df[idx_df[AnomalyDfColumns.IsAnomaly] == 1]
-        #     if not anomaly_idx_df.empty:
-        #         num_anomalies_in_sample = anomaly_idx_df.shape[0]
-        #         if num_anomalies_in_sample >= np.floor(np.sqrt(num_features)):
-        #             anomaly_df.loc[idx, AnomalyDfColumns.IsAnomaly] = 1
-        #         else:
-        #             anomaly_df.loc[idx, AnomalyDfColumns.IsAnomaly] = 0
         return anomaly_df
 
     @staticmethod

@@ -2,7 +2,7 @@ from Models.anomaly_detection_model import AnomalyDetectionModel, validate_anoma
 from Models.Lstm.LstmAeUncertainty.lstm_ae_uncertainty_model import LstmAeUncertaintyModel
 from Models.Lstm.lstmdetector import LstmDetector
 import torch
-
+import pandas as pd
 
 LSTM_UNCERTAINTY_HYPERPARAMETERS = ['batch_size',
                                     'hidden_dim',
@@ -14,7 +14,8 @@ LSTM_UNCERTAINTY_HYPERPARAMETERS = ['batch_size',
                                     'bootstrap',
                                     'percentile_value',
                                     'epochs',
-                                    'early_stop']
+                                    'early_stop',
+                                    'anomaly_interval']
 
 
 class LstmAeUncertainty(LstmDetector):
@@ -47,8 +48,6 @@ class LstmAeUncertainty(LstmDetector):
         x_val, y_val, \
         x_test, y_test = self.init_data(data)
 
-        num_features = self.get_num_features(train_df_raw.iloc[0])
-
         val_dataset = LstmDetector.get_tensor_dataset(x_val, y_val)
         val_dl = LstmDetector.get_dataloader(val_dataset, self.batch_size)
 
@@ -56,6 +55,7 @@ class LstmAeUncertainty(LstmDetector):
         inputs, labels = test_dataset.tensors[0].type(torch.FloatTensor).to(self.device),\
                          test_dataset.tensors[1].type(torch.FloatTensor).to(self.device)
 
+        num_features = self.get_num_features(train_df_raw.iloc[0])
         self.model = self.get_lstm_model(num_features)
         self.model = LstmDetector.load_model(self.model, self.model_path)
 
