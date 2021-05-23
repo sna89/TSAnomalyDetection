@@ -51,7 +51,7 @@ experiment_hyperparameters:
     weeks: 0
   forecast_period:
     minutes: 0
-    hours: 1
+    hours: 6
     days: 0
     weeks: 0
   include_train_time: False

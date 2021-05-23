@@ -70,7 +70,6 @@ class LstmDetector(AnomalyDetectionModel):
 
         train_df_raw, val_df_raw, test_df_raw = LstmDetector.split_data(data,
                                                                         self.val_ratio,
-                                                                        (self.anomaly_interval - 1) +
                                                                         self.input_timesteps_period +
                                                                         self.horizon)
 
@@ -82,15 +81,15 @@ class LstmDetector(AnomalyDetectionModel):
                                           test_df_raw)
 
         x_train, y_train = self.prepare_data(train_scaled,
-                                             (self.anomaly_interval - 1) + self.input_timesteps_period,
+                                             self.input_timesteps_period,
                                              self.horizon)
 
         x_val, y_val = self.prepare_data(val_scaled,
-                                         (self.anomaly_interval - 1) + self.input_timesteps_period,
+                                         self.input_timesteps_period,
                                          self.horizon)
 
         x_test, y_test = self.prepare_data(test_scaled,
-                                           (self.anomaly_interval - 1) + self.input_timesteps_period,
+                                           self.input_timesteps_period,
                                            self.horizon)
 
         return train_df_raw, val_df_raw, test_df_raw, \
